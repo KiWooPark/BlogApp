@@ -71,16 +71,6 @@ class StudyComposeViewModel {
         }
     }
     
-    // Study Entity에 저장된 멤버 데이터 가지고와서 셀에 보여줄수 있도록 UserModel로 변경
-    func fetchMembers() {
-//        self.members.value.removeAll()
-//
-//        coreDataMembers.value.forEach { member in
-//            let user = UserModel(name: member.name, blogUrl: member.blogUrl, fine: Int(member.fine))
-//            members.value.append(user)
-//        }
-    }
-    
     //MARK: U
     func updateStudyProperty(_ property: StudyProperty, value: Any, isEditMember: Bool = false) {
         switch property {
@@ -133,14 +123,14 @@ class StudyComposeViewModel {
         target?.startDate = startDate.value
         target?.finishDay = Int64(finishDay.value ?? 0)
         target?.fine = Int64(fine.value ?? 0)
-        
+
         // 추가된 멤버 study 연결
         coreDataMembers.value.forEach { member in
             if member.study == nil {
                 target?.addToMembers(member)
             }
         }
-    
+   
         target?.memberCount = Int64(coreDataMembers.value.count)
         
         var lastContent = CoreDataManager.shared.fetchLastContent(studyEntity: target!)
@@ -152,6 +142,8 @@ class StudyComposeViewModel {
         // 월 화 -> 마감 기간 지난 상태
         // 수 목 금 토 일 월 -> 마감 기간 지나지 않은 상태
         let finishDate = Date().calcCurrentFinishDate(setDay: finishDay.value ?? 0)!
+        
+        var isCreateNewContent = false
         
         // finishDate가 현재 주차인지 아니면 한주가 지난 상태인지 체크
         // 0이면 현재 주차, 1이면 한주가 지난 주차
@@ -169,6 +161,21 @@ class StudyComposeViewModel {
                 lastContent?.finishDate = finishDate
                 // 마감 요일(101, 102, 103 ...)
                 lastContent?.finishWeekDay = Int64(finishDay.value ?? 0)
+                
+                lastContent?.plusFine = 0
+                lastContent?.totalFine = 0
+                
+                let lastContentMembers = CoreDataManager.shared.fetchCoreDataContentMembers(content: lastContent!)
+            
+                // 만약 멤버가 추가된 상태라면 추가한 멤버 빼고 나머지 공지에 있는 멤버들은 업데이트시켜줘야함
+                for member in lastContentMembers {
+                    if let index = coreDataMembers.value.firstIndex(where: {$0.name == member.name}) {
+                        coreDataMembers.value[index].fine = member.fine
+                    }
+                }
+                
+                
+                
             } else {
                 // 마감 날짜
                 lastContent?.finishDate = finishDate
@@ -187,32 +194,114 @@ class StudyComposeViewModel {
                 print("새로운 공지 생성")
                 // 마지막 공지 벌금 업데이트 하고 새로운 공지 만들어야함
                 
-                
-                
-                lastContent = CoreDataManager.shared.createContent(studyEntity: target!)
+                isCreateNewContent = true
+
+                CrawlingManager.fetchPostData(members: coreDataMembers.value, finishDate: (lastContent?.finishDate)!) { result in
+                    switch result {
+                    case .success(let responseData):
+                        print("123123", responseData)
+                        
+                        let fine = self.calculateFine(studyEntity: target!, members: responseData)
+                        
+                        // 이름으로 인덱스 검색해서 업데이트하게 바꿔야함
+                        CoreDataManager.shared.updateMembersFine(studyEntity: target!, contentEntity: lastContent!, fine: (fine.totalFine, fine.plus), membersPost: responseData)
+                        
+                     
+                        detailViewModel.fetchStudyData() {
+                            completion()
+                        }
+                        
+                        
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
             }
         }
         
-        // 여기서 만약 스터디 시작 날짜를 변경하면
-        // 이전에 만들었던 content의 currentWeekNumber도 싹다 변경
-        CoreDataManager.shared.updateContentCurrentWeekNumber(startDate: startDate.value!, studyEntity: target!)
+        if !isCreateNewContent {
+            
+            // 여기서 만약 스터디 시작 날짜를 변경하면
+            // 이전에 만들었던 content의 currentWeekNumber도 싹다 변경
+            CoreDataManager.shared.updateContentCurrentWeekNumber(startDate: startDate.value!, studyEntity: target!)
 
-        // content멤버 데이터 가지고오고
-        let contentMembers = CoreDataManager.shared.fetchCoreDataContentMembers(content: lastContent!)
-        
-        // content멤버 다 지우고
-        CoreDataManager.shared.deleteContentMembers(members: contentMembers)
-        // study에 저장된 멤버들로 다시 추가
-        CoreDataManager.shared.addContentMembers(members: self.coreDataMembers.value, content: lastContent!)
+            // content멤버 데이터 가지고오고
+            let contentMembers = CoreDataManager.shared.fetchCoreDataContentMembers(content: lastContent!)
+            
+            
+            
+            // content멤버 다 지우고
+            CoreDataManager.shared.deleteContentMembers(members: contentMembers)
+            // study에 저장된 멤버들로 다시 추가
+            CoreDataManager.shared.addContentMembers(members: self.coreDataMembers.value, content: lastContent!)
 
-        CoreDataManager.shared.saveContext()
+            CoreDataManager.shared.saveContext()
 
-        detailViewModel.fetchStudyData() {
-            completion()
+            detailViewModel.fetchStudyData() {
+                completion()
+            }
         }
     }
     
-    func checkPost() {
+    func calculateFine(studyEntity: Study, members: [PostResponse]) -> (totalFine: Int, plus :Int){
+        var resultFine = 0
         
+        // 작성 안한사람
+        let notPostCount = members.filter({$0.data == nil}).count
+        // 작성한 사람
+        let postCount = members.filter({$0.data != nil}).count
+        
+        // 다 작성했거나 다 작성 안했거나 하면 벌금 0 원
+        if notPostCount == members.count || postCount == members.count {
+            return (0, 0)
+        }
+        
+        // 각 멤버별 벌금 합계
+        let totalFine = Int(studyEntity.fine ?? 0).convertFineInt() * notPostCount
+   
+        // 분배할 금액
+        resultFine = totalFine / postCount
+        
+        return (totalFine, resultFine)
+    }
+    
+    func validatePostInputData() -> String? {
+        
+        enum Check: String {
+            case title = "스터디 제목"
+            case announcement = "공지사항 및 소개"
+            case startDate = "시작 날짜"
+            case finishDay = "마감 날짜"
+            case fine = "벌금"
+        }
+        
+        var alertList = [Check]()
+        
+        if title.value == nil {
+            alertList.append(.title)
+        }
+        
+        if announcement.value == nil {
+            alertList.append(.announcement)
+        }
+        
+        if startDate.value == nil {
+            alertList.append(.startDate)
+        }
+        
+        if finishDay.value == nil {
+            alertList.append(.finishDay)
+        }
+        
+        if fine.value == nil {
+            alertList.append(.fine)
+        }
+        
+        if alertList.isEmpty {
+            return nil
+        } else {
+            
+            return "\(alertList.map({$0.rawValue}).joined(separator: ", ")) 입력을 완료해주세요. "
+        }
     }
 }

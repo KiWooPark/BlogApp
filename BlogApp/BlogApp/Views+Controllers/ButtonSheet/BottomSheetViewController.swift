@@ -54,6 +54,7 @@ class BottomSheetViewController: UIViewController {
 
         configLayout()
         configData()
+        configDatePicker()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -119,6 +120,21 @@ class BottomSheetViewController: UIViewController {
             print("")
         }
     }
+    
+    func configDatePicker() {
+        var calendar = Calendar(identifier: .iso8601)
+        calendar.firstWeekday = 2
+        
+        let startDate = Date().getStartDateAndEndDate().0
+        let endDate = Date().getStartDateAndEndDate().1
+        
+        if viewModel?.isNewStudy.value == true {
+            startDatePicker.minimumDate = startDate
+            startDatePicker.maximumDate = endDate
+        } else {
+            startDatePicker.maximumDate = endDate
+        }
+    }
 
     @IBAction func tapCloseButton(_ sender: Any) {
         self.dismiss(animated: true)
@@ -160,23 +176,6 @@ class BottomSheetViewController: UIViewController {
                     viewModel?.updateStudyProperty(.members, value: (name, blogUrl, fine))
                 }
             }
-            
-            
-//            if isEditMember {
-//                print("111")
-//                let name = memberNameTextField.text ?? ""
-//                let blogUrl = blogUrlTextField.text ?? ""
-//                let fine = viewModel?.fine.value?.convertFineInt()
-//
-//                viewModel?.updateStudyProperty(.members, value: (name, blogUrl, fine))
-//            } else {
-//                print("222")
-//                let name = memberNameTextField.text ?? ""
-//                let blogUrl = blogUrlTextField.text ?? ""
-//                let fine = fineTextField.text ?? ""
-//
-//                viewModel?.updateStudyProperty(.members, value: (name, blogUrl, fine), isAddMember: false)
-//            }
         default:
             return
         }

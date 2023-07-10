@@ -49,7 +49,10 @@ class AddMemberInfoTableViewCell: UITableViewCell {
         let tableView = cell.superview as! UITableView
         
         if let indexPath = tableView.indexPath(for: cell) {
+            let member = viewModel?.coreDataMembers.value[indexPath.row - 1]
             viewModel?.coreDataMembers.value.remove(at: indexPath.row - 1)
+            CoreDataManager.shared.deleteStudyMemberTest(user: member!)
+            
         }
     }
 }

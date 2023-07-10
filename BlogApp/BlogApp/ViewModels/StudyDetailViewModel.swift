@@ -70,9 +70,7 @@ class StudyDetailViewModel {
         }
         
         let finishDate = Date().calcCurrentFinishDate(setDay: Int(study.value?.finishDay ?? 0))
-        
-//        let finishDate = Date().calculateDeadline(endDay: Int(study.value?.finishDay ?? 0))
-        
+    
         let secondStr = "마감 : \(finishDate)"
         
         return (firstStr, secondStr.convertBoldString(boldString: .setDay))
@@ -130,7 +128,7 @@ class StudyDetailViewModel {
                             case .success(let postData):
                               
                                 if let postData = postData {
-                                    self.members[index].postData = postData.postUrl == nil ? PostResponse(data: nil, errorMessage: "작성된 게시글이 없습니다.") : PostResponse(data: postData, errorMessage: nil)
+                                    self.members[index].postData = postData.postUrl == nil ? PostResponse(name: member.name, data: nil, errorMessage: "작성된 게시글이 없습니다.") : PostResponse(data: postData, errorMessage: nil)
                                 }
                                 group.leave()
                             case .failure(let error):
@@ -141,13 +139,13 @@ class StudyDetailViewModel {
                         }
                     case .failure(let error):
                         print("2", error)
-                        self.members[index].postData = PostResponse(data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
+                        self.members[index].postData = PostResponse(name: member.name, data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
                         group.leave()
                     }
                 }
             } else {
                 print("1")
-                self.members[index].postData = PostResponse(data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
+                self.members[index].postData = PostResponse(name: member.name, data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
                 group.leave()
             }
         }
@@ -236,8 +234,6 @@ class StudyDetailViewModel {
             return result
         } else {
             print("날짜 안 지남")
-            let contents = CoreDataManager.shared.fetchContent(studyEntity: study.value!)
-            contents.map({print($0.finishDate)})
             return []
         }
     }
@@ -264,6 +260,7 @@ class StudyDetailViewModel {
                 switch result {
                 case .success(let data):
                     
+                    print("33333", data)
                     // 벌금 계산
                     let fine = self.calculateFine(members: data)
                     
@@ -292,6 +289,10 @@ class StudyDetailViewModel {
         
         for (index, member) in members.enumerated() {
             
+            membersPost[index].name = member.name
+            
+            print("11111", membersPost[index])
+            
             group.enter()
             CrawlingManager.getLastPageNumber(member: member) { result in
                 switch result {
@@ -301,7 +302,8 @@ class StudyDetailViewModel {
                     self.checkPagesPost(blogURL: member.blogUrl ?? "", lastPageNum: pages.last ?? 0, date: date) { result in
                         switch result {
                         case .success(let data):
-                            membersPost[index] = data
+                            membersPost[index].data = data.data
+                            membersPost[index].errorMessage = data.errorMessage
                             group.leave()
                         case .failure(let error):
                             // 에러
@@ -342,19 +344,19 @@ class StudyDetailViewModel {
                         
                         CrawlingManager.getPostTitleAndDate(urls: urls, startDate: startDate, endDate: endDate) { result in
                             switch result {
-                            case .success(let data):
-                                
+                            case .success(let postData):
+                                 
                                 var result = PostResponse()
                                 
-                                if data?.postUrl == nil {
+                                if postData?.postUrl == nil {
                                     result = PostResponse(data: nil, errorMessage: "작성된 게시글이 없습니다.")
                                 } else {
-                                    result = PostResponse(data: data, errorMessage: nil)
+                                    result = PostResponse(data: postData, errorMessage: nil)
                                 }
                                 
                                 completion(.success(result))
                                 
-                                if data == nil {
+                                if postData == nil {
                                     currentPage += 1
                                     next()
                                 }

@@ -14,13 +14,10 @@ class AddStudyViewController: UIViewController, ViewModelBindableType {
     typealias ViewModelType = StudyComposeViewModel
     
     var viewModel: ViewModelType?
-    
-    //
+
     var listViewModel: StudyListViewModel?
     var detailViewModel: StudyDetailViewModel?
-    //
-    
-    
+
     @IBOutlet var studyInfoTableView: UITableView!
     
     var isEdit = false
@@ -51,8 +48,6 @@ class AddStudyViewController: UIViewController, ViewModelBindableType {
         }
         
         bindViewModel()
-        
-        viewModel?.fetchMembers()
     }
     
     
@@ -94,19 +89,25 @@ class AddStudyViewController: UIViewController, ViewModelBindableType {
     }
     
     @IBAction func tapDoneButton(_ sender: Any) {
-    
-        if isEdit {
-            viewModel?.updateDetailStudyData(detailViewModel: detailViewModel!, completion: {
-                DispatchQueue.main.async {
-                    self.dismiss(animated: true)
-                }
-            })
+        
+        let checkPostData = viewModel?.validatePostInputData()
+        
+        if checkPostData == nil {
+            if isEdit {
+                viewModel?.updateDetailStudyData(detailViewModel: detailViewModel!, completion: {
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true)
+                    }
+                })
+            } else {
+                viewModel?.createStudy(completion: {
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true)
+                    }
+                })
+            }
         } else {
-            viewModel?.createStudy(completion: {
-                DispatchQueue.main.async {
-                    self.dismiss(animated: true)
-                }
-            })
+            makeAlertDialog(title: checkPostData ?? "", message: "")
         }
     }
 }
@@ -192,7 +193,7 @@ extension AddStudyViewController: UITableViewDataSource {
 
 extension AddStudyViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+
         if indexPath.section == 6 && indexPath.row != 0 {
             let storyboard = UIStoryboard(name: "BottomSheetViewController", bundle: nil)
             guard let vc = storyboard.instantiateViewController(withIdentifier: "BottomSheetViewController") as? BottomSheetViewController else { return }

@@ -24,21 +24,23 @@ enum CrawlingError: Error {
     
 }
 
-//enum CrawlingType {
-//    case currentWeek
-//    case lastContentWeek
-//}
-
 struct CrawlingManager {
     
-    
-    // 카테고리 경로 붙이기
+    /// Blog URL에 "/category" 문자열을 추가하는 메소드
+    /// 이 메소드는 주어진 블로그 URL 뒤에 "/category" 문자열을 추가하여 새로운 URL을 반환합니다.
+    /// --------------------------------------------------------------
+    /// - Parameter blogUrl: 블로그 URL
+    /// - Returns: "/category"가 추가된 새로운 URL. blogUrl이 nil이거나 올바른 URL 형식이 아닌 경우, 이 메소드는 nil을 반환합니다.
     static func addCategoryStr(blogUrl: String?) -> URL? {
         guard let url = blogUrl else { return nil }
         return URL(string: url + "/category")
     }
-    
-    // html에서 head 부분만 가지고 오기
+ 
+    /// HTML 문자열에서 head 부분만 가지고오는 메소드
+    /// 이 메소드는 HTML 문자열에서 body 부분을 제외한 head 부분만 새로운 문자열로 반환합니다.
+    /// --------------------------------------------------------------
+    /// - Parameter html: 블로그 HTML 문자열
+    /// - Returns: <head> </haed> 안에 포함된 문자열
     static func getHtmlHead(html: String) -> String? {
         let pattern = "<head>([\\s\\S]*?)</head>"
 
@@ -47,6 +49,57 @@ struct CrawlingManager {
         let headContent = html[range]
         
         return String(headContent)
+    }
+    
+    static func fetchPostData(members: [User], finishDate: Date, completion: @escaping (Result<[PostResponse],CrawlingError>) -> ())  {
+        
+        let group = DispatchGroup()
+        
+        var resultMembersData = Array(repeating: PostResponse(), count: members.count)
+        
+        for (index, member) in members.enumerated() {
+            
+            group.enter()
+            
+            if let url = addCategoryStr(blogUrl: member.blogUrl) {
+                getPostsURL(url: url) { result in
+                    switch result {
+                    case .success(let urls):
+                        let startDate = finishDate.getStartDateAndEndDate().0
+                        let endDate = finishDate.getStartDateAndEndDate().1
+                        
+                        print("------- urls", urls)
+                        
+                        getPostTitleAndDate(urls: urls, startDate: startDate, endDate: endDate) { result in
+                            switch result {
+                            case .success(let post):
+                                print("-----", post)
+                                if let postData = post {
+                                    resultMembersData[index] = postData.postUrl == nil ? PostResponse(name: member.name, data: nil, errorMessage: "작성된 게시글이 없습니다.") : PostResponse(name: member.name, data: postData, errorMessage: nil)
+                                }
+                                group.leave()
+                            case .failure(let error):
+                                print(error)
+                                group.leave()
+                            }
+                        }
+                    case .failure(let error):
+                        print("22222222", error)
+                        resultMembersData[index] = PostResponse(name: member.name, data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
+                        group.leave()
+                    }
+                }
+            } else {
+                // URL이 잘못된 경우
+                print("1111111111")
+                resultMembersData[index] = PostResponse(name: member.name, data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            completion(.success(resultMembersData))
+        }
     }
     
     // 페이지 마지막 번호 가지고오기2
@@ -184,7 +237,8 @@ struct CrawlingManager {
                                     currentIndex += 1
                                     next()
                                 default:
-                                    print("")
+                                    currentIndex += 1
+                                    next()
                                 }
                             }
                         } catch {

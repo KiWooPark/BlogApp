@@ -29,10 +29,15 @@ class AddTitleTableViewCell: UITableViewCell {
     
     @objc func textFieldDidChange(_ sender: Any?) {
         // 텍스트가 변경될때마다 뷰모델의 title 프로퍼티 업데이트
-        viewModel?.updateStudyProperty(.title, value: titleTextField.text ?? "")
+        let text = titleTextField.text == "" ? nil : titleTextField.text
+        viewModel?.updateStudyProperty(.title, value: text)
     }
     
     func configData() {
-        titleTextField.text = viewModel.title.value == nil ? "스터디 이름을 입력해주세요." : viewModel.title.value ?? ""
+        if viewModel.title.value == nil {
+            titleTextField.placeholder = "스터디 이름을 입력해주세요."
+        } else {
+            titleTextField.text = viewModel.title.value ?? ""
+        }
     }
 }

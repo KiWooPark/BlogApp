@@ -20,6 +20,7 @@
 		162E45D42A470F6700256862 /* AddStudyTypeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 162E45D22A470F6700256862 /* AddStudyTypeTableViewCell.xib */; };
 		162E7F6D2A4B2E8400AF54CD /* TestDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162E7F6C2A4B2E8400AF54CD /* TestDetailViewModel.swift */; };
 		162E7F6F2A4F52FB00AF54CD /* ContentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162E7F6E2A4F52FB00AF54CD /* ContentCollectionViewCell.swift */; };
+		165488852A5BF14100A9925E /* ViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165488842A5BF14100A9925E /* ViewController+Extension.swift */; };
 		166DEC7B2A3C470700A59B8F /* ShareContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166DEC7A2A3C470700A59B8F /* ShareContentViewController.swift */; };
 		166DEC7D2A3C471D00A59B8F /* ShareContentViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 166DEC7C2A3C471D00A59B8F /* ShareContentViewController.storyboard */; };
 		166DEC7F2A3C500E00A59B8F /* ShareContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166DEC7E2A3C500E00A59B8F /* ShareContentViewModel.swift */; };
@@ -94,6 +95,7 @@
 		162E45D22A470F6700256862 /* AddStudyTypeTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddStudyTypeTableViewCell.xib; sourceTree = "<group>"; };
 		162E7F6C2A4B2E8400AF54CD /* TestDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDetailViewModel.swift; sourceTree = "<group>"; };
 		162E7F6E2A4F52FB00AF54CD /* ContentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentCollectionViewCell.swift; sourceTree = "<group>"; };
+		165488842A5BF14100A9925E /* ViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Extension.swift"; sourceTree = "<group>"; };
 		166DEC7A2A3C470700A59B8F /* ShareContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareContentViewController.swift; sourceTree = "<group>"; };
 		166DEC7C2A3C471D00A59B8F /* ShareContentViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ShareContentViewController.storyboard; sourceTree = "<group>"; };
 		166DEC7E2A3C500E00A59B8F /* ShareContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareContentViewModel.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 				16B535092A34E35B0030287C /* String+Extention.swift */,
 				162C37A02A4233C500EE8260 /* Int+Extention.swift */,
 				16B535122A36FA3A0030287C /* UITableViewCell+Extention.swift */,
+				165488842A5BF14100A9925E /* ViewController+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -515,6 +518,7 @@
 				169A022229ACD55300C1B47B /* IntroViewController.swift in Sources */,
 				16E2B1022A16320600596257 /* CoreDataManager.swift in Sources */,
 				162C384B2A444B9500EE8260 /* Content+CoreDataProperties.swift in Sources */,
+				165488852A5BF14100A9925E /* ViewController+Extension.swift in Sources */,
 				16CFAFE82A1395ED00D49904 /* AddAnnouncementTableViewCell.swift in Sources */,
 				162E7F6D2A4B2E8400AF54CD /* TestDetailViewModel.swift in Sources */,
 				16E2B14C2A1F65C000596257 /* BottomSheetViewController.swift in Sources */,

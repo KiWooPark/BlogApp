@@ -36,6 +36,7 @@ struct ContentUserModel {
 }
 
 struct PostResponse {
+    var name: String?
     var data: PostModel?
     var errorMessage: String?
 }

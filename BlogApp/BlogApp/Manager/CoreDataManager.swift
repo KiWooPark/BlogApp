@@ -91,26 +91,14 @@ class CoreDataManager {
     // 공지사항 생성할때 콘텐트 엔티티에 연결
     func addContentMembers(members: [User], content: Content) {
         for member in members {
-            let contentUser = ContentUser(context: persistentContainer.viewContext)
-            contentUser.name = member.name
-            contentUser.postUrl = nil
-            contentUser.fine = member.fine
+            let contentMember = ContentUser(context: persistentContainer.viewContext)
+            contentMember.name = member.name
+            contentMember.postUrl = nil
+            contentMember.fine = member.fine
             
-            content.addToMembers(contentUser)
+            content.addToMembers(contentMember)
         }
     }
-    
-    // 공지사항 생성할때 콘텐트 엔티티에 연결
-//    func addContentMember(members: [ContentUserModel?], content: Content) {
-//        for member in members {
-//            let contentUser = ContentUser(context: persistentContainer.viewContext)
-//            contentUser.name = member?.name
-//            contentUser.postUrl = member?.postURL
-//            contentUser.fine = Int64(member?.fine ?? 0)
-//
-//            content.addToMembers(contentUser)
-//        }
-//    }
     
     // MARK: READ
     // 스터디 가져오기
@@ -168,32 +156,87 @@ class CoreDataManager {
     
     
     // MARK: UPDATE
-    
     func updateMembersFine(studyEntity: Study, contentEntity: Content, fine: (total: Int,plus: Int), membersPost: [PostResponse]) {
-        
+    
         // study에 저장된 멤버 데이터 가지고오기
         let studyMembers: [User] = fetchCoreDataMembers(study: studyEntity)
-        
+
         // 마지막 content에 저장된 멤버 데이터 가지고오기
-        let lastContentMembers = fetchCoreDataContentMembers(content: contentEntity)
-        
+        var lastContentMembers = fetchCoreDataContentMembers(content: contentEntity)
+
         // content에 벌금 업데이트
         contentEntity.totalFine = Int64(fine.total)
         contentEntity.plusFine = Int64(fine.plus)
         
         let notPostMemberCount = membersPost.filter({$0.data == nil}).count
-
-        // study에 저장된 멤버 벌금 업데이트
-        for i in 0..<membersPost.count {
-            
-            if membersPost[i].data != nil {
-                studyMembers[i].fine += Int64(fine.plus)
-                lastContentMembers[i].postUrl = membersPost[i].data?.postUrl
-                lastContentMembers[i].title = membersPost[i].data?.title
-            } else {
-                studyMembers[i].fine -= Int64(fine.total) / Int64(notPostMemberCount)
+        
+        let lastContentMembersName = lastContentMembers.map({$0.name})
+        let membersPostName = membersPost.map({$0.name})
+        
+        // 이름만 따로 가져오고
+        let names = lastContentMembersName.filter({ !membersPostName.contains($0) })
+        
+        // 스터디 멤버에 속하지 않는 멤버 삭제
+        if !names.isEmpty {
+            for name in names {
+                let deleteMember = lastContentMembers.filter({$0.name == name})
+                deleteContentMember(user: deleteMember[0])
             }
         }
+        
+        // 벌금 업데이트하는데
+        // content에 있는 멤버는 업데이트하고
+        // 없는 멤버는 추가
+        for post in membersPost {
+            
+            print(post)
+            
+            // content에 해당 멤버가 있으면
+            if let index = lastContentMembers.firstIndex(where: {$0.name == post.name}) {
+                
+                // 작성한 게시글이 있으면
+                if post.data != nil {
+                    if let index = studyMembers.firstIndex(where: {$0.name == post.name}) {
+                        studyMembers[index].fine += Int64(fine.plus)
+                    }
+                    
+                    lastContentMembers[index].postUrl = post.data?.postUrl
+                    lastContentMembers[index].title = post.data?.title
+                } else {
+                    if let index = studyMembers.firstIndex(where: {$0.name == post.name}) {
+                        studyMembers[index].fine -= Int64(fine.total) / Int64(notPostMemberCount)
+                    }
+                }
+            } else {
+                
+                if let index = studyMembers.firstIndex(where: {$0.name == post.name}) {
+                    // 새로 추가된 멤버 추가하기
+                    if post.data != nil {
+                        studyMembers[index].fine += Int64(fine.plus)
+                        let contentMember = ContentUser(context: persistentContainer.viewContext)
+                        contentMember.name = post.name
+                        contentMember.postUrl = post.data?.postUrl
+                        contentMember.title = post.data?.title
+                        contentMember.fine = Int64(Int(studyEntity.fine).convertFineInt())
+                        contentEntity.addToMembers(contentMember)
+                        lastContentMembers.append(contentMember)
+                    } else {
+                        studyMembers[index].fine -= Int64(fine.total) / Int64(notPostMemberCount)
+                        let contentMember = ContentUser(context: persistentContainer.viewContext)
+                        contentMember.name = post.name
+                        contentMember.postUrl = nil
+                        contentMember.title = nil
+                        contentMember.fine = Int64(Int(studyEntity.fine).convertFineInt())
+                        contentEntity.addToMembers(contentMember)
+                        lastContentMembers.append(contentMember)
+                    }
+                }
+            }
+        }
+        
+        studyMembers.map({print($0.name, $0.fine)})
+        lastContentMembers.map({print( $0.name, $0.fine)})
+        
         
         let nextContentEntity = Content(context: persistentContainer.viewContext)
         // 현재 공지의 마감일을 기준으로 한주 뒤에 마감일 언제인지
@@ -306,6 +349,11 @@ class CoreDataManager {
         let context = persistentContainer.viewContext
         context.delete(user)
         saveContext()
+    }
+    
+    func deleteStudyMemberTest(user: User) {
+        let context = persistentContainer.viewContext
+        context.delete(user)
     }
     
     func deleteContentMember(user: ContentUser) {
