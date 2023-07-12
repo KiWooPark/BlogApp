@@ -212,7 +212,7 @@ class StudyComposeViewModel {
                         let startDate = finishDate?.getStartDateAndEndDate().0 ?? Date()
                         let endDate = finishDate?.getStartDateAndEndDate().1 ?? Date()
                         
-                        CrawlingManager.fetchPostData(members: coreDataMembers.value, startDate: startDate, endDate: endDate) { result in
+                        CrawlingManager.fetchMemberPostData(members: coreDataMembers.value, startDate: startDate, endDate: endDate) { result in
                             
                             switch result {
                             case .success(let responseData):
@@ -403,7 +403,7 @@ class StudyComposeViewModel {
                         let endDate = newFinishDate.getStartDateAndEndDate().1
                       
                         // 작성된 게시물이 있는지 체크
-                        CrawlingManager.fetchPostData(members: coreDataMembers.value, startDate: startDate, endDate: endDate) { result in
+                        CrawlingManager.fetchMemberPostData(members: coreDataMembers.value, startDate: startDate, endDate: endDate) { result in
                             
                             switch result {
                             case .success(let responseData):
@@ -462,7 +462,7 @@ class StudyComposeViewModel {
                 let startDate = finishDate?.getStartDateAndEndDate().0 ?? Date()
                 let endDate = finishDate?.getStartDateAndEndDate().1 ?? Date()
                 
-                CrawlingManager.fetchPostData(members: coreDataMembers.value, startDate: startDate, endDate: endDate) { result in
+                CrawlingManager.fetchMemberPostData(members: coreDataMembers.value, startDate: startDate, endDate: endDate) { result in
                     switch result {
                     case .success(let responseData):
                         
@@ -490,7 +490,7 @@ class StudyComposeViewModel {
             let startDate = content.finishDate?.getStartDateAndEndDate().0 ?? Date()
             let endDate = finishDate ?? Date()
             
-            CrawlingManager.fetchPostData(members: coreDataMembers.value, startDate: startDate, endDate: endDate) { result
+            CrawlingManager.fetchMemberPostData(members: coreDataMembers.value, startDate: startDate, endDate: endDate) { result
                 in
                 switch result {
                 case .success(let responseData):

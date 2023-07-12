@@ -120,7 +120,7 @@ class BottomSheetViewController: UIViewController {
             titleLabel.text = "추가할 멤버의 정보를 입력해주세요."
             addMemberView.isHidden = false
             fineStackView.isHidden = isEditMember == true || viewModel?.isNewStudy.value == false ? false : true
-            deleteMemberButton.isHidden = false
+            deleteMemberButton.isHidden = isEditMember == true ? false : true
         default:
             print("")
         }
@@ -150,42 +150,50 @@ class BottomSheetViewController: UIViewController {
         case .startDate:
             let value = startDatePicker.date
             viewModel?.updateStudyProperty(.startDate, value: value)
+            self.dismiss(animated: true)
         case .selectDay:
             let index = dayButtons.firstIndex(where: {$0.isSelected == true}) ?? 0
             viewModel?.updateStudyProperty(.setDay, value: dayButtons[index].tag)
+            self.dismiss(animated: true)
         case .selectFine:
             let index = fineButtons.firstIndex(where: {$0.isSelected == true}) ?? 0
             viewModel?.updateStudyProperty(.fine, value: fineButtons[index].tag)
+            self.dismiss(animated: true)
         case .addMemeber:
-            // 셀 눌러서 수정
-            if isEditMember {
-                let name = memberNameTextField.text ?? ""
-                let blogUrl = blogUrlTextField.text ?? ""
-                let fine = Int(fineTextField.text ?? "")
-                
-                viewModel?.updateStudyProperty(.members, value: (editIndex, name, blogUrl, fine), isEditMember: true)
-                
-            } else { // 추가버튼 눌러서 추가
-                if viewModel?.isNewStudy.value == true { // 신규 추가
-                    let name = memberNameTextField.text ?? ""
-                    let blogUrl = blogUrlTextField.text ?? ""
-                    let fine = viewModel?.fine.value?.convertFineInt() ?? 0
-                    
-                    viewModel?.updateStudyProperty(.members, value: (name, blogUrl, fine))
-                    
-                } else { // 기존 추가
-                    let name = memberNameTextField.text ?? ""
-                    let blogUrl = blogUrlTextField.text ?? ""
-                    let fine = Int(fineTextField.text ?? "")
-                    
-                    viewModel?.updateStudyProperty(.members, value: (name, blogUrl, fine))
+            CrawlingManager.validateBlogURL(url: blogUrlTextField.text ?? "") { isChecked in
+                if isChecked {
+                    // 셀 눌러서 수정
+                    if self.isEditMember {
+                        let name = self.memberNameTextField.text ?? ""
+                        let blogUrl = self.blogUrlTextField.text ?? ""
+                        let fine = Int(self.fineTextField.text ?? "")
+
+                        self.viewModel?.updateStudyProperty(.members, value: (self.editIndex, name, blogUrl, fine), isEditMember: true)
+
+                    } else { // 추가버튼 눌러서 추가
+                        if self.viewModel?.isNewStudy.value == true { // 신규 추가
+                            let name = self.memberNameTextField.text ?? ""
+                            let blogUrl = self.blogUrlTextField.text ?? ""
+                            let fine = self.viewModel?.fine.value?.convertFineInt() ?? 0
+
+                            self.viewModel?.updateStudyProperty(.members, value: (name, blogUrl, fine))
+
+                        } else { // 기존 추가
+                            let name = self.memberNameTextField.text ?? ""
+                            let blogUrl = self.blogUrlTextField.text ?? ""
+                            let fine = Int(self.fineTextField.text ?? "")
+
+                            self.viewModel?.updateStudyProperty(.members, value: (name, blogUrl, fine))
+                        }
+                    }
+                    self.dismiss(animated: true)
+                } else {
+                    self.makeAlertDialog(title: "Url을 확인해주세요.", message: "")
                 }
             }
         default:
             return
         }
-       
-        self.dismiss(animated: true)
     }
     
     @IBAction func tapDeleteMemberButton(_ sender: Any) {

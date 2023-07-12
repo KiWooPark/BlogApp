@@ -52,7 +52,16 @@ struct CrawlingManager {
     }
     
     
-    static func fetchPostData(members: [User], startDate: Date, endDate: Date, completion: @escaping (Result<[PostResponse],CrawlingError>) -> ())  {
+    
+    /// 파라미터로 전달한 시작 날짜와 마감 날짜를 기준으로 해당 기간내에 작성한 게시글을 가져오는 메소드 입니다.
+    /// postUrl이 nil 여부를 체크하여 nil인경우 작성된 게시물 없음, 잘못된 URL등 Error메시지를 저장하며 nil이 아닌 경우
+    /// 전달받은 post 데이터를 저장합니다.
+    /// - Parameters:
+    ///   - members: <#members description#>
+    ///   - startDate: <#startDate description#>
+    ///   - endDate: <#endDate description#>
+    ///   - completion: <#completion description#>
+    static func fetchMemberPostData(members: [User], startDate: Date, endDate: Date, completion: @escaping (Result<[PostResponse],CrawlingError>) -> ())  {
         
         let group = DispatchGroup()
         
@@ -69,8 +78,8 @@ struct CrawlingManager {
                         
                         getPostTitleAndDate(urls: urls, startDate: startDate, endDate: endDate) { result in
                             switch result {
-                            case .success(let post):
-                                if let postData = post {
+                            case .success(let postData):
+                                if let postData = postData {
                                     resultMembersData[index] = postData.postUrl == nil ? PostResponse(name: member.name, data: nil, errorMessage: "작성된 게시글이 없습니다.") : PostResponse(name: member.name, data: postData, errorMessage: nil)
                                 }
                                 group.leave()
@@ -245,6 +254,25 @@ struct CrawlingManager {
             }
         }
         next()
+    }
+    
+    
+    /// 새로운 멤버를 추가할 경우 입력한 URL이 정상적인 URL인지 검사하는 메소드 입니다.
+    ///
+    /// - Parameter url: <#url description#>
+    static func validateBlogURL(url: String, completion: @escaping (Bool) -> ())  {
+        if let url = URL(string: url) {
+            AF.request(url).responseString { result in
+                switch result.result {
+                case .success(_):
+                    completion(true)
+                case .failure(let error):
+                    completion(false)
+                }
+            }
+        } else {
+            completion(false)
+        }
     }
 }
 
