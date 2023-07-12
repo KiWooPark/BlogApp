@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol AddMemberInfoTableViewCellDelegate: AnyObject {
+    func showEditMemberVC(index: Int)
+}
+
 class AddMemberInfoTableViewCell: UITableViewCell {
 
     static var identifier: String { return String(describing: self)}
@@ -16,6 +20,7 @@ class AddMemberInfoTableViewCell: UITableViewCell {
     @IBOutlet weak var fineLabel: UILabel!
     
     var viewModel: StudyComposeViewModel?
+    weak var delegate: AddMemberInfoTableViewCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -37,6 +42,19 @@ class AddMemberInfoTableViewCell: UITableViewCell {
         fineLabel.text = "\(target?.fine ?? 0)"
     }
     
+    @IBAction func tapEditButton(_ sender: Any) {
+        guard let button = sender as? UIButton else { return }
+        
+        let contentView = button.superview
+        let cell = contentView?.superview as! UITableViewCell
+        let tableView = cell.superview as! UITableView
+        
+        if let indexPath = tableView.indexPath(for: cell) {
+            delegate?.showEditMemberVC(index: indexPath.row - 1)
+        }
+    }
+    
+    
     @IBAction func tapDeleteButton(_ sender: Any) {
         guard let button = sender as? UIButton else { return }
        
@@ -47,7 +65,7 @@ class AddMemberInfoTableViewCell: UITableViewCell {
         if let indexPath = tableView.indexPath(for: cell) {
             let member = viewModel?.coreDataMembers.value[indexPath.row - 1]
             viewModel?.coreDataMembers.value.remove(at: indexPath.row - 1)
-            CoreDataManager.shared.deleteStudyMemberTest(user: member!)
+            CoreDataManager.shared.deleteStudyMember(user: member!)
             
         }
     }

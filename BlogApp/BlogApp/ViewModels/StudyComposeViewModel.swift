@@ -15,6 +15,7 @@ enum StudyProperty {
     case setDay
     case fine
     case members
+    case deleteMember
 }
 
 class StudyComposeViewModel {
@@ -79,7 +80,6 @@ class StudyComposeViewModel {
         case .fine:
             self.fine.value = value as? Int
         case .members:
-            
             if isEditMember {
                 // 수정
                 if let value = value as? (Int, String, String, Int) {
@@ -101,6 +101,12 @@ class StudyComposeViewModel {
                     self.coreDataMembers.value.append(newMember)
                     
                 }
+            }
+        case .deleteMember:
+            if let value = value as? Int {
+                let member = coreDataMembers.value[value]
+                coreDataMembers.value.remove(at: value)
+                CoreDataManager.shared.deleteStudyMember(user: member)
             }
         }
     }
@@ -339,7 +345,7 @@ class StudyComposeViewModel {
         if alertList.isEmpty {
             return nil
         } else {
-            return "\(alertList.map({$0.rawValue}).joined(separator: ", ")) 입력을 완료해주세요. "
+            return "\(alertList.map({$0.rawValue}).joined(separator: "\n")) \n입력을 완료해주세요. "
         }
     }
     

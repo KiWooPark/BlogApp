@@ -349,15 +349,29 @@
                                                     <constraint firstAttribute="trailing" secondItem="b6u-LJ-LSa" secondAttribute="trailing" constant="20" id="ybr-eA-slS"/>
                                                 </constraints>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oRf-Nk-Ofh">
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="w7l-Om-eRJ">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="34.5"/>
-                                                <color key="backgroundColor" systemColor="systemYellowColor"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="완료"/>
-                                                <connections>
-                                                    <action selector="tapDoneButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="CsW-ec-ved"/>
-                                                </connections>
-                                            </button>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oRf-Nk-Ofh">
+                                                        <rect key="frame" x="0.0" y="0.0" width="187" height="34.5"/>
+                                                        <color key="backgroundColor" systemColor="systemYellowColor"/>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" title="완료"/>
+                                                        <connections>
+                                                            <action selector="tapDoneButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="CsW-ec-ved"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JwK-IF-wOz">
+                                                        <rect key="frame" x="187" y="0.0" width="187" height="34.5"/>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" title="삭제"/>
+                                                        <buttonConfiguration key="configuration" style="plain" title="삭제"/>
+                                                        <connections>
+                                                            <action selector="tapDeleteMemberButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="RAX-oX-IO1"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -394,6 +408,7 @@
                         <outlet property="baseStackView" destination="8uZ-0s-7z1" id="JFz-2M-6ZW"/>
                         <outlet property="baseView" destination="deU-N1-ond" id="fFR-wI-QEk"/>
                         <outlet property="blogUrlTextField" destination="4wh-4Z-c9J" id="kK6-Z7-EyG"/>
+                        <outlet property="deleteMemberButton" destination="JwK-IF-wOz" id="Ghe-8e-iTM"/>
                         <outlet property="doneButton" destination="oRf-Nk-Ofh" id="uNI-TD-2Mf"/>
                         <outlet property="fineStackView" destination="YIP-Sq-oLb" id="0hW-gf-VxD"/>
                         <outlet property="fineTextField" destination="5tp-ZU-2LN" id="eJa-Uf-vJc"/>

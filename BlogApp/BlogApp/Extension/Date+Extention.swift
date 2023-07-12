@@ -22,6 +22,8 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
+    
+    
     enum WeekNumberType {
         case currnetDate
         case finishDate
@@ -289,5 +291,22 @@ extension Date {
         let weekOfYear = calendar.component(.weekOfMonth, from: self)
         
         return "\(year)년 \(month)월 \(weekOfYear)주"
+    }
+    
+    
+    /// 마감 날짜를 "\(month)-\(day) \(hour):\(minute):\(second)까지"로 변환하는 메소드 입니다.
+    /// - Returns: 마감 날짜
+    func convertFinishDate() -> String {
+        
+        var calendar = Calendar.current
+        calendar.firstWeekday = 2 //Monday
+        
+        let month = calendar.component(.month, from: self)
+        let day = calendar.component(.day, from: self)
+        let hour = calendar.component(.hour, from: self)
+        let minute = calendar.component(.minute, from: self)
+        let second = calendar.component(.second, from: self)
+        
+        return "\(month)-\(day) \(hour):\(minute):\(second)까지"
     }
 }

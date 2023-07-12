@@ -95,7 +95,6 @@ class AddStudyViewController: UIViewController, ViewModelBindableType {
         if checkPostData == nil {
             if isEdit {
                 viewModel?.updateDetailStudyData(detailViewModel: detailViewModel!, completion: {
-                    print("tapDoneButton")
                     
                     DispatchQueue.main.async {
                         self.dismiss(animated: true)
@@ -184,6 +183,7 @@ extension AddStudyViewController: UITableViewDataSource {
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: AddMemberInfoTableViewCell.identifier, for: indexPath) as? AddMemberInfoTableViewCell else { return UITableViewCell() }
                 cell.viewModel = viewModel
                 cell.configData(indexPath: indexPath)
+                cell.delegate = self
                 
                 return cell
             }
@@ -196,6 +196,7 @@ extension AddStudyViewController: UITableViewDataSource {
 extension AddStudyViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
+        print("123123")
         if indexPath.section == 6 && indexPath.row != 0 {
             let storyboard = UIStoryboard(name: "BottomSheetViewController", bundle: nil)
             guard let vc = storyboard.instantiateViewController(withIdentifier: "BottomSheetViewController") as? BottomSheetViewController else { return }
@@ -248,6 +249,24 @@ extension AddStudyViewController: AddCommonSetInfoTableViewCellDelegate {
         vc.detailOption = option
         vc.viewModel = viewModel
         vc.isEditMember = false
+        
+        vc.modalPresentationStyle = .overFullScreen
+        
+        self.present(vc, animated: false)
+    }
+}
+
+extension AddStudyViewController: AddMemberInfoTableViewCellDelegate {
+    func showEditMemberVC(index: Int) {
+        let storyboard = UIStoryboard(name: "BottomSheetViewController", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "BottomSheetViewController") as? BottomSheetViewController else { return }
+        
+        print(index)
+        
+        vc.detailOption = DetailOption.addMemeber
+        vc.viewModel = viewModel
+        vc.isEditMember = true
+        vc.editIndex = index
         
         vc.modalPresentationStyle = .overFullScreen
         

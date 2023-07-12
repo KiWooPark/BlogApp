@@ -359,13 +359,13 @@ class CoreDataManager {
     func deleteStudyMember(user: User) {
         let context = persistentContainer.viewContext
         context.delete(user)
-        saveContext()
+//        saveContext()
     }
     
-    func deleteStudyMemberTest(user: User) {
-        let context = persistentContainer.viewContext
-        context.delete(user)
-    }
+//    func deleteStudyMemberTest(user: User) {
+//        let context = persistentContainer.viewContext
+//        context.delete(user)
+//    }
     
     func deleteContentMember(user: ContentUser) {
         let context = persistentContainer.viewContext

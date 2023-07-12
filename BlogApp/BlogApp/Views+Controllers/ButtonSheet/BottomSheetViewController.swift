@@ -42,6 +42,7 @@ class BottomSheetViewController: UIViewController {
     @IBOutlet weak var fineStackView: UIStackView!
     
     @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var deleteMemberButton: UIButton!
     
     var detailOption: DetailOption?
     var viewModel: StudyComposeViewModel?
@@ -106,16 +107,20 @@ class BottomSheetViewController: UIViewController {
         case .startDate:
             titleLabel.text = "시작 날짜를 선택해 주세요."
             startDateView.isHidden = false
+            deleteMemberButton.isHidden = true
         case .selectDay:
             titleLabel.text = "마감 요일을 선택해 주세요."
             selectDayView.isHidden = false
+            deleteMemberButton.isHidden = true
         case .selectFine:
             titleLabel.text = "벌금을 선택해 주세요."
             selectFineView.isHidden = false
+            deleteMemberButton.isHidden = true
         case .addMemeber:
             titleLabel.text = "추가할 멤버의 정보를 입력해주세요."
             addMemberView.isHidden = false
             fineStackView.isHidden = isEditMember == true || viewModel?.isNewStudy.value == false ? false : true
+            deleteMemberButton.isHidden = false
         default:
             print("")
         }
@@ -182,6 +187,15 @@ class BottomSheetViewController: UIViewController {
        
         self.dismiss(animated: true)
     }
+    
+    @IBAction func tapDeleteMemberButton(_ sender: Any) {
+        viewModel?.updateStudyProperty(.deleteMember, value: editIndex)
+        
+        DispatchQueue.main.async {
+            self.dismiss(animated: true)
+        }
+    }
+    
     
     @IBAction func tapSetDayButton(_ sender: Any) {
         guard let selectButton = sender as? UIButton else { return }

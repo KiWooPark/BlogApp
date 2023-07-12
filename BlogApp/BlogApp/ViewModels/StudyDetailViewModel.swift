@@ -72,7 +72,7 @@ class StudyDetailViewModel {
         
         let finishDate = Date().calcCurrentFinishDate(setDay: Int(study.value?.finishDay ?? 0))
 
-        let secondStr = "마감 : \(finishDate)"
+        let secondStr = "마감 : \(finishDate?.convertFinishDate() ?? "")"
         
         return (firstStr, secondStr.convertBoldString(boldString: .setDay))
     }
