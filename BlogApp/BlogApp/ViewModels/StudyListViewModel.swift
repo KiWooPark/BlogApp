@@ -21,6 +21,13 @@ class StudyListViewModel {
     func fetchStudys() {
         list.value = CoreDataManager.shared.fetchStudys()
         
+        let contents = CoreDataManager.shared.fetchContent(studyEntity: list.value[0])
+
+        for i in contents {
+            print(i.finishDate, list.value.first?.startDate?.calculateWeekNumber(finishDate: i.finishDate!))
+
+        }
+        
         // 코어데이터 경로
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         print(paths)

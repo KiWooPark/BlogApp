@@ -58,6 +58,7 @@ class DetailStudyViewController: UIViewController, ViewModelBindableType {
             self.listViewModel?.updateList(study: self.viewModel?.study.value)
             
             DispatchQueue.main.async {
+                print("bindViewModel")
                 self.detailStudyTableView.reloadData()
             }
         }

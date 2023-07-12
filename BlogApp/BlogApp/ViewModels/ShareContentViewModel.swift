@@ -40,7 +40,7 @@ class ShareContentViewModel {
         
         // 시작 날짜 ~ 마감 날짜
         let startDate = contentList[index].finishDate?.getStartDateAndEndDate().0
-        let endDate = contentList[index].finishDate?.getStartDateAndEndDate().1
+        let endDate = contentList[index].finishDate?.getStartDateAndEndDate().2
         
         let weekDate = " - \(startDate?.convertStartDate() ?? "") ~ \(endDate?.convertStartDate() ?? "")\n"
         // 진행중인 주차
@@ -53,7 +53,7 @@ class ShareContentViewModel {
         // 마감 요일
         let finishDay = " - 마감 요일 : \(Int(contentList[index].finishWeekDay).convertSetDayStr())\n"
         // 마감 기한
-        let finishTime = " - \(contentList[index].currentWeekNumber)주차 마감 기한 : \(contentList[index].finishDate?.getStartDateAndEndDate().1.convertStartDate() ?? "") \(Int(contentList[index].finishWeekDay).convertSetDayStr().components(separatedBy: " ")[1]) 자정(23:59)까지\n\n"
+        let finishTime = " - \(contentList[index].currentWeekNumber)주차 마감 기한 : \(contentList[index].finishDate?.getStartDateAndEndDate().2.convertStartDate() ?? "") \(Int(contentList[index].finishWeekDay).convertSetDayStr().components(separatedBy: " ")[1]) 자정(23:59)까지\n\n"
 
         return "마감\n" + finishDay + finishTime
     }

@@ -124,8 +124,7 @@ extension Date {
         default:
             calcDay = Date()
         }
-
-        // 마감일 23:59:59초로 변경
+        
         let year = calendar.dateComponents([.year], from: calcDay).year
         let month = calendar.dateComponents([.month], from: calcDay).month
         let day = calendar.dateComponents([.day], from: calcDay).day
@@ -177,7 +176,6 @@ extension Date {
             print("")
         }
     
-        // 마감일 23:59:59초로 변경
         let year = calendar.dateComponents([.year], from: resultFinishDate).year
         let month = calendar.dateComponents([.month], from: resultFinishDate).month
         let day = calendar.dateComponents([.day], from: resultFinishDate).day
@@ -187,17 +185,18 @@ extension Date {
         return calendar.date(from: resultComponents)
     }
     
-    // 마감일을 기준으로 기간 구하는 메소드
-    func getStartDateAndEndDate() -> (Date, Date) {
-        
+    // 마감일을 기준으로 시작날짜와 마감 날짜를 구하는 메소드
+    // 토 ~ 토, 월 ~ 월, 수 ~ 수
+    func getStartDateAndEndDate() -> (Date, Date, Date) {
+
         var calendar = Calendar.current
         calendar.firstWeekday = 2
-        
+
         let endDate = self
-        let startDate = calendar.date(byAdding: .day, value: -6, to: endDate)!
-        
-        
-        return (startDate, endDate)
+        let startDate = calendar.date(byAdding: .day, value: -7, to: endDate)!
+        let subtractOneSecond = calendar.date(byAdding: .second, value: -1, to: endDate)!
+    
+        return (startDate, endDate, subtractOneSecond)
     }
     
     // 해당 날짜를 기준으로 한주의 월요일과 일요일을 구하는 메소드
@@ -221,63 +220,63 @@ extension Date {
         let sundayComponent = calendar.dateComponents([.year, .month, .day], from: sunday)
         let changeSundayTime = DateComponents(year: sundayComponent.year, month: sundayComponent.month, day: sundayComponent.day, hour: 23, minute: 59, second: 59)
         let resultSunday = calendar.date(from: changeSundayTime)!
-        
+    
         return (monday: resultMonday, sunday: resultSunday)
     }
     
-    // 마감 날짜 계산하기
-    // 현재 주차에서 마감일 계산
-    func calculateDeadline(endDay: Int) -> Date {
-        var calendar = Calendar(identifier: .iso8601)
-        calendar.firstWeekday = 2 //Monday
-        calendar.locale = Locale(identifier: "ko_kr")
-        
-        // 무슨 요일인지
-        let now = calendar.dateComponents([.weekday], from: self)
-      
-        var resultDay = Date()
-        
-        switch endDay {
-        case 101:
-            //월 2
-            let day = (2 + 7 - now.weekday!) % 7
-            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
-        case 102:
-            //화 3
-            let day = (3 + 7 - now.weekday!) % 7
-            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
-        case 103:
-            //수 4
-            let day = (4 + 7 - now.weekday!) % 7
-            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
-        case 104:
-            //목 5
-            let day = (5 + 7 - now.weekday!) % 7
-            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
-        case 105:
-            //금 6
-            let day = (6 + 7 - now.weekday!) % 7
-            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
-        case 106:
-            //토 7
-            let day = (7 + 7 - now.weekday!) % 7
-            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
-        case 107:
-            //일 1
-            let day = (1 + 7 - now.weekday!) % 7
-            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
-        default:
-            return Date()
-        }
-
-        let year = calendar.dateComponents([.year], from: resultDay).year
-        let month = calendar.dateComponents([.month], from: resultDay).month
-        let day = calendar.dateComponents([.day], from: resultDay).day
-
-        let resultComponents = DateComponents(year: year, month: month, day: day, hour: 23, minute: 59, second: 59)
-        
-        return calendar.date(from: resultComponents)!
-    }
+//    // 마감 날짜 계산하기
+//    // 현재 주차에서 마감일 계산
+//    func calculateDeadline(endDay: Int) -> Date {
+//        var calendar = Calendar(identifier: .iso8601)
+//        calendar.firstWeekday = 2 //Monday
+//        calendar.locale = Locale(identifier: "ko_kr")
+//
+//        // 무슨 요일인지
+//        let now = calendar.dateComponents([.weekday], from: self)
+//
+//        var resultDay = Date()
+//
+//        switch endDay {
+//        case 101:
+//            //월 2
+//            let day = (2 + 7 - now.weekday!) % 7
+//            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
+//        case 102:
+//            //화 3
+//            let day = (3 + 7 - now.weekday!) % 7
+//            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
+//        case 103:
+//            //수 4
+//            let day = (4 + 7 - now.weekday!) % 7
+//            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
+//        case 104:
+//            //목 5
+//            let day = (5 + 7 - now.weekday!) % 7
+//            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
+//        case 105:
+//            //금 6
+//            let day = (6 + 7 - now.weekday!) % 7
+//            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
+//        case 106:
+//            //토 7
+//            let day = (7 + 7 - now.weekday!) % 7
+//            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
+//        case 107:
+//            //일 1
+//            let day = (1 + 7 - now.weekday!) % 7
+//            resultDay = calendar.date(byAdding: .day, value: day, to: self)!
+//        default:
+//            return Date()
+//        }
+//
+//        let year = calendar.dateComponents([.year], from: resultDay).year
+//        let month = calendar.dateComponents([.month], from: resultDay).month
+//        let day = calendar.dateComponents([.day], from: resultDay).day
+//
+//        let resultComponents = DateComponents(year: year, month: month, day: day, hour: 23, minute: 59, second: 59)
+//
+//        return calendar.date(from: resultComponents)!
+//    }
     
     // xxxx년 xx월의 x주 인지 구하는 메소드
     func getWeekOfMonth() -> String {
@@ -288,8 +287,6 @@ extension Date {
         let year = calendar.component(.year, from: self)
         let month = calendar.component(.month, from: self)
         let weekOfYear = calendar.component(.weekOfMonth, from: self)
-        
-        
         
         return "\(year)년 \(month)월 \(weekOfYear)주"
     }

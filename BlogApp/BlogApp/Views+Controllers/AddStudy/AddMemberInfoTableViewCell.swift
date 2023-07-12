@@ -35,10 +35,6 @@ class AddMemberInfoTableViewCell: UITableViewCell {
         nameLabel.text = target?.name
         blogUrlLabel.text = target?.blogUrl
         fineLabel.text = "\(target?.fine ?? 0)"
-        
-//        nameLabel.text = viewModel?.members.value[indexPath.row - 1].name
-//        blogUrlLabel.text = viewModel?.members.value[indexPath.row - 1].blogUrl
-//        fineLabel.text = "\(viewModel?.members.value[indexPath.row - 1].fine ?? 0)"
     }
     
     @IBAction func tapDeleteButton(_ sender: Any) {

@@ -27,11 +27,12 @@ class StudyDetailViewModel {
     }
     
     func fetchStudyData(completion: @escaping () -> ()) {
-        self.study.value = CoreDataManager.shared.getStudy(id: study.value!.objectID)
-        self.members = CoreDataManager.shared.fetchCoreDataMembers(study: self.study.value!)
-       
+
+        // 멤버 데이터 다시 가져오기
+        self.members = CoreDataManager.shared.fetchCoreDataMembers(study: study.value!)
+        
         fetchCurrentWeekPost {
-            print(self.members)
+            self.study.value = CoreDataManager.shared.getStudy(id: self.study.value!.objectID)
             completion()
         }
     }
@@ -70,7 +71,7 @@ class StudyDetailViewModel {
         }
         
         let finishDate = Date().calcCurrentFinishDate(setDay: Int(study.value?.finishDay ?? 0))
-    
+
         let secondStr = "마감 : \(finishDate)"
         
         return (firstStr, secondStr.convertBoldString(boldString: .setDay))
@@ -120,8 +121,10 @@ class StudyDetailViewModel {
                     switch result {
                     case .success(let urls):
                         
-                        let startDate = Date().getMondayAndSunDay().0
-                        let endDate = Date().getMondayAndSunDay().1
+                        let lastContent = CoreDataManager.shared.fetchLastContent(studyEntity: self.study.value!)
+                        
+                        let startDate = lastContent?.finishDate?.getStartDateAndEndDate().0
+                        let endDate = lastContent?.finishDate?.getStartDateAndEndDate().1
                         
                         CrawlingManager.getPostTitleAndDate(urls: urls, startDate: startDate, endDate: endDate) { result in
                             switch result {
@@ -169,12 +172,6 @@ class StudyDetailViewModel {
     // 709225199 // 2023-06-23 14:59:59 (금)
     // 709829999 // 2023-06-30 14:59:59 (금)
     
-    // 708015599 // 2023-06-09 14:59:59 (수)
-    // 708620399 // 2023-06-16 14:59:59 (수)
-    // 709225199 // 2023-06-23 14:59:59 (수)
-    // 709829999 // 2023-06-30 14:59:59 (수)
-    
-    
     // 708447599 // 2023-06-14 14:59:59 (수)
     // 709052399 // 2023-06-21 14:59:59 (수)
     // 709657199 // 2023-06-28 14:59:59 (수)
@@ -194,7 +191,7 @@ class StudyDetailViewModel {
         let lastContent = CoreDataManager.shared.fetchLastContent(studyEntity: study.value!)
         let lastContentFinishDate = (lastContent?.finishDate)!
         
-//        let components = DateComponents(year: 2023, month: 7, day: 6, hour: 23, minute: 59, second: 59)
+//        let components = DateComponents(year: 2023, month: 7, day: 14, hour: 12, minute: 12, second: 12)
 //        let date = calendar.date(from: components)!
 //
 //        print(date.timeIntervalSinceReferenceDate)
@@ -260,15 +257,15 @@ class StudyDetailViewModel {
                 switch result {
                 case .success(let data):
                     
-                    print("33333", data)
                     // 벌금 계산
                     let fine = self.calculateFine(members: data)
                     
-                    CoreDataManager.shared.updateMembersFine(studyEntity: study!, contentEntity: lastContent!, fine: (fine.totalFine, fine.plus), membersPost: data)
+                    CoreDataManager.shared.updateMembersFine(studyEntity: study!, contentEntity: lastContent!, fine: (fine.totalFine, fine.plus), membersPost: data) {
+                        
+                        currentDateCount += 1
+                        next()
+                    }
 
-                    currentDateCount += 1
-                    next()
-                    
                 case .failure(let error):
                     print("----", error)
                 }
@@ -329,8 +326,8 @@ class StudyDetailViewModel {
         
         var currentPage = 1
         
-        let startDate = date.getMondayAndSunDay().0
-        let endDate = date.getMondayAndSunDay().1
+        let startDate = date.getStartDateAndEndDate().0
+        let endDate = date.getStartDateAndEndDate().1
         
         func next() {
             guard currentPage < lastPageNum else { return }

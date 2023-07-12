@@ -91,10 +91,12 @@ class AddStudyViewController: UIViewController, ViewModelBindableType {
     @IBAction func tapDoneButton(_ sender: Any) {
         
         let checkPostData = viewModel?.validatePostInputData()
-        
+
         if checkPostData == nil {
             if isEdit {
                 viewModel?.updateDetailStudyData(detailViewModel: detailViewModel!, completion: {
+                    print("tapDoneButton")
+                    
                     DispatchQueue.main.async {
                         self.dismiss(animated: true)
                     }

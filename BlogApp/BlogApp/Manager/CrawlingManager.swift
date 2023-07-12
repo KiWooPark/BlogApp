@@ -51,7 +51,8 @@ struct CrawlingManager {
         return String(headContent)
     }
     
-    static func fetchPostData(members: [User], finishDate: Date, completion: @escaping (Result<[PostResponse],CrawlingError>) -> ())  {
+    
+    static func fetchPostData(members: [User], startDate: Date, endDate: Date, completion: @escaping (Result<[PostResponse],CrawlingError>) -> ())  {
         
         let group = DispatchGroup()
         
@@ -65,15 +66,10 @@ struct CrawlingManager {
                 getPostsURL(url: url) { result in
                     switch result {
                     case .success(let urls):
-                        let startDate = finishDate.getStartDateAndEndDate().0
-                        let endDate = finishDate.getStartDateAndEndDate().1
-                        
-                        print("------- urls", urls)
                         
                         getPostTitleAndDate(urls: urls, startDate: startDate, endDate: endDate) { result in
                             switch result {
                             case .success(let post):
-                                print("-----", post)
                                 if let postData = post {
                                     resultMembersData[index] = postData.postUrl == nil ? PostResponse(name: member.name, data: nil, errorMessage: "작성된 게시글이 없습니다.") : PostResponse(name: member.name, data: postData, errorMessage: nil)
                                 }
@@ -84,14 +80,12 @@ struct CrawlingManager {
                             }
                         }
                     case .failure(let error):
-                        print("22222222", error)
                         resultMembersData[index] = PostResponse(name: member.name, data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
                         group.leave()
                     }
                 }
             } else {
                 // URL이 잘못된 경우
-                print("1111111111")
                 resultMembersData[index] = PostResponse(name: member.name, data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
                 group.leave()
             }

@@ -156,7 +156,7 @@ class CoreDataManager {
     
     
     // MARK: UPDATE
-    func updateMembersFine(studyEntity: Study, contentEntity: Content, fine: (total: Int,plus: Int), membersPost: [PostResponse]) {
+    func updateMembersFine(studyEntity: Study, contentEntity: Content, fine: (total: Int,plus: Int), membersPost: [PostResponse], completion: @escaping () -> ()) {
     
         // study에 저장된 멤버 데이터 가지고오기
         let studyMembers: [User] = fetchCoreDataMembers(study: studyEntity)
@@ -168,8 +168,10 @@ class CoreDataManager {
         contentEntity.totalFine = Int64(fine.total)
         contentEntity.plusFine = Int64(fine.plus)
         
+        // 게시글 작성하지 않은 멤버 카운트
         let notPostMemberCount = membersPost.filter({$0.data == nil}).count
         
+        // 이름 비교를 위해
         let lastContentMembersName = lastContentMembers.map({$0.name})
         let membersPostName = membersPost.map({$0.name})
         
@@ -188,9 +190,6 @@ class CoreDataManager {
         // content에 있는 멤버는 업데이트하고
         // 없는 멤버는 추가
         for post in membersPost {
-            
-            print(post)
-            
             // content에 해당 멤버가 있으면
             if let index = lastContentMembers.firstIndex(where: {$0.name == post.name}) {
                 
@@ -233,20 +232,17 @@ class CoreDataManager {
                 }
             }
         }
-        
-        studyMembers.map({print($0.name, $0.fine)})
-        lastContentMembers.map({print( $0.name, $0.fine)})
-        
-        
+  
         let nextContentEntity = Content(context: persistentContainer.viewContext)
         // 현재 공지의 마감일을 기준으로 한주 뒤에 마감일 언제인지
-        let setDay = Int(contentEntity.finishWeekDay)
+        let setDay = Int(studyEntity.finishDay) //Int(contentEntity.finishWeekDay)
         let nextWeekFinishDate = contentEntity.finishDate?.getFinishDate(finishDayNum: setDay, type: .nextWeek)
     
         nextContentEntity.currentWeekNumber = Int64((studyEntity.startDate?.calculateWeekNumber(finishDate: nextWeekFinishDate!))!)
         nextContentEntity.finishDate = nextWeekFinishDate
         nextContentEntity.plusFine = 0
-        nextContentEntity.finishWeekDay = contentEntity.finishWeekDay
+        nextContentEntity.finishWeekDay = studyEntity.finishDay
+        
 
         // Content 멤버에 study member에 저장한 데이터 그대로 업데이트 해야함
         for member in studyMembers {
@@ -260,16 +256,31 @@ class CoreDataManager {
         studyEntity.addToContents(nextContentEntity)
         
         saveContext()
+        
+        completion()
     }
     
     // 시작 날짜 변경시 content의 CurrentWeekNumber 다시 계산해서 업데이트
-    func updateContentCurrentWeekNumber(startDate: Date, studyEntity: Study) {
+    func updateContentCurrentWeekNumber(startDate: Date, studyEntity: Study, completion: @escaping () -> ()) {
     
         let contents = fetchContent(studyEntity: studyEntity)
         
         for i in contents {
             let calcWeekNumber = startDate.calculateWeekNumber(finishDate: i.finishDate!)
             i.currentWeekNumber = Int64(calcWeekNumber)
+        }
+        
+        completion()
+    }
+    
+    func updateLastContentMembers(lastContent: Content, studyMembers: [User]) {
+        let lastContentMembers = fetchCoreDataContentMembers(content: lastContent)
+        
+        // 공지사항에 있는 멤버들의 벌금을 Study에 속한 멤버 데이터에 업데이트 (벌금 상태 동기화)
+        for member in lastContentMembers {
+            if let index = studyMembers.firstIndex(where: {$0.name == member.name}) {
+                studyMembers[index].fine = member.fine
+            }
         }
     }
     
@@ -399,6 +410,197 @@ class CoreDataManager {
             debugPrint(nsError.localizedDescription)
         }
     }
+    
+    
+    
+    
+    
+//    // ========================================
+//    // StudyComposeViewModel에서 사용할 메서드
+//    func updateCurrentWeekLastContentFinishDate(contentList: [Content], studyEntity: Study?, studyMembers: [User], finishDate: Date, finishDay: Int, completion: @escaping () -> ()) {
+//
+//        var copyContentList = contentList
+//
+//        // 마지막 공지사항 삭제
+//        if let lastContent = copyContentList.last {
+//            deleteContent(content: lastContent)
+//            copyContentList.removeLast()
+//        }
+//
+//        // 그 다음 업데이트 할 마지막 공지사항
+//        if let updateLastContent = copyContentList.last {
+//
+//            // 공지사항 갯수에 따라서 분기처리
+//            // 이전 공지사항의 마감일에 맞춰 마감요일을 업데이트해줘야함
+//            // count == 1 >>> 공지사항이 한개라면 변경한 요일로 업데이트
+//            // count가 2개 이상이라면 업데이트할 공지사항 이전 공지사항의 마감 날짜로 업데이트
+//            if copyContentList.count == 1 {
+//                updateLastContent.finishDate = finishDate
+//                updateLastContent.finishWeekDay = Int64(finishDay)
+//            } else {
+//                if let index = copyContentList.firstIndex(of: updateLastContent) {
+//                    let content = copyContentList[index - 1]
+//
+//                    // 현재 업데이트할 마감 요일이 이번주에 있다면 이전 공지사항의 마감 날짜로 업데이트
+//                    if Date().calculateWeekNumber(finishDate: updateLastContent.finishDate ?? Date()) == 0 {
+//
+//                        // 저번주의 마감 요일의 날짜를 구한 후 업데이트
+//                        let beforeWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: updateLastContent.finishDate ?? Date())
+//                        let newFinishDate = beforeWeek?.getFinishDate(finishDayNum: Int(content.finishWeekDay), type: .currentWeek)
+//
+//                        updateLastContent.finishDate = newFinishDate
+//                        updateLastContent.finishWeekDay = content.finishWeekDay
+//                        updateLastContent.plusFine = 0
+//                        updateLastContent.totalFine = 0
+//
+//                        // 멤버 벌금 동기화
+//                        updateLastContentMembers(lastContent: updateLastContent, studyMembers: studyMembers)
+//
+//                        let startDate = newFinishDate?.getStartDateAndEndDate().0 ?? Date()
+//                        let endDate = newFinishDate?.getStartDateAndEndDate().1 ?? Date()
+//
+//                        CrawlingManager.fetchPostData(members: studyMembers, startDate: startDate, endDate: endDate) { result in
+//
+//                            switch result {
+//                            case .success(let responseData):
+//
+//                                if let studyEntity = studyEntity {
+//                                    let fine = self.calculateFine(studyEntity: studyEntity, members: responseData)
+//
+//                                    CoreDataManager.shared.updateMembersFine(studyEntity: studyEntity, contentEntity: updateLastContent, fine: (fine.totalFine, fine.plus), membersPost: responseData)
+//
+//                                    CoreDataManager.shared.updateContentCurrentWeekNumber(startDate: studyEntity.startDate ?? Date(), studyEntity: studyEntity)
+//
+//                                    completion()
+//                                }
+//                            case .failure(let error):
+//                                print(error)
+//                            }
+//                        }
+//                    } else {
+//                        updateLastContent.finishDate = finishDate
+//                        updateLastContent.finishWeekDay = Int64(finishDay)
+//                        updateLastContent.plusFine = 0
+//                        updateLastContent.totalFine = 0
+//
+//                        // 멤버 벌금 동기화
+//                        updateLastContentMembers(lastContent: updateLastContent, studyMembers: studyMembers)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    func updateNextWeekLastContentFinishDate(contentList: [Content], studyEntity: Study?, studyMembers: [User], finishDate: Date, finishDay: Int, completion: @escaping () -> ()) {
+//
+//        let finishDate = Date().getFinishDate(finishDayNum: finishDay, type: .currentWeek)
+//
+//        if contentList.count == 1 {
+//            if let lastContent = contentList.last {
+//                lastContent.finishDate = finishDate
+//                lastContent.finishWeekDay = Int64(finishDay)
+//
+//                let startDate = finishDate?.getStartDateAndEndDate().0 ?? Date()
+//                let endDate = finishDate?.getStartDateAndEndDate().1 ?? Date()
+//
+//                CrawlingManager.fetchPostData(members: studyMembers, startDate: startDate, endDate: endDate) { result in
+//                    switch result {
+//                    case .success(let responseData):
+//
+//                        if let studyEntity = studyEntity {
+//                            let fine = self.calculateFine(studyEntity: studyEntity, members: responseData)
+//
+//                            // 이름으로 인덱스 검색해서 업데이트하게 바꿔야함
+//                            CoreDataManager.shared.updateMembersFine(studyEntity: studyEntity, contentEntity: lastContent, fine: (fine.totalFine, fine.plus), membersPost: responseData)
+//
+//                            CoreDataManager.shared.updateContentCurrentWeekNumber(startDate: studyEntity.startDate ?? Date(), studyEntity: studyEntity)
+//
+//                            completion()
+//                        }
+//                    case .failure(let error):
+//                        print(error)
+//                    }
+//                }
+//            }
+//        } else {
+//            // 공지사항이 2개 이상인경우
+//            // 이전주 시작날짜부터 변경한 날짜까지 체크
+//            // 현재 날짜 = 11일 , 원래 마감 날짜 = 16일, 변경 날짜 = 11일 (월요일)
+//            // 이전주 시작 날짜 2일 ~ 10일까지 체크
+//            let content = contentList[contentList.count - 2]
+//            let startDate = content.finishDate?.getStartDateAndEndDate().0 ?? Date()
+//            let endDate = finishDate ?? Date()
+//
+//            CrawlingManager.fetchPostData(members: studyMembers, startDate: startDate, endDate: endDate) { result
+//                in
+//                switch result {
+//                case .success(let responseData):
+//
+//                    if let studyEntity = studyEntity {
+//                        let fine = self.calculateFine(studyEntity: studyEntity, members: responseData)
+//
+//                        content.finishDate = endDate
+//                        content.finishWeekDay = Int64(finishDay)
+//
+//                        if let lastContent = contentList.last {
+//                            CoreDataManager.shared.deleteContent(content: lastContent)
+//                        }
+//
+//                        let members: [User] = CoreDataManager.shared.fetchCoreDataMembers(study: studyEntity)
+//                        let contentMembers = CoreDataManager.shared.fetchCoreDataContentMembers(content: content)
+//
+//                        for contentMember in contentMembers {
+//                            let index = members.firstIndex(where: {$0.name == contentMember.name})
+//                            members[index!].fine = contentMember.fine
+//                        }
+//
+//                        // 새로운 공지 생성
+//                        CoreDataManager.shared.updateMembersFine(studyEntity: studyEntity, contentEntity: content, fine: (fine.totalFine, fine.plus), membersPost: responseData)
+//
+//                        CoreDataManager.shared.updateContentCurrentWeekNumber(startDate: studyEntity.startDate ?? Date(), studyEntity: studyEntity)
+//
+//                        completion()
+//                    }
+//                case .failure(let error):
+//                    print(error)
+//                }
+//            }
+//        }
+//
+//    }
+//
+//    func calculateFine(studyEntity: Study, members: [PostResponse]) -> (totalFine: Int, plus :Int){
+//        var resultFine = 0
+//
+//        // 작성 안한사람
+//        let notPostCount = members.filter({$0.data == nil}).count
+//        // 작성한 사람
+//        let postCount = members.filter({$0.data != nil}).count
+//
+//        // 다 작성했거나 다 작성 안했거나 하면 벌금 0 원
+//        if notPostCount == members.count || postCount == members.count {
+//            return (0, 0)
+//        }
+//
+//        // 각 멤버별 벌금 합계
+//        let totalFine = Int(studyEntity.fine ?? 0).convertFineInt() * notPostCount
+//
+//        // 분배할 금액
+//        resultFine = totalFine / postCount
+//
+//        return (totalFine, resultFine)
+//    }
+    
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
 //    func StudySettingModel() -> Study? {

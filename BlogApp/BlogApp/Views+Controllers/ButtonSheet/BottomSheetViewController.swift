@@ -125,8 +125,8 @@ class BottomSheetViewController: UIViewController {
         var calendar = Calendar(identifier: .iso8601)
         calendar.firstWeekday = 2
         
-        let startDate = Date().getStartDateAndEndDate().0
-        let endDate = Date().getStartDateAndEndDate().1
+        let startDate = Date().getMondayAndSunDay().0
+        let endDate = Date().getMondayAndSunDay().1
         
         if viewModel?.isNewStudy.value == true {
             startDatePicker.minimumDate = startDate

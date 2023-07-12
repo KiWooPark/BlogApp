@@ -46,7 +46,7 @@ class DetailCommonSetInfoTableViewCell: UITableViewCell {
             subTitleLabel.text = viewModel?.configStartDate()?.0
             subTitle2Lable.attributedText = viewModel?.configStartDate()?.1
         case 3:
-            subTitleLabel.text = viewModel?.configSetDay()?.0
+            subTitleLabel.text = viewModel?.configSetDay()?.0            
             subTitle2Lable.attributedText = viewModel?.configSetDay()?.1
         case 4:
             subTitleLabel.text = Int(viewModel?.study.value?.fine ?? 0).convertFineStr()

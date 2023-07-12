@@ -62,8 +62,7 @@ class DetailMemberInfoTableViewCell: UITableViewCell {
     }
     
     func configData(indexPath: IndexPath) {
-        
-        
+
         let target = viewModel?.members[indexPath.row - 1]
 
         nameLabel.text = target?.name ?? ""
