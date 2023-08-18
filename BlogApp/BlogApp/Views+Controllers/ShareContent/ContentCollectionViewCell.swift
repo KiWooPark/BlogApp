@@ -11,17 +11,12 @@ class ContentCollectionViewCell: UICollectionViewCell {
     
     var viewModel: ShareContentViewModel?
     
-<<<<<<< HEAD
     @IBOutlet weak var shareContentTextView: UITextView!
     @IBOutlet weak var currentStudyView: UIView!
-=======
-    @IBOutlet weak var testTextView: UITextView!
->>>>>>> main
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-<<<<<<< HEAD
         self.layer.cornerRadius = .cornerRadius
     }
     
@@ -32,11 +27,5 @@ class ContentCollectionViewCell: UICollectionViewCell {
             shareContentTextView.text = viewModel?.fetchContent(index: index) ?? ""
             currentStudyView.isHidden = true
         }
-=======
-    }
-    
-    func configData(index: Int) {
-        testTextView.text = viewModel?.fetchContent(index: index)
->>>>>>> main
     }
 }

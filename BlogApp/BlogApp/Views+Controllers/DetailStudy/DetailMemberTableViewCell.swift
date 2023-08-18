@@ -9,15 +9,9 @@ import UIKit
 
 class DetailMemberTableViewCell: UITableViewCell {
 
-<<<<<<< HEAD
     static var identifier: String { return String(describing: self)}
     
     @IBOutlet weak var memberCountLabel: UILabel!
-=======
-    @IBOutlet weak var memberListTableView: UITableView!
-    
-    static var identifier: String { return String(describing: self)}
->>>>>>> main
     
     var studyViewModel: StudyDetailViewModel?
     
@@ -34,11 +28,8 @@ class DetailMemberTableViewCell: UITableViewCell {
         
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20))
     }
-<<<<<<< HEAD
     
     func configData() {
         memberCountLabel.text = "\(studyViewModel?.study.value?.members?.count ?? 0)명"
     }
-=======
->>>>>>> main
 }

@@ -14,13 +14,6 @@ struct UserModel {
     let blogUrl: String?
     // 벌금도 가지고 있어야함
     var fine: Int?
-<<<<<<< HEAD
-=======
-    
-    // --------- 코어 데이터에 저장 안해도되는 프로퍼티
-    // 블로그 이름
-    var blogName: String?
->>>>>>> main
     // 게시글 데이터
     var postData: PostResponse?
 }
@@ -28,10 +21,6 @@ struct UserModel {
 struct ContentModel {
     let content: Content?
     let contentMembers: [ContentUserModel]
-<<<<<<< HEAD
-=======
-    
->>>>>>> main
 }
 
 struct ContentUserModel {
@@ -42,10 +31,7 @@ struct ContentUserModel {
 }
 
 struct PostResponse {
-<<<<<<< HEAD
     var name: String?
-=======
->>>>>>> main
     var data: PostModel?
     var errorMessage: String?
 }

@@ -17,12 +17,8 @@ class DetailTitleTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-<<<<<<< HEAD
    
         
-=======
-                
->>>>>>> main
     }
     
     // 셀사이 간격주기

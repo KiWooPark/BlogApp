@@ -55,17 +55,8 @@
       "size" : "57x57"
     },
     {
-<<<<<<< HEAD
       "filename" : "120.png",
       "idiom" : "iphone",
-=======
-      "idiom" : "ipad",
-      "scale" : "1x",
-      "size" : "76x76"
-    },
-    {
-      "idiom" : "ipad",
->>>>>>> main
       "scale" : "2x",
       "size" : "60x60"
     },

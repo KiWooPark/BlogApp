@@ -4,19 +4,14 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
-<<<<<<< HEAD
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
-=======
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
->>>>>>> main
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-<<<<<<< HEAD
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="210" id="KGk-i7-Jjw" customClass="AddMemberInfoTableViewCell" customModule="BlogApp" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="210"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -29,42 +24,10 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="이름" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a3w-yG-dBZ">
                                 <rect key="frame" x="0.0" y="0.0" width="258.5" height="57.5"/>
-=======
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="121" id="KGk-i7-Jjw" customClass="AddMemberInfoTableViewCell" customModule="BlogApp" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="121"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="121"/>
-                <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zZ3-kR-hV1">
-                        <rect key="frame" x="20" y="20" width="93" height="81"/>
-                        <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="hL2-Wq-1vk">
-                                <rect key="frame" x="0.0" y="0.0" width="93" height="20.5"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a3w-yG-dBZ">
-                                        <rect key="frame" x="0.0" y="0.0" width="41.5" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2T6-gy-3up">
-                                        <rect key="frame" x="51.5" y="0.0" width="41.5" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DOw-z2-5tJ">
-                                <rect key="frame" x="0.0" y="60.5" width="93" height="20.5"/>
->>>>>>> main
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-<<<<<<< HEAD
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="보증금asdasdasdasdasdasdasdasdasdasdasd" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2T6-gy-3up">
                                 <rect key="frame" x="0.0" y="66.5" width="258.5" height="57"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -81,51 +44,30 @@
                     </stackView>
                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wPU-sY-SLA">
                         <rect key="frame" x="278.5" y="94.5" width="21.5" height="21.5"/>
-=======
-                        </subviews>
-                    </stackView>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wPU-sY-SLA">
-                        <rect key="frame" x="278" y="49.5" width="22" height="22"/>
->>>>>>> main
                         <constraints>
                             <constraint firstAttribute="width" secondItem="wPU-sY-SLA" secondAttribute="height" multiplier="1:1" id="DaD-id-MIe"/>
                         </constraints>
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-<<<<<<< HEAD
                         <state key="normal">
                             <imageReference key="image" image="highlighter" catalog="system" symbolScale="medium"/>
                         </state>
                         <connections>
                             <action selector="tapEditButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="EKW-TG-27d"/>
-=======
-                        <state key="normal" image="xmark" catalog="system"/>
-                        <connections>
-                            <action selector="tapDeleteButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="8LL-vx-u5v"/>
->>>>>>> main
                         </connections>
                     </button>
                 </subviews>
                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
-<<<<<<< HEAD
                     <constraint firstItem="kEU-2E-0nC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="Uec-Uf-fp8"/>
                     <constraint firstAttribute="bottom" secondItem="kEU-2E-0nC" secondAttribute="bottom" constant="10" id="cdd-k1-hw3"/>
                     <constraint firstItem="kEU-2E-0nC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="jM7-tI-hwK"/>
                     <constraint firstAttribute="trailing" secondItem="wPU-sY-SLA" secondAttribute="trailing" constant="20" id="kDf-9G-WpI"/>
                     <constraint firstItem="wPU-sY-SLA" firstAttribute="leading" secondItem="kEU-2E-0nC" secondAttribute="trailing" constant="10" id="r8Q-zP-4NT"/>
-=======
-                    <constraint firstItem="wPU-sY-SLA" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="zZ3-kR-hV1" secondAttribute="trailing" constant="20" id="5EU-5o-gZ1"/>
-                    <constraint firstItem="zZ3-kR-hV1" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="BYT-b0-CeI"/>
-                    <constraint firstAttribute="bottom" secondItem="zZ3-kR-hV1" secondAttribute="bottom" constant="20" id="HLF-7P-PzJ"/>
-                    <constraint firstItem="zZ3-kR-hV1" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="Sts-0c-g5y"/>
-                    <constraint firstAttribute="trailing" secondItem="wPU-sY-SLA" secondAttribute="trailing" constant="20" id="kDf-9G-WpI"/>
->>>>>>> main
                     <constraint firstItem="wPU-sY-SLA" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="xRo-TE-q40"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-<<<<<<< HEAD
                 <outlet property="blogUrlLabel" destination="AUw-x3-Azy" id="K9F-6g-JRc"/>
                 <outlet property="fineLabel" destination="2T6-gy-3up" id="0Z9-5F-bte"/>
                 <outlet property="nameLabel" destination="a3w-yG-dBZ" id="6gD-B1-cGz"/>
@@ -138,16 +80,5 @@
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
-=======
-                <outlet property="blogUrlLabel" destination="DOw-z2-5tJ" id="tFd-FI-COt"/>
-                <outlet property="fineLabel" destination="2T6-gy-3up" id="0Z9-5F-bte"/>
-                <outlet property="nameLabel" destination="a3w-yG-dBZ" id="6gD-B1-cGz"/>
-            </connections>
-            <point key="canvasLocation" x="131.8840579710145" y="106.13839285714285"/>
-        </tableViewCell>
-    </objects>
-    <resources>
-        <image name="xmark" catalog="system" width="128" height="113"/>
->>>>>>> main
     </resources>
 </document>

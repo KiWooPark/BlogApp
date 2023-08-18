@@ -20,11 +20,8 @@ class AddAnnouncementTableViewCell: UITableViewCell {
     var viewModel: StudyComposeViewModel?
     weak var delegate: AddAnnouncementTableViewCellDelegate?
     
-<<<<<<< HEAD
     var textViewPlaceHolder = "공지사항 및 스터디 소개를 작성해주세요."
     
-=======
->>>>>>> main
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -33,13 +30,10 @@ class AddAnnouncementTableViewCell: UITableViewCell {
         AnnouncementTextView.layer.borderColor = UIColor.gray.cgColor
         AnnouncementTextView.layer.borderWidth = 1
     }
-<<<<<<< HEAD
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.AnnouncementTextView.resignFirstResponder()
     }
-=======
->>>>>>> main
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -48,23 +42,18 @@ class AddAnnouncementTableViewCell: UITableViewCell {
     }
     
     func configData() {
-<<<<<<< HEAD
 //        if viewModel?.announcement.value == nil {
 //            AnnouncementTextView.text = textViewPlaceHolder
 //            AnnouncementTextView.textColor = .lightGray
 //        } else {
 //            AnnouncementTextView.text = viewModel?.announcement.value ?? ""
 //        }
-=======
-        AnnouncementTextView.text = viewModel?.announcement.value == nil ? "공지사항 및 스터디 소개를 작성해주세요." : viewModel?.announcement.value ?? ""
->>>>>>> main
     }
 }
 
 extension AddAnnouncementTableViewCell: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         delegate?.updateHeightOfRow(self, textView)
-<<<<<<< HEAD
         
         let text = textView.text == "" ? nil : textView.text
 //        viewModel?.updateStudyProperty(.announcement, value: text)
@@ -84,8 +73,5 @@ extension AddAnnouncementTableViewCell: UITextViewDelegate {
             textView.text = textViewPlaceHolder
             textView.textColor = .lightGray
         }
-=======
-        viewModel?.updateStudyProperty(.announcement, value: textView.text ?? "")
->>>>>>> main
     }
 }

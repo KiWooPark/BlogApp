@@ -30,13 +30,8 @@ class AddStudyTypeTableViewCell: UITableViewCell {
     
     @IBAction func tapStudyTypeBUtton(_ sender: Any) {
         guard let button = sender as? UIButton else { return }
-<<<<<<< HEAD
     
         viewModel?.updateStudyProperty(.newStudy, value: button.tag == 100 ? true : false)
-=======
-        
-        viewModel.isNewStudy.value = button.tag == 100 ? true : false
->>>>>>> main
         changeIsSelectedButton()
         
     }
@@ -48,11 +43,7 @@ class AddStudyTypeTableViewCell: UITableViewCell {
     
     
     func changeIsSelectedButton() {
-<<<<<<< HEAD
         if viewModel.isNewStudy.value == true {
-=======
-        if viewModel.isNewStudy.value {
->>>>>>> main
             newStudyButton.isSelected = true
             oldStudyButton.isSelected = false
         } else {

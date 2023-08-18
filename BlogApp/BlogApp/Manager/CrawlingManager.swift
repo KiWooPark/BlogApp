@@ -22,7 +22,6 @@ enum CrawlingError: Error {
     case notFoundId
     case notFoundTitleAndDate
     
-<<<<<<< HEAD
     case categoryNumberError
 }
 
@@ -32,25 +31,6 @@ struct CrawlingManager {
     /// --------------------------------------------------------------
     /// - Parameter html: 블로그 HTML 문자열
     /// - Returns: <head> </haed> 안에 포함된 문자열
-=======
-}
-
-//enum CrawlingType {
-//    case currentWeek
-//    case lastContentWeek
-//}
-
-struct CrawlingManager {
-    
-    
-    // 카테고리 경로 붙이기
-    static func addCategoryStr(blogUrl: String?) -> URL? {
-        guard let url = blogUrl else { return nil }
-        return URL(string: url + "/category")
-    }
-    
-    // html에서 head 부분만 가지고 오기
->>>>>>> main
     static func getHtmlHead(html: String) -> String? {
         let pattern = "<head>([\\s\\S]*?)</head>"
 
@@ -61,7 +41,6 @@ struct CrawlingManager {
         return String(headContent)
     }
     
-<<<<<<< HEAD
     
     enum BlogURLError: Error {
         case notTistoryURL
@@ -147,27 +126,10 @@ struct CrawlingManager {
                 switch result.result {
                 case .success( _):
                     guard let html = result.value else { return }
-=======
-    // 페이지 마지막 번호 가지고오기2
-    static func getLastPageNumber(member: UserModel, completion: @escaping (Result<[Int], CrawlingError>) -> ()) {
-
-        let url = addCategoryStr(blogUrl: member.blogUrl ?? "")
-
-        // URL에 공백있으면 에러 
-        if let url = url {
-            AF.request(url).responseString { result in
-                switch result.result {
-                case .success(let data):
-                    guard let html = result.value else {
-                        completion(.failure(.urlError))
-                        return
-                    }
->>>>>>> main
                     
                     do {
                         let pattern = #"(/category\?page=\d+)""#
                         let regex = try NSRegularExpression(pattern: pattern, options: [])
-<<<<<<< HEAD
                         let range = NSRange(html.startIndex..<html.endIndex, in: html)
                         let matches = regex.matches(in: html, options: [], range: range)
                         let matchedStrings = matches.compactMap { match -> Int? in
@@ -192,39 +154,10 @@ struct CrawlingManager {
             }
         } else {
             print("URL 변환 실패")
-=======
-
-                        let range = NSRange(html.startIndex..<html.endIndex, in: html)
-                        let matches = regex.matches(in: html, options: [], range: range)
-
-                        let matchedStrings = matches.compactMap { match -> Int? in
-                            guard let range = Range(match.range(at: 1), in: html) else {
-                                return nil
-                            }
-
-                            let pageNumber = Int(String(html[range]).components(separatedBy: "=")[1])
-
-                            return pageNumber
-                        }
-
-                        let pagesNumber = matchedStrings.sorted()
-                        completion(.success(pagesNumber))
-
-                    } catch {
-                        print("getLastPageNumber error")
-                    }
-                case .failure(let error):
-                    print("category 번호 못가져옴")
-                    completion(.failure(.error))
-                }
-            }
-        } else {
->>>>>>> main
             completion(.failure(.urlError))
         }
     }
     
-<<<<<<< HEAD
     // 페이지별로 게시글 URL 가지고오기
     static func fetchPostsByPage(lastPageNumber: Int, baseUrl: String, startDate: Date?, deadlineDate: Date?, completion: @escaping (Result<PostModel?,CrawlingError>) -> ()) {
         
@@ -265,11 +198,6 @@ struct CrawlingManager {
     
     // 해당 페이지의 게시글들의 URL 가지고오기
     static func getPostsUrl(url: URL, completion: @escaping (Result<[String],CrawlingError>) -> ()) {
-=======
-    // 작성한 게시글들 url 가지고오기2
-    static func getPostsURL(url: URL, completion: @escaping (Result<[String], CrawlingError>) -> ()) {
-    
->>>>>>> main
         AF.request(url).responseString { result in
             switch result.result {
             case .success(let html):
@@ -277,11 +205,7 @@ struct CrawlingManager {
                     completion(.failure(.htmlError))
                     return
                 }
-<<<<<<< HEAD
     
-=======
-                
->>>>>>> main
                 do {
                     let doc = try SwiftSoup.parse(headContent)
                     let scriptElements = try doc.select("script[type=application/ld+json]")
@@ -312,7 +236,6 @@ struct CrawlingManager {
             }
         }
     }
-<<<<<<< HEAD
     
     static func checkBlogPostsInRange(urls: [String], startDate: Date?, deadlineDate: Date?, completion: @escaping (Result<PostModel?,CrawlingError>) -> ()) {
         var currentCount = 0
@@ -322,29 +245,10 @@ struct CrawlingManager {
             
             let currentUrl = urls[currentCount]
             
-=======
- 
-    static func getPostTitleAndDate(urls: [String], startDate: Date?, endDate: Date?, completion: @escaping (Result<PostModel?, CrawlingError>) -> ()) {
-    
-        var currentIndex = 0
-        let calendar = Calendar.current
-
-        func next() {
-
-            guard currentIndex < urls.count else {
-                print("없음 - \(urls)")
-                completion(.success(nil))
-                return
-            }
-            
-            let currentUrl = urls[currentIndex]
-
->>>>>>> main
             if let url = URL(string: currentUrl) {
                 AF.request(url).responseString { result in
                     switch result.result {
                     case .success(let html):
-<<<<<<< HEAD
                         
                         let headContent = getHtmlHead(html: html)
                         
@@ -374,47 +278,10 @@ struct CrawlingManager {
                         }
                     case .failure(_):
                         completion(.failure(.error))
-=======
-
-                        let headContent = getHtmlHead(html: html)
-
-                        do {
-                            let doc = try SwiftSoup.parse(headContent ?? "")
-                            let title = try doc.select("meta[property=og:title]").first()?.attr("content")
-                            let date = try doc.select("meta[property=article:published_time]").first()?.attr("content")
-
-                            // 날짜 비교
-                            let dateRange = DateInterval(start: startDate!, end: endDate!)
-                            
-                            if dateRange.contains((date?.convertToDate())!) {
-                                let postModel = PostModel(title: title, date: date, postUrl: currentUrl)
-                                completion(.success(postModel))
-                            } else {
-                                
-                                let result = calendar.compare((date?.convertToDate())!, to: startDate!, toGranularity: .day)
-                                
-                                switch result {
-                                case .orderedAscending:
-                                    let postModel = PostModel(title: nil, date: nil, postUrl: nil)
-                                    completion(.success(postModel))
-                                case .orderedDescending:
-                                    currentIndex += 1
-                                    next()
-                                default:
-                                    print("")
-                                }
-                            }
-                        } catch {
-                            completion(.failure(.tryError))
-                        }
-                    case .failure(_):
-                        completion(.failure(.urlError))
->>>>>>> main
                     }
                 }
             }
         }
-<<<<<<< HEAD
         checkPost()
     }
 }
@@ -442,12 +309,6 @@ struct CrawlingManager {
 //        return URL(string: url + "/category")
 //    }
 
-=======
-        next()
-    }
-}
-
->>>>>>> main
 //enum CrawlingManager {
 //
 //    //case getNewPost(url: String)
@@ -853,7 +714,6 @@ struct CrawlingManager {
 //        }
 //    }
 
-<<<<<<< HEAD
 ///// 파라미터로 전달한 시작 날짜와 마감 날짜를 기준으로 해당 기간내에 작성한 게시글을 가져오는 메소드 입니다.
 ///// postUrl이 nil 여부를 체크하여 nil인경우 작성된 게시물 없음, 잘못된 URL등 Error메시지를 저장하며 nil이 아닌 경우
 ///// 전달받은 post 데이터를 저장합니다.
@@ -1056,5 +916,3 @@ struct CrawlingManager {
 //    }
 //    next()
 //}
-=======
->>>>>>> main

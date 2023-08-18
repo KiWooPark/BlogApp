@@ -10,7 +10,6 @@
       }
     },
     {
-<<<<<<< HEAD
       "identity" : "lookinserver",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/QMUI/LookinServer/",
@@ -29,8 +28,6 @@
       }
     },
     {
-=======
->>>>>>> main
       "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup.git",
@@ -38,7 +35,6 @@
         "revision" : "f707b8680cddb96dc1855632340a572ef37bbb98",
         "version" : "2.5.3"
       }
-<<<<<<< HEAD
     },
     {
       "identity" : "then",
@@ -48,8 +44,6 @@
         "revision" : "d41ef523faef0f911369f79c0b96815d9dbb6d7a",
         "version" : "3.0.0"
       }
-=======
->>>>>>> main
     }
   ],
   "version" : 2

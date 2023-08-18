@@ -39,11 +39,7 @@ class DetailAnnouncementTableViewCell: UITableViewCell {
     }
     
     func configData() {
-<<<<<<< HEAD
         //announcementTextView.text = viewModel?.study.value?.announcement ?? "공지사항 및 소개를 작성해주세요."
-=======
-        announcementTextView.text = viewModel?.study.value?.announcement ?? "공지사항 및 소개를 작성해주세요."
->>>>>>> main
     }
 }
 
