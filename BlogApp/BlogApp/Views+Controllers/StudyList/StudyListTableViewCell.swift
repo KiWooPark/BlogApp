@@ -11,6 +11,7 @@ class StudyListTableViewCell: UITableViewCell {
 
     static var identifier: String { return String(describing: self)}
     
+<<<<<<< HEAD
     @IBOutlet weak var baseView: UIView!
     @IBOutlet weak var progressLabel: BasePaddingLabel!
     @IBOutlet weak var studyTitleLabel: UILabel!
@@ -18,12 +19,21 @@ class StudyListTableViewCell: UITableViewCell {
     @IBOutlet weak var dDayLabel: UILabel!
     @IBOutlet weak var memberCountLabel: UILabel!
 
+=======
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var endDateLabel: UILabel!
+    @IBOutlet weak var memberCountLable: UILabel!
+    
+>>>>>>> main
     var viewModel: StudyListViewModel?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
+<<<<<<< HEAD
         configLayout()
+=======
+>>>>>>> main
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -31,6 +41,7 @@ class StudyListTableViewCell: UITableViewCell {
 
     }
     
+<<<<<<< HEAD
     func configLayout() {
         baseView.layer.cornerRadius = .cornerRadius
     
@@ -71,5 +82,10 @@ class StudyListTableViewCell: UITableViewCell {
         
         // 마감 날짜
         deadlineDateLabel.text = viewModel?.getLastContentDeadlineDate(studtEntity: viewModel?.list.value[index]).toString()
+=======
+    func configData(indexPath: IndexPath) {
+        titleLabel.text = viewModel?.list.value[indexPath.row].title
+        memberCountLable.text = "참여인원 \(viewModel?.list.value[indexPath.row].members?.count ?? 0)명"
+>>>>>>> main
     }
 }

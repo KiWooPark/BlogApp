@@ -22,16 +22,33 @@
                         <rect key="frame" x="10" y="10" width="300" height="112"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u6M-mP-XnM">
+<<<<<<< HEAD
                                 <rect key="frame" x="0.0" y="0.0" width="51.5" height="24"/>
+=======
+                                <rect key="frame" x="0.0" y="0.0" width="248.5" height="24"/>
+>>>>>>> main
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="y5q-Vg-I3L">
+<<<<<<< HEAD
                                 <rect key="frame" x="61.5" y="0.0" width="238.5" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wAs-eN-cUU">
                                         <rect key="frame" x="0.0" y="0.0" width="238.5" height="20.5"/>
+=======
+                                <rect key="frame" x="258.5" y="0.0" width="41.5" height="51"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wAs-eN-cUU">
+                                        <rect key="frame" x="0.0" y="0.0" width="41.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jEh-Om-KiO">
+                                        <rect key="frame" x="0.0" y="30.5" width="41.5" height="20.5"/>
+>>>>>>> main
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -52,6 +69,10 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" name="BackgroundColor"/>
             <connections>
+<<<<<<< HEAD
+=======
+                <outlet property="subTitle2Lable" destination="jEh-Om-KiO" id="kl5-zD-A74"/>
+>>>>>>> main
                 <outlet property="subTitleLabel" destination="wAs-eN-cUU" id="kk3-y8-Qsv"/>
                 <outlet property="titleLabel" destination="u6M-mP-XnM" id="isQ-tC-GA3"/>
             </connections>

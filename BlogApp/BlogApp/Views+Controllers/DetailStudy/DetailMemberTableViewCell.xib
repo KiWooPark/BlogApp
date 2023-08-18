@@ -46,9 +46,12 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" name="BackgroundColor"/>
+<<<<<<< HEAD
             <connections>
                 <outlet property="memberCountLabel" destination="K7f-Hw-LXP" id="NQ8-Zi-31q"/>
             </connections>
+=======
+>>>>>>> main
             <point key="canvasLocation" x="131.8840579710145" y="130.91517857142856"/>
         </tableViewCell>
     </objects>

@@ -8,6 +8,7 @@
 import UIKit
 
 class ShareContentViewController: UIViewController, ViewModelBindableType {
+<<<<<<< HEAD
 
     @IBOutlet weak var contentCollectionView: UICollectionView!
     @IBOutlet weak var contentNumberLabel: UILabel!
@@ -38,6 +39,18 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
         
         static let itemSize = CGSize(width: UIScreen.main.bounds.width * 0.85, height: (UIScreen.main.bounds.height - navigationBarHeight - contentNumberStackViewHeight - totalSafeArea))
         
+=======
+    
+    typealias ViewModelType = ShareContentViewModel
+    var viewModel: ViewModelType?
+    
+    @IBOutlet weak var contentCollectionView: UICollectionView!
+    @IBOutlet weak var dateLable: UILabel!
+    
+    
+    private enum Const {
+        static let itemSize = CGSize(width: UIScreen.main.bounds.width * 0.85, height: UIScreen.main.bounds.height * 0.7)
+>>>>>>> main
         static let itemSpacing = 24.0
         
         static var insetX: CGFloat {
@@ -45,7 +58,11 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
         }
         
         static var collectionViewContentInset: UIEdgeInsets {
+<<<<<<< HEAD
             UIEdgeInsets(top: 0, left: self.insetX, bottom: 0, right: self.insetX)
+=======
+            UIEdgeInsets(top: 0, left: Self.insetX, bottom: 0, right: Self.insetX)
+>>>>>>> main
         }
     }
     
@@ -62,6 +79,7 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
         super.viewDidLoad()
 
         configLayout()
+<<<<<<< HEAD
         configData()
         bindViewModel()
     }
@@ -76,11 +94,17 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
         }
     }
     
+=======
+        bindViewModel()
+    }
+    
+>>>>>>> main
     
     @IBAction func tapCloseButton(_ sender: Any) {
         self.dismiss(animated: true)
     }
     
+<<<<<<< HEAD
     @IBAction func tapShareButton(_ sender: Any) {
         var shareList = [String]()
         
@@ -101,6 +125,12 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
     
     
     
+=======
+    @IBAction func tapMoreMenuButton(_ sender: Any) {
+        
+    }
+    
+>>>>>>> main
     func configLayout() {
         contentCollectionView.collectionViewLayout = self.collectionViewFlowLayout
         contentCollectionView.isScrollEnabled = true
@@ -113,6 +143,7 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
         contentCollectionView.contentInset = Const.collectionViewContentInset
         contentCollectionView.decelerationRate = .fast
         contentCollectionView.translatesAutoresizingMaskIntoConstraints = false
+<<<<<<< HEAD
         
     }
     
@@ -123,6 +154,8 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
         } else {
             contentNumberLabel.text = "\(viewModel?.contentList?[(viewModel?.contentList?.count ?? 0) - 2].contentNumber ?? 0) 회차"
         }
+=======
+>>>>>>> main
     }
     
     func bindViewModel() { }
@@ -130,7 +163,11 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
 
 extension ShareContentViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+<<<<<<< HEAD
         return viewModel?.contentList?.count ?? 0
+=======
+        return viewModel?.contentList.count ?? 0
+>>>>>>> main
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -147,6 +184,7 @@ extension ShareContentViewController: UICollectionViewDelegateFlowLayout {
         let scrolledOffsetX = targetContentOffset.pointee.x + scrollView.contentInset.left
         let cellWidth = Const.itemSize.width + Const.itemSpacing
         let index = round(scrolledOffsetX / cellWidth)
+<<<<<<< HEAD
     
         targetContentOffset.pointee = CGPoint(x: index * cellWidth - scrollView.contentInset.left, y: scrollView.contentInset.top)
         
@@ -159,5 +197,11 @@ extension ShareContentViewController: UICollectionViewDelegateFlowLayout {
         viewModel?.currentIndex = Int(index)
         
         contentNumberLabel.text = "\(viewModel?.contentList?[Int(index)].contentNumber ?? 0) 회차"
+=======
+        targetContentOffset.pointee = CGPoint(x: index * cellWidth - scrollView.contentInset.left, y: scrollView.contentInset.top)
+        dateLable.text = "\(viewModel?.contentList[Int(index)].finishDate?.getWeekOfMonth() ?? "")"
+
+        
+>>>>>>> main
     }
 }

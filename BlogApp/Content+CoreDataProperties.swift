@@ -2,7 +2,11 @@
 //  Content+CoreDataProperties.swift
 //  BlogApp
 //
+<<<<<<< HEAD
 //  Created by PKW on 2023/07/29.
+=======
+//  Created by PKW on 2023/06/22.
+>>>>>>> main
 //
 //
 
@@ -15,6 +19,7 @@ extension Content {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Content> {
         return NSFetchRequest<Content>(entityName: "Content")
     }
+<<<<<<< HEAD
     @NSManaged public var study: Study?
     
     @NSManaged public var contentNumber: Int64
@@ -29,6 +34,16 @@ extension Content {
     
     @NSManaged public var members: NSSet?
     
+=======
+
+    @NSManaged public var finishDate: Date?
+    @NSManaged public var plusFine: Int64
+    @NSManaged public var totalFine: Int64
+    @NSManaged public var currentWeekNumber: Int64
+    @NSManaged public var finishWeekDay: Int64
+    @NSManaged public var study: Study?
+    @NSManaged public var members: NSSet?
+>>>>>>> main
 
 }
 

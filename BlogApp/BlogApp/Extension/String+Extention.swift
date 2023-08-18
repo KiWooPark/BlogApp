@@ -56,6 +56,7 @@ extension String {
         }
     }
     
+<<<<<<< HEAD
     func toDate() -> Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -74,6 +75,12 @@ extension String {
         } else {
             return members.contains(where: {$0.name == self})
         }
+=======
+    func convertToDate() -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        return dateFormatter.date(from: self)
+>>>>>>> main
     }
 }
 

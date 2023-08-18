@@ -22,6 +22,7 @@
                         <rect key="frame" x="10" y="10" width="300" height="111"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="rmz-Xk-r6F">
+<<<<<<< HEAD
                                 <rect key="frame" x="0.0" y="0.0" width="78" height="111"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="ehw-2T-s4o">
@@ -29,18 +30,60 @@
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="이름" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOW-OD-HRE">
                                                 <rect key="frame" x="0.0" y="0.0" width="78" height="20.5"/>
+=======
+                                <rect key="frame" x="0.0" y="0.0" width="268" height="111"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="ehw-2T-s4o">
+                                        <rect key="frame" x="0.0" y="0.0" width="268" height="20.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="이름" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOW-OD-HRE">
+                                                <rect key="frame" x="0.0" y="0.0" width="29.5" height="20.5"/>
+>>>>>>> main
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+<<<<<<< HEAD
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="벌금 잔액" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1lP-Se-D23">
                                                 <rect key="frame" x="0.0" y="45.5" width="78" height="20.5"/>
+=======
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="블로그 이름" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IxH-3z-7Ca">
+                                                <rect key="frame" x="29.5" y="0.0" width="78" height="20.5"/>
+>>>>>>> main
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+<<<<<<< HEAD
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="블로그 이름" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IxH-3z-7Ca">
                                                 <rect key="frame" x="0.0" y="90.5" width="78" height="20.5"/>
+=======
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="새로운 글 체크" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hRl-7v-acQ">
+                                                <rect key="frame" x="107.5" y="0.0" width="97" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="벌금 잔액" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1lP-Se-D23">
+                                                <rect key="frame" x="204.5" y="0.0" width="63.5" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="PWO-Eo-g5Z">
+                                        <rect key="frame" x="0.0" y="90.5" width="268" height="20.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="12312312312312312312312312312312312" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3kS-e9-J6x">
+                                                <rect key="frame" x="0.0" y="0.0" width="223" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="12/31" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pa6-r3-CRd">
+                                                <rect key="frame" x="228" y="0.0" width="40" height="20.5"/>
+>>>>>>> main
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -50,7 +93,11 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="adI-oz-J48">
+<<<<<<< HEAD
                                 <rect key="frame" x="217" y="0.0" width="83" height="111"/>
+=======
+                                <rect key="frame" x="273" y="0.0" width="27" height="111"/>
+>>>>>>> main
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="보러가기"/>
                                 <connections>
@@ -71,9 +118,18 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" name="BackgroundColor"/>
             <connections>
+<<<<<<< HEAD
                 <outlet property="blogNameLabel" destination="IxH-3z-7Ca" id="aKh-78-pxq"/>
                 <outlet property="fineLabel" destination="1lP-Se-D23" id="eVb-OF-3Hf"/>
                 <outlet property="nameLabel" destination="lOW-OD-HRE" id="Pjo-wc-reH"/>
+=======
+                <outlet property="blogNameLable" destination="IxH-3z-7Ca" id="fmc-RH-NKA"/>
+                <outlet property="fineLabel" destination="1lP-Se-D23" id="eVb-OF-3Hf"/>
+                <outlet property="nameLabel" destination="lOW-OD-HRE" id="Pjo-wc-reH"/>
+                <outlet property="newPostCheckLabel" destination="hRl-7v-acQ" id="0UV-HV-tkP"/>
+                <outlet property="postDateLabel" destination="pa6-r3-CRd" id="HTd-aZ-iuM"/>
+                <outlet property="postTitleLabel" destination="3kS-e9-J6x" id="Lgl-fG-PSN"/>
+>>>>>>> main
                 <outlet property="showPostButton" destination="adI-oz-J48" id="j5d-Pg-1xI"/>
             </connections>
             <point key="canvasLocation" x="115.94202898550725" y="113.50446428571428"/>
