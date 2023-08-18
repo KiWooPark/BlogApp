@@ -30,7 +30,7 @@ class AddTitleTableViewCell: UITableViewCell {
     @objc func textFieldDidChange(_ sender: Any?) {
         // 텍스트가 변경될때마다 뷰모델의 title 프로퍼티 업데이트
         let text = titleTextField.text == "" ? nil : titleTextField.text
-        viewModel?.updateStudyProperty(.title, value: text)
+        viewModel?.updateStudyProperty(.studyTitle, value: text)
     }
     
     func configData() {

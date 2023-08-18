@@ -11,7 +11,6 @@ class DetailCommonSetInfoTableViewCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subTitleLabel: UILabel!
-    @IBOutlet weak var subTitle2Lable: UILabel!
     
     static var identifier: String { return String(describing: self)}
     
@@ -20,10 +19,6 @@ class DetailCommonSetInfoTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-    }
-    
-    override func prepareForReuse() {
-        subTitle2Lable.isHidden = false
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -41,18 +36,16 @@ class DetailCommonSetInfoTableViewCell: UITableViewCell {
     }
     
     func configData(index: IndexPath) {
-        switch index.section {
-        case 2:
-            subTitleLabel.text = viewModel?.configStartDate()?.0
-            subTitle2Lable.attributedText = viewModel?.configStartDate()?.1
-        case 3:
-            subTitleLabel.text = viewModel?.configSetDay()?.0            
-            subTitle2Lable.attributedText = viewModel?.configSetDay()?.1
-        case 4:
-            subTitleLabel.text = Int(viewModel?.study.value?.fine ?? 0).convertFineStr()
-        default:
-            return
-        }
+//        switch index.section {
+//        case 2:
+//            subTitleLabel.text = viewModel?.study.value?.startDate?.toString()
+//        case 3:
+//            subTitleLabel.text = "\(Int(viewModel?.study.value?.finishDay ?? 0).convertDeadlineDayToString())"
+//        case 4:
+//            subTitleLabel.text = Int(viewModel?.study.value?.fine ?? 0).convertFineStr()
+//        default:
+//            return
+//        }
     }
     
     func configLayout(indexPath: IndexPath) {
@@ -63,7 +56,6 @@ class DetailCommonSetInfoTableViewCell: UITableViewCell {
             titleLabel.text = "마감 요일"
         case 4:
             titleLabel.text = "벌금"
-            subTitle2Lable.isHidden = true
         default:
             break
         }

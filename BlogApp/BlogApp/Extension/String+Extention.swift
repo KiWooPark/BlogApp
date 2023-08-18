@@ -56,10 +56,24 @@ extension String {
         }
     }
     
-    func convertToDate() -> Date? {
+    func toDate() -> Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        return dateFormatter.date(from: self)
+        dateFormatter.timeZone = TimeZone(identifier: "")
+        return dateFormatter.date(from: self) ?? Date()
+    }
+    
+    
+    func validateName(members: [User], isEdit: Bool = false, index: Int = 9999) -> Bool  {
+        if isEdit {
+            if members[index].name == self {
+                return false
+            } else {
+                return members.contains(where: {$0.name == self})
+            }
+        } else {
+            return members.contains(where: {$0.name == self})
+        }
     }
 }
 

@@ -9,6 +9,7 @@ import UIKit
 
 protocol AddMemberInfoTableViewCellDelegate: AnyObject {
     func showEditMemberVC(index: Int)
+    func showBlogWebView(url: String)
 }
 
 class AddMemberInfoTableViewCell: UITableViewCell {
@@ -16,8 +17,8 @@ class AddMemberInfoTableViewCell: UITableViewCell {
     static var identifier: String { return String(describing: self)}
     
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var blogUrlLabel: UILabel!
     @IBOutlet weak var fineLabel: UILabel!
+    @IBOutlet weak var blogUrlLabel: UILabel!
     
     var viewModel: StudyComposeViewModel?
     weak var delegate: AddMemberInfoTableViewCellDelegate?
@@ -25,6 +26,10 @@ class AddMemberInfoTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(tapBlogURLLable(_:)))
+        blogUrlLabel.isUserInteractionEnabled = true
+        blogUrlLabel.addGestureRecognizer(recognizer)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -35,11 +40,11 @@ class AddMemberInfoTableViewCell: UITableViewCell {
     
     func configData(indexPath: IndexPath) {
         
-        let target = viewModel?.coreDataMembers.value[indexPath.row - 1]
+        let target = viewModel?.studyMembers.value[indexPath.row - 1]
         
-        nameLabel.text = target?.name
-        blogUrlLabel.text = target?.blogUrl
-        fineLabel.text = "\(target?.fine ?? 0)"
+        nameLabel.text = target?.name ?? ""
+        fineLabel.text = "보증금 ∣ \(target?.fine ?? 0)"
+        blogUrlLabel.text = target?.blogUrl ?? ""
     }
     
     @IBAction func tapEditButton(_ sender: Any) {
@@ -63,10 +68,14 @@ class AddMemberInfoTableViewCell: UITableViewCell {
         let tableView = cell.superview as! UITableView
         
         if let indexPath = tableView.indexPath(for: cell) {
-            let member = viewModel?.coreDataMembers.value[indexPath.row - 1]
-            viewModel?.coreDataMembers.value.remove(at: indexPath.row - 1)
-            CoreDataManager.shared.deleteStudyMember(user: member!)
+            let member = viewModel?.studyMembers.value[indexPath.row - 1]
+            viewModel?.studyMembers.value.remove(at: indexPath.row - 1)
+            //CoreDataManager.shared.deleteStudyMember(user: member!)
             
         }
+    }
+    
+    @objc func tapBlogURLLable(_ sender: UITapGestureRecognizer) {
+        delegate?.showBlogWebView(url: blogUrlLabel.text ?? "")
     }
 }

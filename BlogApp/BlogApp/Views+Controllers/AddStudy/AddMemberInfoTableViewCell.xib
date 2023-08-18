@@ -4,7 +4,9 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,35 +20,37 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="kEU-2E-0nC">
-                        <rect key="frame" x="10" y="10" width="44.5" height="190"/>
+                        <rect key="frame" x="10" y="10" width="258.5" height="190"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="이름" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a3w-yG-dBZ">
-                                <rect key="frame" x="0.0" y="0.0" width="44.5" height="57.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="258.5" height="57.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="보증금" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2T6-gy-3up">
-                                <rect key="frame" x="0.0" y="66.5" width="44.5" height="57"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="보증금asdasdasdasdasdasdasdasdasdasdasd" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2T6-gy-3up">
+                                <rect key="frame" x="0.0" y="66.5" width="258.5" height="57"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="URL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DOw-z2-5tJ">
-                                <rect key="frame" x="0.0" y="132.5" width="44.5" height="57.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUw-x3-Azy">
+                                <rect key="frame" x="0.0" y="132.5" width="258.5" height="57.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
+                                <color key="textColor" systemColor="linkColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                     </stackView>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wPU-sY-SLA">
-                        <rect key="frame" x="277.5" y="94" width="22.5" height="22.5"/>
+                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wPU-sY-SLA">
+                        <rect key="frame" x="278.5" y="94.5" width="21.5" height="21.5"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="wPU-sY-SLA" secondAttribute="height" multiplier="1:1" id="DaD-id-MIe"/>
                         </constraints>
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                        <state key="normal" image="highlighter" catalog="system"/>
+                        <state key="normal">
+                            <imageReference key="image" image="highlighter" catalog="system" symbolScale="medium"/>
+                        </state>
                         <connections>
                             <action selector="tapEditButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="EKW-TG-27d"/>
                         </connections>
@@ -58,13 +62,13 @@
                     <constraint firstAttribute="bottom" secondItem="kEU-2E-0nC" secondAttribute="bottom" constant="10" id="cdd-k1-hw3"/>
                     <constraint firstItem="kEU-2E-0nC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="jM7-tI-hwK"/>
                     <constraint firstAttribute="trailing" secondItem="wPU-sY-SLA" secondAttribute="trailing" constant="20" id="kDf-9G-WpI"/>
-                    <constraint firstItem="wPU-sY-SLA" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="kEU-2E-0nC" secondAttribute="trailing" constant="10" id="r8Q-zP-4NT"/>
+                    <constraint firstItem="wPU-sY-SLA" firstAttribute="leading" secondItem="kEU-2E-0nC" secondAttribute="trailing" constant="10" id="r8Q-zP-4NT"/>
                     <constraint firstItem="wPU-sY-SLA" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="xRo-TE-q40"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="blogUrlLabel" destination="DOw-z2-5tJ" id="tFd-FI-COt"/>
+                <outlet property="blogUrlLabel" destination="AUw-x3-Azy" id="K9F-6g-JRc"/>
                 <outlet property="fineLabel" destination="2T6-gy-3up" id="0Z9-5F-bte"/>
                 <outlet property="nameLabel" destination="a3w-yG-dBZ" id="6gD-B1-cGz"/>
             </connections>
@@ -73,5 +77,8 @@
     </objects>
     <resources>
         <image name="highlighter" catalog="system" width="128" height="120"/>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

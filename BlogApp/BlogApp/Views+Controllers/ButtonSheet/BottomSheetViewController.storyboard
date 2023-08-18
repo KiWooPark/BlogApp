@@ -11,9 +11,558 @@
     </dependencies>
     <scenes>
         <!--Bottom Sheet View Controller-->
+        <scene sceneID="gP9-N4-pJZ">
+            <objects>
+                <viewController storyboardIdentifier="BottomSheetViewController" id="yZc-Jl-kEa" customClass="BottomSheetViewController" customModule="BlogApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="U3K-wH-9L4">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="2000"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bJq-RH-IR1">
+                                <rect key="frame" x="0.0" y="1823" width="414" height="177"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="4IB-XY-RKh">
+                                        <rect key="frame" x="20" y="20" width="330" height="47"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="메인 타이틀" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xVL-Hf-tV7">
+                                                <rect key="frame" x="0.0" y="0.0" width="330" height="24"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="서브 타이틀" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JMd-Kj-6kb">
+                                                <rect key="frame" x="0.0" y="29" width="330" height="18"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                <color key="textColor" name="RestColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="RML-0t-aYG">
+                                        <rect key="frame" x="20" y="87" width="374" height="50"/>
+                                        <subviews>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HYN-7D-4Dp" userLabel="DateView">
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="40"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="uC6-xy-jAg">
+                                                        <rect key="frame" x="20" y="20" width="334" height="0.0"/>
+                                                        <subviews>
+                                                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="inline" translatesAutoresizingMaskIntoConstraints="NO" id="qnK-am-bwC">
+                                                                <rect key="frame" x="0.0" y="0.0" width="334" height="0.0"/>
+                                                                <locale key="locale" localeIdentifier="ko"/>
+                                                            </datePicker>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <color key="backgroundColor" name="CellColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="uC6-xy-jAg" secondAttribute="trailing" constant="20" id="Eei-DC-UoR"/>
+                                                    <constraint firstItem="uC6-xy-jAg" firstAttribute="leading" secondItem="HYN-7D-4Dp" secondAttribute="leading" constant="20" id="jQa-Pe-ol0"/>
+                                                    <constraint firstItem="uC6-xy-jAg" firstAttribute="top" secondItem="HYN-7D-4Dp" secondAttribute="top" constant="20" id="oXm-w9-pyk"/>
+                                                    <constraint firstAttribute="bottom" secondItem="uC6-xy-jAg" secondAttribute="bottom" constant="20" id="rLd-d5-rJ6"/>
+                                                </constraints>
+                                            </view>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PUG-8D-ZOo" userLabel="DeadlineDayView">
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="131.5"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="puu-a8-Kdv">
+                                                        <rect key="frame" x="20" y="20" width="334" height="91.5"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="s0D-UP-2qN">
+                                                                <rect key="frame" x="0.0" y="0.0" width="334" height="45"/>
+                                                                <subviews>
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="15B-AH-Ka1">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="167" height="45"/>
+                                                                        <subviews>
+                                                                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aAU-gf-aeJ">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 월요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapDeadlineDayButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="0rC-vP-nL3"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fjt-Ih-MSf">
+                                                                                <rect key="frame" x="0.0" y="15" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 수요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapDeadlineDayButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="WTz-at-Pqr"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="weZ-GD-qpo">
+                                                                                <rect key="frame" x="0.0" y="30" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 금요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapDeadlineDayButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="Rwg-sp-YVb"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bap-pG-DxJ">
+                                                                                <rect key="frame" x="0.0" y="45" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 일요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapDeadlineDayButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="pEB-Oq-kaQ"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                        </subviews>
+                                                                    </stackView>
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="0JP-8X-TkV">
+                                                                        <rect key="frame" x="167" y="0.0" width="167" height="45"/>
+                                                                        <subviews>
+                                                                            <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gy0-Lm-tI6">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 화요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapDeadlineDayButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="1av-B0-uZc"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EZO-ar-e83">
+                                                                                <rect key="frame" x="0.0" y="15" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 목요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapDeadlineDayButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="wAy-9g-XJA"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oAe-XX-b21">
+                                                                                <rect key="frame" x="0.0" y="30" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 토요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapDeadlineDayButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="n2c-Xs-xfq"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2w5-o9-Kvx">
+                                                                                <rect key="frame" x="0.0" y="45" width="167" height="0.0"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                            </button>
+                                                                        </subviews>
+                                                                    </stackView>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7H1-Zq-DSF">
+                                                                <rect key="frame" x="0.0" y="57" width="334" height="0.5"/>
+                                                                <color key="backgroundColor" name="RestColor"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="0.5" id="sRa-AM-TnC"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="asdasdasdasdasdasdasdasd" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I3m-Ud-aR9">
+                                                                <rect key="frame" x="0.0" y="69.5" width="334" height="0.0"/>
+                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                                <color key="textColor" name="RestColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="MWN-gf-XFh">
+                                                                <rect key="frame" x="0.0" y="81.5" width="334" height="10"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="이번주 또는 다음주중 하나를 선택해 주세요" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UR5-GB-FRZ">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="0.0"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                                        <color key="textColor" name="RestColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="scI-JX-gXz">
+                                                                        <rect key="frame" x="0.0" y="10" width="334" height="0.0"/>
+                                                                        <subviews>
+                                                                            <button opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0km-Jf-Hax">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="162" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="#### ## ##" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapCurrentDateAndNextWeekDateButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="jUc-fM-hnh"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wbf-no-JQO">
+                                                                                <rect key="frame" x="172" y="0.0" width="162" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="#### ## ##" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapCurrentDateAndNextWeekDateButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="Zje-3o-LlL"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                        </subviews>
+                                                                    </stackView>
+                                                                </subviews>
+                                                            </stackView>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <color key="backgroundColor" name="CellColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="puu-a8-Kdv" secondAttribute="trailing" constant="20" id="2ho-Ng-ZZX"/>
+                                                    <constraint firstItem="puu-a8-Kdv" firstAttribute="leading" secondItem="PUG-8D-ZOo" secondAttribute="leading" constant="20" id="7RW-ru-Gdd"/>
+                                                    <constraint firstItem="puu-a8-Kdv" firstAttribute="top" secondItem="PUG-8D-ZOo" secondAttribute="top" constant="20" id="PnH-2c-zFo"/>
+                                                    <constraint firstAttribute="bottom" secondItem="puu-a8-Kdv" secondAttribute="bottom" constant="20" id="bZR-fG-M4Q"/>
+                                                </constraints>
+                                            </view>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1fA-cK-03E" userLabel="FineView">
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="70"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="FRb-dP-O6U">
+                                                        <rect key="frame" x="20" y="20" width="334" height="30"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="D4G-MO-MNl">
+                                                                <rect key="frame" x="0.0" y="0.0" width="334" height="30"/>
+                                                                <subviews>
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="tU1-pW-jAk">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="167" height="30"/>
+                                                                        <subviews>
+                                                                            <button opaque="NO" tag="1000" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VNZ-8n-sYb">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="1,000원" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapFineButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="oEE-Wh-emD"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="5000" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wj7-3Q-GcH">
+                                                                                <rect key="frame" x="0.0" y="15" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="5,000원" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapFineButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="1ae-C2-z14"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="10000" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eSM-G8-7he">
+                                                                                <rect key="frame" x="0.0" y="30" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="10,000원" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapFineButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="42L-GX-VxT"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                        </subviews>
+                                                                    </stackView>
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="1iY-tv-boj">
+                                                                        <rect key="frame" x="167" y="0.0" width="167" height="30"/>
+                                                                        <subviews>
+                                                                            <button opaque="NO" tag="3000" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vkE-Wp-7tG">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="3,000원" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapFineButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="bov-Rc-x1v"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="7000" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HOv-g3-yij">
+                                                                                <rect key="frame" x="0.0" y="15" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="7,000원" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapFineButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="Hlw-ct-RDQ"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7lw-ng-y5x">
+                                                                                <rect key="frame" x="0.0" y="30" width="167" height="0.0"/>
+                                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                            </button>
+                                                                        </subviews>
+                                                                    </stackView>
+                                                                </subviews>
+                                                            </stackView>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <color key="backgroundColor" name="CellColor"/>
+                                                <constraints>
+                                                    <constraint firstItem="FRb-dP-O6U" firstAttribute="top" secondItem="1fA-cK-03E" secondAttribute="top" constant="20" id="CjB-9K-bQM"/>
+                                                    <constraint firstItem="FRb-dP-O6U" firstAttribute="leading" secondItem="1fA-cK-03E" secondAttribute="leading" constant="20" id="Exf-3J-5IK"/>
+                                                    <constraint firstAttribute="trailing" secondItem="FRb-dP-O6U" secondAttribute="trailing" constant="20" id="NGU-Hg-RA2"/>
+                                                    <constraint firstAttribute="bottom" secondItem="FRb-dP-O6U" secondAttribute="bottom" constant="20" id="gXK-qy-3ZA"/>
+                                                </constraints>
+                                            </view>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lZ8-IO-Mca" userLabel="MemberInfoView">
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="100"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="ZlT-YW-uW4">
+                                                        <rect key="frame" x="20" y="20" width="334" height="60"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="DDy-NU-7CE">
+                                                                <rect key="frame" x="0.0" y="0.0" width="334" height="10"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="이름" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7gk-r1-zLS">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="0.0"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                        <color key="textColor" name="RestColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sD0-ZX-K7v">
+                                                                        <rect key="frame" x="0.0" y="10" width="334" height="0.0"/>
+                                                                        <color key="backgroundColor" name="CellColor"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                        <textInputTraits key="textInputTraits"/>
+                                                                    </textField>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="vyl-VY-fT9">
+                                                                <rect key="frame" x="0.0" y="25" width="334" height="10"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="블로그 URL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gLN-93-feB">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="0.0"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                        <color key="textColor" name="RestColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xAz-qu-Qf4">
+                                                                        <rect key="frame" x="0.0" y="10" width="334" height="0.0"/>
+                                                                        <color key="backgroundColor" name="CellColor"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                        <textInputTraits key="textInputTraits"/>
+                                                                    </textField>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="V2e-lJ-OOV">
+                                                                <rect key="frame" x="0.0" y="50" width="334" height="10"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="보증금" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wvd-4s-sp9">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="0.0"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                        <color key="textColor" name="RestColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="k0j-7U-He6">
+                                                                        <rect key="frame" x="0.0" y="10" width="334" height="0.0"/>
+                                                                        <color key="backgroundColor" name="CellColor"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                        <textInputTraits key="textInputTraits"/>
+                                                                    </textField>
+                                                                </subviews>
+                                                            </stackView>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <color key="backgroundColor" name="CellColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="ZlT-YW-uW4" secondAttribute="trailing" constant="20" id="U23-CK-mQD"/>
+                                                    <constraint firstItem="ZlT-YW-uW4" firstAttribute="leading" secondItem="lZ8-IO-Mca" secondAttribute="leading" constant="20" id="YhN-bo-Ha7"/>
+                                                    <constraint firstItem="ZlT-YW-uW4" firstAttribute="top" secondItem="lZ8-IO-Mca" secondAttribute="top" constant="20" id="pql-Bv-HfM"/>
+                                                    <constraint firstAttribute="bottom" secondItem="ZlT-YW-uW4" secondAttribute="bottom" constant="20" id="y94-M3-8fU"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ah8-Ah-ShY" userLabel="FinishView">
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="EOf-dN-R0j">
+                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TEo-QS-rMG">
+                                                                <rect key="frame" x="0.0" y="0.0" width="182" height="50"/>
+                                                                <color key="backgroundColor" name="ButtonColor"/>
+                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                <state key="normal" title="완료">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                </state>
+                                                                <connections>
+                                                                    <action selector="tapDoneButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="9Rs-t1-yls"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VV6-RM-PMo">
+                                                                <rect key="frame" x="192" y="0.0" width="182" height="50"/>
+                                                                <color key="backgroundColor" name="ButtonColor"/>
+                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                <state key="normal" title="삭제">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                </state>
+                                                                <connections>
+                                                                    <action selector="tapDeleteButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="K3a-2k-Lz5"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="EOf-dN-R0j" firstAttribute="top" secondItem="ah8-Ah-ShY" secondAttribute="top" id="N4I-zL-er3"/>
+                                                    <constraint firstAttribute="bottom" secondItem="EOf-dN-R0j" secondAttribute="bottom" id="TXy-Jx-kD7"/>
+                                                    <constraint firstAttribute="trailing" secondItem="EOf-dN-R0j" secondAttribute="trailing" id="WMk-b8-0M1"/>
+                                                    <constraint firstItem="EOf-dN-R0j" firstAttribute="leading" secondItem="ah8-Ah-ShY" secondAttribute="leading" id="tW5-q1-oDP"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pm9-rq-dX5">
+                                        <rect key="frame" x="370" y="20" width="24" height="24"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="24" id="etX-YQ-13N"/>
+                                            <constraint firstAttribute="width" secondItem="Pm9-rq-dX5" secondAttribute="height" multiplier="1:1" id="hvL-rb-577"/>
+                                        </constraints>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" image="xmark" catalog="system">
+                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="semibold"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="tapCloseButton:" destination="yZc-Jl-kEa" eventType="touchUpInside" id="2rZ-P5-VD8"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" name="BackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="4IB-XY-RKh" firstAttribute="leading" secondItem="bJq-RH-IR1" secondAttribute="leading" constant="20" id="7oM-uS-xGd"/>
+                                    <constraint firstItem="4IB-XY-RKh" firstAttribute="top" secondItem="bJq-RH-IR1" secondAttribute="top" constant="20" id="UGs-Sh-ZDv"/>
+                                    <constraint firstAttribute="bottom" secondItem="RML-0t-aYG" secondAttribute="bottom" constant="40" id="Xgb-sD-SzX"/>
+                                    <constraint firstItem="Pm9-rq-dX5" firstAttribute="top" secondItem="bJq-RH-IR1" secondAttribute="top" constant="20" id="Ycl-59-cAN"/>
+                                    <constraint firstAttribute="trailing" secondItem="Pm9-rq-dX5" secondAttribute="trailing" constant="20" id="YgI-kL-7LT"/>
+                                    <constraint firstAttribute="trailing" secondItem="RML-0t-aYG" secondAttribute="trailing" constant="20" id="iJ3-ei-aAY"/>
+                                    <constraint firstItem="RML-0t-aYG" firstAttribute="leading" secondItem="bJq-RH-IR1" secondAttribute="leading" constant="20" id="mGm-Ga-8fU"/>
+                                    <constraint firstItem="RML-0t-aYG" firstAttribute="top" secondItem="4IB-XY-RKh" secondAttribute="bottom" constant="20" id="mRt-qP-6UL"/>
+                                    <constraint firstItem="Pm9-rq-dX5" firstAttribute="leading" secondItem="4IB-XY-RKh" secondAttribute="trailing" constant="20" id="nDx-vK-zcn"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Ib4-Ux-40a"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="bJq-RH-IR1" secondAttribute="bottom" id="Jul-rU-FSb"/>
+                            <constraint firstItem="bJq-RH-IR1" firstAttribute="leading" secondItem="Ib4-Ux-40a" secondAttribute="leading" id="UXr-I2-hWc"/>
+                            <constraint firstItem="Ib4-Ux-40a" firstAttribute="trailing" secondItem="bJq-RH-IR1" secondAttribute="trailing" id="uyE-08-dPT"/>
+                        </constraints>
+                    </view>
+                    <size key="freeformSize" width="414" height="2000"/>
+                    <connections>
+                        <outlet property="baseDatePickerView" destination="HYN-7D-4Dp" id="LTE-2K-mZk"/>
+                        <outlet property="baseDeadlineDayView" destination="PUG-8D-ZOo" id="EAu-R1-rEh"/>
+                        <outlet property="baseFineView" destination="1fA-cK-03E" id="vTv-vf-5dS"/>
+                        <outlet property="baseMemberInfoView" destination="lZ8-IO-Mca" id="Jhg-aG-HLK"/>
+                        <outlet property="baseSelectedDayStackView" destination="MWN-gf-XFh" id="QHJ-vs-ECU"/>
+                        <outlet property="blogUrlTextField" destination="xAz-qu-Qf4" id="PNW-Iu-Q2u"/>
+                        <outlet property="bottomSheetView" destination="bJq-RH-IR1" id="vzZ-Je-csC"/>
+                        <outlet property="currentDayButton" destination="0km-Jf-Hax" id="sfF-Vs-3Y0"/>
+                        <outlet property="deleteButton" destination="VV6-RM-PMo" id="TBQ-8l-bZv"/>
+                        <outlet property="doneButton" destination="TEo-QS-rMG" id="sz5-1J-poT"/>
+                        <outlet property="fineInfoStackView" destination="V2e-lJ-OOV" id="Xkc-Qe-UYp"/>
+                        <outlet property="fineTextField" destination="k0j-7U-He6" id="XzH-6B-Bcv"/>
+                        <outlet property="nameTextField" destination="sD0-ZX-K7v" id="v9c-JC-icQ"/>
+                        <outlet property="nextWeekDayButton" destination="wbf-no-JQO" id="GMJ-4S-pKB"/>
+                        <outlet property="selectedDayLabel" destination="I3m-Ud-aR9" id="viB-VV-KZ9"/>
+                        <outlet property="studyDatePicker" destination="qnK-am-bwC" id="JtV-x4-2Ko"/>
+                        <outlet property="subTitleLabel" destination="JMd-Kj-6kb" id="UHe-oc-ngL"/>
+                        <outlet property="titleLabel" destination="xVL-Hf-tV7" id="6uF-BE-Gez"/>
+                        <outletCollection property="dayButtons" destination="aAU-gf-aeJ" collectionClass="NSMutableArray" id="Vzh-zM-qdE"/>
+                        <outletCollection property="dayButtons" destination="Gy0-Lm-tI6" collectionClass="NSMutableArray" id="dxn-48-awu"/>
+                        <outletCollection property="dayButtons" destination="Fjt-Ih-MSf" collectionClass="NSMutableArray" id="Tel-5f-FYS"/>
+                        <outletCollection property="dayButtons" destination="EZO-ar-e83" collectionClass="NSMutableArray" id="7Hh-Wr-42Z"/>
+                        <outletCollection property="dayButtons" destination="weZ-GD-qpo" collectionClass="NSMutableArray" id="zNi-4z-cf3"/>
+                        <outletCollection property="dayButtons" destination="oAe-XX-b21" collectionClass="NSMutableArray" id="951-xT-6lU"/>
+                        <outletCollection property="dayButtons" destination="bap-pG-DxJ" collectionClass="NSMutableArray" id="u5Q-VH-BeZ"/>
+                        <outletCollection property="fineButtons" destination="VNZ-8n-sYb" collectionClass="NSMutableArray" id="QE0-QL-J8f"/>
+                        <outletCollection property="fineButtons" destination="vkE-Wp-7tG" collectionClass="NSMutableArray" id="sDM-n2-avl"/>
+                        <outletCollection property="fineButtons" destination="Wj7-3Q-GcH" collectionClass="NSMutableArray" id="g1G-ZJ-DRM"/>
+                        <outletCollection property="fineButtons" destination="HOv-g3-yij" collectionClass="NSMutableArray" id="sUb-iZ-6jv"/>
+                        <outletCollection property="fineButtons" destination="eSM-G8-7he" collectionClass="NSMutableArray" id="TLO-fR-odV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fgz-68-ZgK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-994.20289855072474" y="-40.178571428571423"/>
+        </scene>
+        <!--View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="BottomSheetViewController" id="Y6W-OH-hqX" customClass="BottomSheetViewController" customModule="BlogApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Y6W-OH-hqX" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="1500"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -27,31 +576,36 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="deU-N1-ond">
-                                <rect key="frame" x="0.0" y="1291" width="414" height="209"/>
+                                <rect key="frame" x="0.0" y="367" width="414" height="1133"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="새로운 멤버를 추가해주세요." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Jj-bD-Wyu">
-                                        <rect key="frame" x="20" y="50" width="374" height="24"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oPb-AY-Sxt">
-                                        <rect key="frame" x="20" y="84" width="374" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="8uZ-0s-7z1">
-                                        <rect key="frame" x="20" y="124.5" width="374" height="34.5"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="fPJ-z6-g5S">
+                                        <rect key="frame" x="20" y="50" width="374" height="54.5"/>
                                         <subviews>
-                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YKp-er-8v7">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="0.0"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="새로운 멤버를 추가해주세요." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Jj-bD-Wyu">
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="24"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oPb-AY-Sxt">
+                                                <rect key="frame" x="0.0" y="34" width="374" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="8uZ-0s-7z1">
+                                        <rect key="frame" x="20" y="124.5" width="374" height="958.5"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YKp-er-8v7">
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="216"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ToL-5y-YJ2">
-                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="0.0"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="216"/>
                                                         <subviews>
                                                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="qjl-HX-PWs">
-                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="0.0"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="216"/>
                                                                 <locale key="locale" localeIdentifier="ko"/>
                                                             </datePicker>
                                                         </subviews>
@@ -65,139 +619,185 @@
                                                     <constraint firstItem="ToL-5y-YJ2" firstAttribute="leading" secondItem="YKp-er-8v7" secondAttribute="leading" id="oKj-9Z-QZj"/>
                                                 </constraints>
                                             </view>
-                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XJt-Ff-XTz">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="100"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XJt-Ff-XTz">
+                                                <rect key="frame" x="0.0" y="216" width="374" height="284.5"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="BGA-3X-I6g">
-                                                        <rect key="frame" x="20" y="20" width="334" height="60"/>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="N4N-aG-XWc">
+                                                        <rect key="frame" x="20" y="20" width="334" height="244.5"/>
                                                         <subviews>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="t4j-aa-Vyw">
-                                                                <rect key="frame" x="0.0" y="0.0" width="167" height="60"/>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="BGA-3X-I6g">
+                                                                <rect key="frame" x="0.0" y="0.0" width="334" height="180"/>
                                                                 <subviews>
-                                                                    <button opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p6j-4j-KEj">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="167" height="0.0"/>
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="t4j-aa-Vyw">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="167" height="180"/>
+                                                                        <subviews>
+                                                                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p6j-4j-KEj">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="167" height="30"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 월요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="vGg-js-Ltr"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q38-X9-M3X">
+                                                                                <rect key="frame" x="0.0" y="50" width="167" height="30"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 수요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="bwp-NH-Mxe"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Kc-8J-G1j">
+                                                                                <rect key="frame" x="0.0" y="100" width="167" height="30"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 금요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="JyJ-Oh-nm4"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a7Y-h7-uFa">
+                                                                                <rect key="frame" x="0.0" y="150" width="167" height="30"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 일요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="vjd-48-ysv"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                        </subviews>
+                                                                    </stackView>
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="uwc-zd-QCi">
+                                                                        <rect key="frame" x="167" y="0.0" width="167" height="180"/>
+                                                                        <subviews>
+                                                                            <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H2b-2x-sOr">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="167" height="30"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 화요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="htD-8w-c8I"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ih-qQ-phT">
+                                                                                <rect key="frame" x="0.0" y="50" width="167" height="30"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 목요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="eSV-10-Ryj"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VTO-qE-BYo">
+                                                                                <rect key="frame" x="0.0" y="100" width="167" height="30"/>
+                                                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                                <state key="normal" title="매주 토요일" image="circle" catalog="system">
+                                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </state>
+                                                                                <state key="selected" image="circle.inset.filled" catalog="system"/>
+                                                                                <connections>
+                                                                                    <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="MT3-UN-Oix"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LQf-6J-s8t">
+                                                                                <rect key="frame" x="0.0" y="150" width="167" height="30"/>
+                                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                            </button>
+                                                                        </subviews>
+                                                                    </stackView>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="BkO-ll-xx7">
+                                                                <rect key="frame" x="0.0" y="180" width="334" height="44"/>
+                                                                <subviews>
+                                                                    <button opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t1x-DL-1PW">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="22"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                        <state key="normal" title="매주 월요일" image="circle" catalog="system">
+                                                                        <state key="normal" image="circle" catalog="system">
                                                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         </state>
                                                                         <state key="selected" image="circle.inset.filled" catalog="system"/>
                                                                         <connections>
-                                                                            <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="vGg-js-Ltr"/>
+                                                                            <action selector="tapFinishDateButtons:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="qxc-Ja-U1B"/>
                                                                         </connections>
                                                                     </button>
-                                                                    <button opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q38-X9-M3X">
-                                                                        <rect key="frame" x="0.0" y="20" width="167" height="0.0"/>
+                                                                    <button opaque="NO" tag="200" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ypm-jr-6MX">
+                                                                        <rect key="frame" x="0.0" y="22" width="334" height="22"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                        <state key="normal" title="매주 수요일" image="circle" catalog="system">
+                                                                        <state key="normal" image="circle" catalog="system">
                                                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         </state>
-                                                                        <state key="selected" image="circle.inset.filled" catalog="system"/>
-                                                                        <connections>
-                                                                            <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="bwp-NH-Mxe"/>
-                                                                        </connections>
-                                                                    </button>
-                                                                    <button opaque="NO" tag="105" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Kc-8J-G1j">
-                                                                        <rect key="frame" x="0.0" y="40" width="167" height="0.0"/>
-                                                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                        <state key="normal" title="매주 금요일" image="circle" catalog="system">
+                                                                        <state key="selected" image="circle.inset.filled" catalog="system">
                                                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         </state>
-                                                                        <state key="selected" image="circle.inset.filled" catalog="system"/>
                                                                         <connections>
-                                                                            <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="JyJ-Oh-nm4"/>
-                                                                        </connections>
-                                                                    </button>
-                                                                    <button opaque="NO" tag="107" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a7Y-h7-uFa">
-                                                                        <rect key="frame" x="0.0" y="60" width="167" height="0.0"/>
-                                                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                        <state key="normal" title="매주 일요일" image="circle" catalog="system">
-                                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        </state>
-                                                                        <state key="selected" image="circle.inset.filled" catalog="system"/>
-                                                                        <connections>
-                                                                            <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="vjd-48-ysv"/>
+                                                                            <action selector="tapFinishDateButtons:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="kQn-e9-Dbc"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>
                                                             </stackView>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="uwc-zd-QCi">
-                                                                <rect key="frame" x="167" y="0.0" width="167" height="60"/>
-                                                                <subviews>
-                                                                    <button opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H2b-2x-sOr">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="167" height="0.0"/>
-                                                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                        <state key="normal" title="매주 화요일" image="circle" catalog="system">
-                                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        </state>
-                                                                        <state key="selected" image="circle.inset.filled" catalog="system"/>
-                                                                        <connections>
-                                                                            <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="htD-8w-c8I"/>
-                                                                        </connections>
-                                                                    </button>
-                                                                    <button opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ih-qQ-phT">
-                                                                        <rect key="frame" x="0.0" y="20" width="167" height="0.0"/>
-                                                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                        <state key="normal" title="매주 목요일" image="circle" catalog="system">
-                                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        </state>
-                                                                        <state key="selected" image="circle.inset.filled" catalog="system"/>
-                                                                        <connections>
-                                                                            <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="eSV-10-Ryj"/>
-                                                                        </connections>
-                                                                    </button>
-                                                                    <button opaque="NO" tag="106" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VTO-qE-BYo">
-                                                                        <rect key="frame" x="0.0" y="40" width="167" height="0.0"/>
-                                                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                        <state key="normal" title="매주 토요일" image="circle" catalog="system">
-                                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                        </state>
-                                                                        <state key="selected" image="circle.inset.filled" catalog="system"/>
-                                                                        <connections>
-                                                                            <action selector="tapSetDayButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="MT3-UN-Oix"/>
-                                                                        </connections>
-                                                                    </button>
-                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LQf-6J-s8t">
-                                                                        <rect key="frame" x="0.0" y="60" width="167" height="0.0"/>
-                                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                    </button>
-                                                                </subviews>
-                                                            </stackView>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4mR-F4-sdU">
+                                                                <rect key="frame" x="0.0" y="224" width="334" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
                                                         </subviews>
                                                     </stackView>
                                                 </subviews>
                                                 <color key="backgroundColor" name="CellColor"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="bottom" secondItem="BGA-3X-I6g" secondAttribute="bottom" constant="20" id="B54-J1-KoE"/>
-                                                    <constraint firstAttribute="trailing" secondItem="BGA-3X-I6g" secondAttribute="trailing" constant="20" id="Of6-FR-eyV"/>
-                                                    <constraint firstItem="BGA-3X-I6g" firstAttribute="top" secondItem="XJt-Ff-XTz" secondAttribute="top" constant="20" id="kC2-wU-rvP"/>
-                                                    <constraint firstItem="BGA-3X-I6g" firstAttribute="leading" secondItem="XJt-Ff-XTz" secondAttribute="leading" constant="20" id="vT6-Kc-HLL"/>
+                                                    <constraint firstItem="N4N-aG-XWc" firstAttribute="top" secondItem="XJt-Ff-XTz" secondAttribute="top" constant="20" id="B9Q-R1-W3c"/>
+                                                    <constraint firstItem="N4N-aG-XWc" firstAttribute="leading" secondItem="XJt-Ff-XTz" secondAttribute="leading" constant="20" id="D1j-qf-8K1"/>
+                                                    <constraint firstAttribute="bottom" secondItem="N4N-aG-XWc" secondAttribute="bottom" constant="20" id="K2G-ZA-Qgs"/>
+                                                    <constraint firstAttribute="trailing" secondItem="N4N-aG-XWc" secondAttribute="trailing" constant="20" id="Snc-XE-Z4F"/>
                                                 </constraints>
                                             </view>
-                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="58V-t5-YUU">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="80"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="58V-t5-YUU">
+                                                <rect key="frame" x="0.0" y="500.5" width="374" height="170"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Ems-vc-tzf">
-                                                        <rect key="frame" x="20" y="20" width="334" height="40"/>
+                                                        <rect key="frame" x="20" y="20" width="334" height="130"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="yv3-7j-baI">
-                                                                <rect key="frame" x="0.0" y="0.0" width="167" height="40"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="167" height="130"/>
                                                                 <subviews>
                                                                     <button opaque="NO" tag="201" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1nG-nU-Mfr">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="167" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="167" height="30"/>
                                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -210,7 +810,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" tag="203" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="25y-se-iiF">
-                                                                        <rect key="frame" x="0.0" y="20" width="167" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="50" width="167" height="30"/>
                                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -223,7 +823,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" tag="205" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b3V-5b-Bz9">
-                                                                        <rect key="frame" x="0.0" y="40" width="167" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="100" width="167" height="30"/>
                                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -238,10 +838,10 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="obI-Pg-ALJ">
-                                                                <rect key="frame" x="167" y="0.0" width="167" height="40"/>
+                                                                <rect key="frame" x="167" y="0.0" width="167" height="130"/>
                                                                 <subviews>
                                                                     <button opaque="NO" tag="202" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W0k-K7-mYV">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="167" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="167" height="30"/>
                                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -254,7 +854,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" tag="204" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EKL-rd-ib9">
-                                                                        <rect key="frame" x="0.0" y="20" width="167" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="50" width="167" height="30"/>
                                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -267,7 +867,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sma-TW-cX4">
-                                                                        <rect key="frame" x="0.0" y="40" width="167" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="100" width="167" height="30"/>
                                                                         <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                                     </button>
@@ -284,55 +884,55 @@
                                                     <constraint firstAttribute="trailing" secondItem="Ems-vc-tzf" secondAttribute="trailing" constant="20" id="soc-6x-NbV"/>
                                                 </constraints>
                                             </view>
-                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bkK-II-pvN">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="90"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bkK-II-pvN">
+                                                <rect key="frame" x="0.0" y="670.5" width="374" height="253.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="b6u-LJ-LSa">
-                                                        <rect key="frame" x="20" y="20" width="334" height="50"/>
+                                                        <rect key="frame" x="20" y="20" width="334" height="213.5"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zGR-QI-K91">
-                                                                <rect key="frame" x="0.0" y="0.0" width="334" height="10"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="334" height="64.5"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="이름" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0hs-Fj-6k0">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="20.5"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1JR-Yi-cfK">
-                                                                        <rect key="frame" x="0.0" y="10" width="334" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="30.5" width="334" height="34"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                         <textInputTraits key="textInputTraits"/>
                                                                     </textField>
                                                                 </subviews>
                                                             </stackView>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="P0V-Bv-3PR">
-                                                                <rect key="frame" x="0.0" y="20" width="334" height="10"/>
+                                                                <rect key="frame" x="0.0" y="74.5" width="334" height="64.5"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="블로그 URL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1dJ-Fs-LeG">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="20.5"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4wh-4Z-c9J">
-                                                                        <rect key="frame" x="0.0" y="10" width="334" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="30.5" width="334" height="34"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                         <textInputTraits key="textInputTraits"/>
                                                                     </textField>
                                                                 </subviews>
                                                             </stackView>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="YIP-Sq-oLb">
-                                                                <rect key="frame" x="0.0" y="40" width="334" height="10"/>
+                                                                <rect key="frame" x="0.0" y="149" width="334" height="64.5"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="보증금" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="irZ-4C-Hn7">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="334" height="20.5"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5tp-ZU-2LN">
-                                                                        <rect key="frame" x="0.0" y="10" width="334" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="30.5" width="334" height="34"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                         <textInputTraits key="textInputTraits"/>
                                                                     </textField>
@@ -350,7 +950,7 @@
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="w7l-Om-eRJ">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="34.5"/>
+                                                <rect key="frame" x="0.0" y="924" width="374" height="34.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oRf-Nk-Ofh">
                                                         <rect key="frame" x="0.0" y="0.0" width="187" height="34.5"/>
@@ -377,16 +977,13 @@
                                 </subviews>
                                 <color key="backgroundColor" name="BackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="oPb-AY-Sxt" firstAttribute="leading" secondItem="deU-N1-ond" secondAttribute="leading" constant="20" id="1FF-Z0-z2A"/>
-                                    <constraint firstItem="0Jj-bD-Wyu" firstAttribute="top" secondItem="deU-N1-ond" secondAttribute="top" constant="50" id="1zj-tV-YIZ"/>
-                                    <constraint firstItem="0Jj-bD-Wyu" firstAttribute="leading" secondItem="deU-N1-ond" secondAttribute="leading" constant="20" id="LPv-JT-k93"/>
+                                    <constraint firstItem="8uZ-0s-7z1" firstAttribute="top" secondItem="fPJ-z6-g5S" secondAttribute="bottom" constant="20" id="Dbl-xv-7We"/>
+                                    <constraint firstAttribute="trailing" secondItem="fPJ-z6-g5S" secondAttribute="trailing" constant="20" id="MGL-Oo-qQC"/>
                                     <constraint firstAttribute="trailing" secondItem="8uZ-0s-7z1" secondAttribute="trailing" constant="20" id="Wk7-ma-IAv"/>
-                                    <constraint firstItem="oPb-AY-Sxt" firstAttribute="top" secondItem="0Jj-bD-Wyu" secondAttribute="bottom" constant="10" id="X6v-2G-8il"/>
-                                    <constraint firstAttribute="trailing" secondItem="oPb-AY-Sxt" secondAttribute="trailing" constant="20" id="i8z-R9-7Be"/>
-                                    <constraint firstItem="8uZ-0s-7z1" firstAttribute="top" secondItem="oPb-AY-Sxt" secondAttribute="bottom" constant="20" id="nDB-qg-Aix"/>
+                                    <constraint firstItem="fPJ-z6-g5S" firstAttribute="leading" secondItem="deU-N1-ond" secondAttribute="leading" constant="20" id="dYJ-kW-PE4"/>
+                                    <constraint firstItem="fPJ-z6-g5S" firstAttribute="top" secondItem="deU-N1-ond" secondAttribute="top" constant="50" id="sYN-Hl-MQd"/>
                                     <constraint firstAttribute="bottom" secondItem="8uZ-0s-7z1" secondAttribute="bottom" constant="50" id="t88-wN-jBM"/>
                                     <constraint firstItem="8uZ-0s-7z1" firstAttribute="leading" secondItem="deU-N1-ond" secondAttribute="leading" constant="20" id="v48-Bh-nb7"/>
-                                    <constraint firstAttribute="trailing" secondItem="0Jj-bD-Wyu" secondAttribute="trailing" constant="20" id="w1a-RX-QFK"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -408,44 +1005,56 @@
                         <outlet property="baseStackView" destination="8uZ-0s-7z1" id="JFz-2M-6ZW"/>
                         <outlet property="baseView" destination="deU-N1-ond" id="fFR-wI-QEk"/>
                         <outlet property="blogUrlTextField" destination="4wh-4Z-c9J" id="kK6-Z7-EyG"/>
+                        <outlet property="currentDateButton" destination="t1x-DL-1PW" id="iSB-GL-UsO"/>
                         <outlet property="deleteMemberButton" destination="JwK-IF-wOz" id="Ghe-8e-iTM"/>
                         <outlet property="doneButton" destination="oRf-Nk-Ofh" id="uNI-TD-2Mf"/>
                         <outlet property="fineStackView" destination="YIP-Sq-oLb" id="0hW-gf-VxD"/>
                         <outlet property="fineTextField" destination="5tp-ZU-2LN" id="eJa-Uf-vJc"/>
                         <outlet property="memberNameTextField" destination="1JR-Yi-cfK" id="olc-n4-JLF"/>
+                        <outlet property="nextWeekDateButton" destination="ypm-jr-6MX" id="cuJ-Yf-KgV"/>
+                        <outlet property="selectDateLabel" destination="4mR-F4-sdU" id="tmN-rY-nwJ"/>
                         <outlet property="selectDayView" destination="XJt-Ff-XTz" id="7lU-xb-MyX"/>
                         <outlet property="selectFineView" destination="58V-t5-YUU" id="VjV-30-hyA"/>
                         <outlet property="startDatePicker" destination="qjl-HX-PWs" id="i9n-hq-8DF"/>
                         <outlet property="startDateView" destination="YKp-er-8v7" id="y7y-aH-MUS"/>
                         <outlet property="subTitleLabel" destination="oPb-AY-Sxt" id="7a9-Fm-Oe8"/>
                         <outlet property="titleLabel" destination="0Jj-bD-Wyu" id="1wc-HQ-xSg"/>
-                        <outletCollection property="dayButtons" destination="p6j-4j-KEj" collectionClass="NSMutableArray" id="PQx-Ro-0CC"/>
-                        <outletCollection property="dayButtons" destination="H2b-2x-sOr" collectionClass="NSMutableArray" id="N19-x6-OSX"/>
-                        <outletCollection property="dayButtons" destination="Q38-X9-M3X" collectionClass="NSMutableArray" id="bdS-TM-WAy"/>
-                        <outletCollection property="dayButtons" destination="5ih-qQ-phT" collectionClass="NSMutableArray" id="BTM-cw-y3P"/>
-                        <outletCollection property="dayButtons" destination="7Kc-8J-G1j" collectionClass="NSMutableArray" id="MYd-gX-OjN"/>
-                        <outletCollection property="dayButtons" destination="VTO-qE-BYo" collectionClass="NSMutableArray" id="qZf-43-5Ab"/>
-                        <outletCollection property="dayButtons" destination="a7Y-h7-uFa" collectionClass="NSMutableArray" id="daN-dG-tuo"/>
                         <outletCollection property="fineButtons" destination="1nG-nU-Mfr" collectionClass="NSMutableArray" id="e8J-7Q-IUm"/>
                         <outletCollection property="fineButtons" destination="W0k-K7-mYV" collectionClass="NSMutableArray" id="42S-k0-6Vy"/>
                         <outletCollection property="fineButtons" destination="25y-se-iiF" collectionClass="NSMutableArray" id="Ntw-9r-KxF"/>
                         <outletCollection property="fineButtons" destination="EKL-rd-ib9" collectionClass="NSMutableArray" id="x4H-gM-m1i"/>
                         <outletCollection property="fineButtons" destination="b3V-5b-Bz9" collectionClass="NSMutableArray" id="RGy-WE-cIr"/>
+                        <outletCollection property="dayButtons" destination="5ih-qQ-phT" collectionClass="NSMutableArray" id="BTM-cw-y3P"/>
+                        <outletCollection property="dayButtons" destination="p6j-4j-KEj" collectionClass="NSMutableArray" id="PQx-Ro-0CC"/>
+                        <outletCollection property="dayButtons" destination="H2b-2x-sOr" collectionClass="NSMutableArray" id="N19-x6-OSX"/>
+                        <outletCollection property="dayButtons" destination="7Kc-8J-G1j" collectionClass="NSMutableArray" id="MYd-gX-OjN"/>
+                        <outletCollection property="dayButtons" destination="Q38-X9-M3X" collectionClass="NSMutableArray" id="bdS-TM-WAy"/>
+                        <outletCollection property="dayButtons" destination="a7Y-h7-uFa" collectionClass="NSMutableArray" id="daN-dG-tuo"/>
+                        <outletCollection property="dayButtons" destination="VTO-qE-BYo" collectionClass="NSMutableArray" id="qZf-43-5Ab"/>
+                        <outletCollection property="finishDateButtons" destination="t1x-DL-1PW" collectionClass="NSMutableArray" id="t2d-s6-MNe"/>
+                        <outletCollection property="finishDateButtons" destination="ypm-jr-6MX" collectionClass="NSMutableArray" id="ZAA-3U-kzi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-17.39130434782609" y="103.79464285714285"/>
+            <point key="canvasLocation" x="83" y="161"/>
         </scene>
     </scenes>
     <resources>
         <image name="circle" catalog="system" width="128" height="123"/>
         <image name="circle.inset.filled" catalog="system" width="128" height="123"/>
+        <image name="xmark" catalog="system" width="128" height="113"/>
         <namedColor name="BackgroundColor">
-            <color red="0.97699999809265137" green="0.98000001907348633" blue="0.98400002717971802" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96899998188018799" green="0.96899998188018799" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="ButtonColor">
+            <color red="0.22400000691413879" green="0.24300000071525574" blue="0.27500000596046448" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="CellColor">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.93300002813339233" green="0.93300002813339233" blue="0.93300002813339233" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="RestColor">
+            <color red="0.57300001382827759" green="0.60399997234344482" blue="0.67100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

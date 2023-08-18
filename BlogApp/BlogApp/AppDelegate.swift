@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  BlogApp
 //
-//  Created by PKW on 2023/02/27.
+//  Created by PKW on 2023/05/01.
 //
 
 import UIKit
@@ -11,7 +11,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        NetworkCheck.shared.startMonitoring()
         return true
     }
 

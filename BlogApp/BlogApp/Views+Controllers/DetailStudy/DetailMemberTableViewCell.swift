@@ -9,9 +9,9 @@ import UIKit
 
 class DetailMemberTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var memberListTableView: UITableView!
-    
     static var identifier: String { return String(describing: self)}
+    
+    @IBOutlet weak var memberCountLabel: UILabel!
     
     var studyViewModel: StudyDetailViewModel?
     
@@ -27,5 +27,9 @@ class DetailMemberTableViewCell: UITableViewCell {
         super.layoutSubviews()
         
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20))
+    }
+    
+    func configData() {
+        memberCountLabel.text = "\(studyViewModel?.study.value?.members?.count ?? 0)명"
     }
 }

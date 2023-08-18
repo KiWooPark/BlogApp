@@ -8,16 +8,36 @@
 import UIKit
 
 class ShareContentViewController: UIViewController, ViewModelBindableType {
+
+    @IBOutlet weak var contentCollectionView: UICollectionView!
+    @IBOutlet weak var contentNumberLabel: UILabel!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
     
     typealias ViewModelType = ShareContentViewModel
     var viewModel: ViewModelType?
-    
-    @IBOutlet weak var contentCollectionView: UICollectionView!
-    @IBOutlet weak var dateLable: UILabel!
-    
-    
+   
     private enum Const {
-        static let itemSize = CGSize(width: UIScreen.main.bounds.width * 0.85, height: UIScreen.main.bounds.height * 0.7)
+        
+        static let navigationBarHeight = 44.0
+        static let contentNumberStackViewHeight = 50.0
+        
+        static var totalSafeArea: CGFloat {
+            if #available(iOS 13.0, *) {
+                let window = UIApplication.shared.windows.first
+                let top = window?.safeAreaInsets.top ?? 0.0
+                let bottom = window?.safeAreaInsets.bottom ?? 0.0
+                return top + bottom
+                
+            } else if #available(iOS 11.0, *) {
+                let window = UIApplication.shared.keyWindow
+                let top = window?.safeAreaInsets.top ?? 0.0
+                let bottom = window?.safeAreaInsets.bottom ?? 0.0
+                return top + bottom
+            }
+        }
+        
+        static let itemSize = CGSize(width: UIScreen.main.bounds.width * 0.85, height: (UIScreen.main.bounds.height - navigationBarHeight - contentNumberStackViewHeight - totalSafeArea))
+        
         static let itemSpacing = 24.0
         
         static var insetX: CGFloat {
@@ -25,7 +45,7 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
         }
         
         static var collectionViewContentInset: UIEdgeInsets {
-            UIEdgeInsets(top: 0, left: Self.insetX, bottom: 0, right: Self.insetX)
+            UIEdgeInsets(top: 0, left: self.insetX, bottom: 0, right: self.insetX)
         }
     }
     
@@ -42,7 +62,18 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
         super.viewDidLoad()
 
         configLayout()
+        configData()
         bindViewModel()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if viewModel?.contentList?.count != 1 {
+            let indexPath = IndexPath(row: (viewModel?.contentList?.count ?? 0) - 2, section: 0)
+            viewModel?.currentIndex = indexPath.row
+            contentCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        }
     }
     
     
@@ -50,9 +81,25 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
         self.dismiss(animated: true)
     }
     
-    @IBAction func tapMoreMenuButton(_ sender: Any) {
+    @IBAction func tapShareButton(_ sender: Any) {
+        var shareList = [String]()
         
+        if let cell = contentCollectionView.cellForItem(at: IndexPath(row: viewModel?.currentIndex ?? 0, section: 0)) as? ContentCollectionViewCell,
+           let shareText = cell.shareContentTextView.text {
+            
+            shareList.append(shareText)
+        }
+        
+        let activityVC = UIActivityViewController(activityItems: shareList, applicationActivities: nil)
+        
+        // 공유하기 기능 중 제외할 기능이 있을 때 사용
+//        activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+        
+        activityVC.popoverPresentationController?.sourceView = self.view
+        self.present(activityVC, animated: true, completion: nil)
     }
+    
+    
     
     func configLayout() {
         contentCollectionView.collectionViewLayout = self.collectionViewFlowLayout
@@ -66,6 +113,16 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
         contentCollectionView.contentInset = Const.collectionViewContentInset
         contentCollectionView.decelerationRate = .fast
         contentCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+    }
+    
+    func configData() {
+        if viewModel?.contentList?.count == 1 {
+            contentNumberLabel.text = "\(viewModel?.contentList?.first?.contentNumber ?? 0) 회차"
+            shareButton.isEnabled = false
+        } else {
+            contentNumberLabel.text = "\(viewModel?.contentList?[(viewModel?.contentList?.count ?? 0) - 2].contentNumber ?? 0) 회차"
+        }
     }
     
     func bindViewModel() { }
@@ -73,7 +130,7 @@ class ShareContentViewController: UIViewController, ViewModelBindableType {
 
 extension ShareContentViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel?.contentList.count ?? 0
+        return viewModel?.contentList?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -90,9 +147,17 @@ extension ShareContentViewController: UICollectionViewDelegateFlowLayout {
         let scrolledOffsetX = targetContentOffset.pointee.x + scrollView.contentInset.left
         let cellWidth = Const.itemSize.width + Const.itemSpacing
         let index = round(scrolledOffsetX / cellWidth)
+    
         targetContentOffset.pointee = CGPoint(x: index * cellWidth - scrollView.contentInset.left, y: scrollView.contentInset.top)
-        dateLable.text = "\(viewModel?.contentList[Int(index)].finishDate?.getWeekOfMonth() ?? "")"
-
         
+        if (viewModel?.contentList?.count ?? 0) - 1 == Int(index) {
+            shareButton.isEnabled = false
+        } else {
+            shareButton.isEnabled = true
+        }
+        
+        viewModel?.currentIndex = Int(index)
+        
+        contentNumberLabel.text = "\(viewModel?.contentList?[Int(index)].contentNumber ?? 0) 회차"
     }
 }

@@ -29,80 +29,101 @@ class CoreDataManager {
     }()
     
     // MARK: CREATE
-    func createStudy(title: String, announcement: String, startDate: Date, finishDay: Int, fine: Int, members: [User], isNewStudy: Bool, completion: @escaping () -> ()) {
+    func createStudy(isNewStudy: Bool?, lastProgressNumber: Int?, lastProgressDeadlineDate: Date?, title: String?, firstStudyDate: Date?, deadlineDay: Int?, deadlineDate: Date?, fine: Int?, members: [User], completion: @escaping () -> ()) {
         
         let studyEntity = Study(context: persistentContainer.viewContext)
+        // 생성 날짜
         studyEntity.createDate = Date()
+        // 신규, 기존
+        studyEntity.isNewStudy = isNewStudy ?? true
+        // 스터디 이름
         studyEntity.title = title
-        studyEntity.announcement = announcement
-        studyEntity.startDate = startDate
-        studyEntity.finishDay = Int64(finishDay)
-        studyEntity.fine = Int64(fine)
+        // 최초 시작 날짜
+        studyEntity.firstStartDate = firstStudyDate
+        // 마감 요일
+        studyEntity.deadlineDay = Int64(deadlineDay ?? 0)
+        // 벌금
+        studyEntity.fine = Int64(fine ?? 0)
+        // 멤버 수
         studyEntity.memberCount = Int64(members.count)
-        studyEntity.isNewStudy = isNewStudy
+        // 멤버
+        for member in members {
+            studyEntity.addToMembers(member)
+        }
         
-        addNewMembers(members: members, study: studyEntity)
-        
+        // 회차 데이터 생성
         let contentEntity = Content(context: persistentContainer.viewContext)
+        // 신규
+        if isNewStudy == true {
+            // 회차
+            contentEntity.contentNumber = 1
+            // 마감 요일 (삭제해도 됨)
+            contentEntity.deadlineDay = Int64(deadlineDay ?? 0)
+            // 마감 날짜
+            contentEntity.deadlineDate = deadlineDate
+            
+            studyEntity.addToContents(contentEntity)
+        } else {
+            // 마지막 스터디 진행 회차
+            contentEntity.contentNumber = Int64(lastProgressNumber ?? 0)
+            // 마감 요일
+            contentEntity.deadlineDay = Int64(deadlineDay ?? 0)
+            // 마지막 스터디 진행 회차의 마감 날짜
+            contentEntity.startDate = lastProgressDeadlineDate?.makeDeadlineDate()?.convertDeadlineToStartDate()
+            // 마감 날짜
+            contentEntity.deadlineDate = deadlineDate
+            
+            studyEntity.addToContents(contentEntity)
+        }
         
-        // 현재 날짜를 기준으로 선택한 마감일의 날짜를 구함
-        let finishDate = Date().calcCurrentFinishDate(setDay: finishDay)
+        saveContext()
         
-        contentEntity.currentWeekNumber = Int64(startDate.calculateWeekNumber(finishDate: finishDate!))
-        contentEntity.finishDate = finishDate
-        contentEntity.plusFine = 0
-        contentEntity.totalFine = 0
-        contentEntity.finishWeekDay = Int64(Int(finishDay))
-        studyEntity.addToContents(contentEntity)
+        completion()
+    }
+    
+    func createContent(lastContent: Content?, deadlineDay: Int?, startDate: Date?, deadlineDate: Date?, fine: Int?, totalFine: Int?, plusFine: Int?, studyMembers: [User], contentMembers: [ContentUser], completion: @escaping () -> ()) {
+    
+        // 마지막 마감 데이터 정보 업데이트
+        lastContent?.deadlineDay = Int64(deadlineDay ?? 0)
+        lastContent?.startDate = startDate
+        lastContent?.deadlineDate = deadlineDate
+        lastContent?.fine = Int64(fine ?? 0)
+        lastContent?.totalFine = Int64(totalFine ?? 0)
+        lastContent?.plusFine = Int64(plusFine ?? 0)
         
-        addContentMembers(members: members, content: contentEntity)
+        // 스터디에 설정된 마감요일
+        let studyDeadlineDay = Int(studyMembers.first?.study?.deadlineDay ?? 0)
         
+        // 새로운 공지사항 만들고
+        let contentEntity = Content(context: persistentContainer.viewContext)
+        contentEntity.contentNumber = (lastContent?.contentNumber ?? 0) + 1
+        // 시작 날짜는 이전 마감일로부터 + 1일
+        contentEntity.startDate = lastContent?.deadlineDate?.convertDeadlineToStartDate()
+        // 스터디에 설정된 마감요일에 날짜로 새로 계산
+        let calcDeadlineDate = contentEntity.startDate?.calculateFinishDate(deadlineDay: studyDeadlineDay)
+        
+        if calcDeadlineDate?.nextWeekFinishDate == nil {
+            contentEntity.deadlineDate = calcDeadlineDate?.currentDate
+        } else {
+            contentEntity.deadlineDate = calcDeadlineDate?.nextWeekFinishDate
+        }
+        
+        if let studyEntity = lastContent?.study {
+            // 새로 생성한 content study에 연결
+            studyEntity.addToContents(contentEntity)
+        }
+        
+        for i in 0 ..< studyMembers.count {
+            lastContent?.addToMembers(contentMembers[i])
+            studyMembers[i].fine = contentMembers[i].fine
+        }
+
         saveContext()
         completion()
     }
     
-    func createContent(studyEntity: Study) -> Content {
-        let contentEntity = Content(context: persistentContainer.viewContext)
-        
-        let finishDate = Date().calcCurrentFinishDate(setDay: Int(studyEntity.finishDay))!
-        
-        contentEntity.currentWeekNumber = Int64(studyEntity.startDate?.calculateWeekNumber(finishDate: finishDate) ?? 0)
-        contentEntity.finishDate = finishDate
-        contentEntity.plusFine = 0
-        contentEntity.totalFine = 0
-        contentEntity.finishWeekDay = studyEntity.finishDay
-        studyEntity.addToContents(contentEntity)
-        
-        let members: [User] = fetchCoreDataMembers(study: studyEntity)
-
-        addContentMembers(members: members, content: contentEntity)
-        
-        return contentEntity
-    }
- 
-    
-    // 새로 생성할때 스터디엔티티에 멤버 연결
-    func addNewMembers(members: [User], study: Study) {
-        for member in members {
-            study.addToMembers(member)
-        }
-    }
-    
-    // 공지사항 생성할때 콘텐트 엔티티에 연결
-    func addContentMembers(members: [User], content: Content) {
-        for member in members {
-            let contentMember = ContentUser(context: persistentContainer.viewContext)
-            contentMember.name = member.name
-            contentMember.postUrl = nil
-            contentMember.fine = member.fine
-            
-            content.addToMembers(contentMember)
-        }
-    }
-    
     // MARK: READ
-    // 스터디 가져오기
-    func fetchStudys() -> [Study] {
+    func fetchStudyList() -> [Study] {
         let request: NSFetchRequest<Study> = Study.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "createDate", ascending: true)]
         var fetchedStudys: [Study] = []
@@ -115,23 +136,21 @@ class CoreDataManager {
         return fetchedStudys
     }
     
-    // 해당 id의 스터디 가지고오기
-    func getStudy(id: NSManagedObjectID) -> Study? {
+    func fetchStudy(id: NSManagedObjectID) -> Study? {
         do {
             return try context.existingObject(with: id) as? Study
         } catch {
-            print("error")
+            print("fetchStudy - ERROR")
             return nil
         }
     }
     
-    // content 가져오기
-    func fetchContent(studyEntity: Study) -> [Content] {
+    func fetchContentList(studyEntity: Study) -> [Content] {
         let request: NSFetchRequest<Content> = Content.fetchRequest()
         request.predicate = NSPredicate(format: "study = %@", studyEntity)
-        request.sortDescriptors = [NSSortDescriptor(key: "finishDate", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(key: "deadlineDate", ascending: true)]
         var fetchedContents: [Content] = []
-
+        
         do {
             fetchedContents = try persistentContainer.viewContext.fetch(request)
         } catch {
@@ -143,264 +162,107 @@ class CoreDataManager {
     func fetchLastContent(studyEntity: Study) -> Content? {
         let request: NSFetchRequest<Content> = Content.fetchRequest()
         request.predicate = NSPredicate(format: "study = %@", studyEntity)
-        request.sortDescriptors = [NSSortDescriptor(key: "finishDate", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(key: "deadlineDate", ascending: true)]
+        var fetchedContents: [Content] = []
         
         do {
-            let contents = try persistentContainer.viewContext.fetch(request)
-            return contents.last
+            fetchedContents = try persistentContainer.viewContext.fetch(request)
         } catch {
-            print("error")
-            return nil
+            print(error.localizedDescription)
         }
+        return fetchedContents.last
     }
     
+    func fetchStudyMembers(studyEntity: Study) -> [User] {
+        let request: NSFetchRequest<User> = User.fetchRequest()
+        request.predicate = NSPredicate(format: "study = %@", studyEntity)
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        
+        do {
+            return try persistentContainer.viewContext.fetch(request)
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        return []
+    }
+    
+    func fetchContentMembers(contentEntity: Content?) -> [ContentUser] {
+        let request: NSFetchRequest<ContentUser> = ContentUser.fetchRequest()
+        guard let contentEntity = contentEntity else { return [] }
+        request.predicate = NSPredicate(format: "content = %@", contentEntity)
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+    
+        do {
+            return try persistentContainer.viewContext.fetch(request)
+        } catch {
+            print(error.localizedDescription)
+        }
+        return []
+    }
+
     
     // MARK: UPDATE
-    func updateMembersFine(studyEntity: Study, contentEntity: Content, fine: (total: Int,plus: Int), membersPost: [PostResponse], completion: @escaping () -> ()) {
     
-        // study에 저장된 멤버 데이터 가지고오기
-        let studyMembers: [User] = fetchCoreDataMembers(study: studyEntity)
-
-        // 마지막 content에 저장된 멤버 데이터 가지고오기
-        var lastContentMembers = fetchCoreDataContentMembers(content: contentEntity)
-
-        // content에 벌금 업데이트
-        contentEntity.totalFine = Int64(fine.total)
-        contentEntity.plusFine = Int64(fine.plus)
+    func updateStudy(id: NSManagedObjectID?, title: String?, deadlineDay: Int?, deadlineDate: Date?, fine: Int?, members: [User], completion: @escaping () -> ()) {
         
-        // 게시글 작성하지 않은 멤버 카운트
-        let notPostMemberCount = membersPost.filter({$0.data == nil}).count
-        
-        // 이름 비교를 위해
-        let lastContentMembersName = lastContentMembers.map({$0.name})
-        let membersPostName = membersPost.map({$0.name})
-        
-        // 이름만 따로 가져오고
-        let names = lastContentMembersName.filter({ !membersPostName.contains($0) })
-        
-        // 스터디 멤버에 속하지 않는 멤버 삭제
-        if !names.isEmpty {
-            for name in names {
-                let deleteMember = lastContentMembers.filter({$0.name == name})
-                deleteContentMember(user: deleteMember[0])
-            }
-        }
-        
-        // 벌금 업데이트하는데
-        // content에 있는 멤버는 업데이트하고
-        // 없는 멤버는 추가
-        for post in membersPost {
-            // content에 해당 멤버가 있으면
-            if let index = lastContentMembers.firstIndex(where: {$0.name == post.name}) {
-                
-                // 작성한 게시글이 있으면
-                if post.data != nil {
-                    if let index = studyMembers.firstIndex(where: {$0.name == post.name}) {
-                        studyMembers[index].fine += Int64(fine.plus)
-                    }
-                    
-                    lastContentMembers[index].postUrl = post.data?.postUrl
-                    lastContentMembers[index].title = post.data?.title
-                } else {
-                    if let index = studyMembers.firstIndex(where: {$0.name == post.name}) {
-                        studyMembers[index].fine -= Int64(fine.total) / Int64(notPostMemberCount)
-                    }
-                }
-            } else {
-                
-                if let index = studyMembers.firstIndex(where: {$0.name == post.name}) {
-                    // 새로 추가된 멤버 추가하기
-                    if post.data != nil {
-                        studyMembers[index].fine += Int64(fine.plus)
-                        let contentMember = ContentUser(context: persistentContainer.viewContext)
-                        contentMember.name = post.name
-                        contentMember.postUrl = post.data?.postUrl
-                        contentMember.title = post.data?.title
-                        contentMember.fine = Int64(Int(studyEntity.fine).convertFineInt())
-                        contentEntity.addToMembers(contentMember)
-                        lastContentMembers.append(contentMember)
-                    } else {
-                        studyMembers[index].fine -= Int64(fine.total) / Int64(notPostMemberCount)
-                        let contentMember = ContentUser(context: persistentContainer.viewContext)
-                        contentMember.name = post.name
-                        contentMember.postUrl = nil
-                        contentMember.title = nil
-                        contentMember.fine = Int64(Int(studyEntity.fine).convertFineInt())
-                        contentEntity.addToMembers(contentMember)
-                        lastContentMembers.append(contentMember)
-                    }
-                }
-            }
-        }
-  
-        let nextContentEntity = Content(context: persistentContainer.viewContext)
-        // 현재 공지의 마감일을 기준으로 한주 뒤에 마감일 언제인지
-        let setDay = Int(studyEntity.finishDay) //Int(contentEntity.finishWeekDay)
-        let nextWeekFinishDate = contentEntity.finishDate?.getFinishDate(finishDayNum: setDay, type: .nextWeek)
-    
-        nextContentEntity.currentWeekNumber = Int64((studyEntity.startDate?.calculateWeekNumber(finishDate: nextWeekFinishDate!))!)
-        nextContentEntity.finishDate = nextWeekFinishDate
-        nextContentEntity.plusFine = 0
-        nextContentEntity.finishWeekDay = studyEntity.finishDay
-        
-
-        // Content 멤버에 study member에 저장한 데이터 그대로 업데이트 해야함
-        for member in studyMembers {
-            let contentMember = ContentUser(context: persistentContainer.viewContext)
-            contentMember.name = member.name
-            contentMember.fine = member.fine
+        if let studyID = id,
+           let studyEntity = fetchStudy(id: studyID) {
             
-            nextContentEntity.addToMembers(contentMember)
-        }
+            studyEntity.title = title
+            studyEntity.deadlineDay = Int64(deadlineDay ?? 0)
+            studyEntity.fine = Int64(fine ?? 0)
+            
+            for member in members {
+                if member.study == nil {
+                    studyEntity.addToMembers(member)
+                }
+            }
+            
+            let lastContent = fetchLastContent(studyEntity: studyEntity)
+            lastContent?.deadlineDay = Int64(deadlineDay ?? 0)
+            lastContent?.deadlineDate = deadlineDate
         
-        studyEntity.addToContents(nextContentEntity)
+        }
         
         saveContext()
         
         completion()
     }
-    
-    // 시작 날짜 변경시 content의 CurrentWeekNumber 다시 계산해서 업데이트
-    func updateContentCurrentWeekNumber(startDate: Date, studyEntity: Study, completion: @escaping () -> ()) {
-    
-        let contents = fetchContent(studyEntity: studyEntity)
-        
-        for i in contents {
-            let calcWeekNumber = startDate.calculateWeekNumber(finishDate: i.finishDate!)
-            i.currentWeekNumber = Int64(calcWeekNumber)
-        }
-        
-        completion()
-    }
-    
-    func updateLastContentMembers(lastContent: Content, studyMembers: [User]) {
-        let lastContentMembers = fetchCoreDataContentMembers(content: lastContent)
-        
-        // 공지사항에 있는 멤버들의 벌금을 Study에 속한 멤버 데이터에 업데이트 (벌금 상태 동기화)
-        for member in lastContentMembers {
-            if let index = studyMembers.firstIndex(where: {$0.name == member.name}) {
-                studyMembers[index].fine = member.fine
-            }
-        }
-    }
-    
-    
-    
-    
-    // 멤버 가져오기
-    // 데이터 변경시
-    func fetchCoreDataMembers(study: Study) -> [User] {
-        let request: NSFetchRequest<User> = User.fetchRequest()
-        request.predicate = NSPredicate(format: "study = %@", study)
-        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        
-        var result = [User]()
-    
-        do {
-            result = try persistentContainer.viewContext.fetch(request)
-        } catch {
-            print(error.localizedDescription)
-        }
-        return result
-    }
-    
-    // 멤버 가져오기
-    // 블로그 데이터 가져올때
-    func fetchCoreDataMembers(study: Study) -> [UserModel] {
-        let request: NSFetchRequest<User> = User.fetchRequest()
-        request.predicate = NSPredicate(format: "study = %@", study)
-        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-
-        var result = [UserModel]()
-
-        do {
-            let members = try persistentContainer.viewContext.fetch(request)
-
-            members.forEach { member in
-                let userModel = UserModel(name: member.name, blogUrl: member.blogUrl, fine: Int(member.fine))
-                result.append(userModel)
-            }
-
-        } catch {
-            print(error.localizedDescription)
-        }
-        return result
-    }
-    
-    func fetchCoreDataContentMembers(content: Content) -> [ContentUser] {
-        let request: NSFetchRequest<ContentUser> = ContentUser.fetchRequest()
-        request.predicate = NSPredicate(format: "content = %@", content)
-        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        
-        var result: [ContentUser] = []
-        
-        do {
-            result = try persistentContainer.viewContext.fetch(request)
-        } catch {
-            print(error.localizedDescription)
-        }
-        return result
-    }
-    
     
     // MARK: DELETE
-    func deleteStudy(study: Study) {
+    func deleteStudy(study: Study?) {
         let context = persistentContainer.viewContext
-        context.delete(study)
-        saveContext()
-    }
-    
-    func deleteContent(content: Content) {
-        let context = persistentContainer.viewContext
-        context.delete(content)
-        saveContext()
-    }
-    
-    func deleteStudyMember(user: User) {
-        let context = persistentContainer.viewContext
-        context.delete(user)
-//        saveContext()
-    }
-    
-//    func deleteStudyMemberTest(user: User) {
-//        let context = persistentContainer.viewContext
-//        context.delete(user)
-//    }
-    
-    func deleteContentMember(user: ContentUser) {
-        let context = persistentContainer.viewContext
-        context.delete(user)
-        saveContext()
-    }
-    
-    func deleteContentMembers(members: [ContentUser]) {
         
+        if let studyEntity = study {
+            context.delete(studyEntity)
+        }
+        
+        saveContext()
+    }
+    
+    func deleteStudyMember(member: User) {
         let context = persistentContainer.viewContext
-        members.forEach { member in
+        context.delete(member)
+    }
+    
+    func deleteStudyMembers(members: [User]) {
+        for member in members {
+            let context = persistentContainer.viewContext
             context.delete(member)
         }
     }
     
-    func deletaAll() {
-        let readRequest = NSFetchRequest<NSManagedObject>(entityName: "Study")
-        let readRequest2 = NSFetchRequest<NSManagedObject>(entityName: "User")
-        let studyDatas = try! context.fetch(readRequest)
-        let userDatas = try! context.fetch(readRequest2)
-        
-        for data in studyDatas {
-            context.delete(data)
+    func deleteContentMembers(members: [ContentUser]) {
+            
+        for member in members {
+            let context = persistentContainer.viewContext
+            context.delete(member)
         }
-        
-        for data in userDatas {
-            context.delete(data)
-        }
-        
-        saveContext()
     }
     
     // MARK: SAVE
     func saveContext() {
-        
         guard context.hasChanges else { return }
         
         do {
@@ -410,6 +272,379 @@ class CoreDataManager {
             debugPrint(nsError.localizedDescription)
         }
     }
+}
+    
+//    // MARK: CREATE
+//    func createStudy(title: String, announcement: String, startDate: Date, finishDay: Int, fine: Int, members: [User], isNewStudy: Bool, completion: @escaping () -> ()) {
+//
+//        let studyEntity = Study(context: persistentContainer.viewContext)
+//        studyEntity.createDate = Date()
+//        studyEntity.title = title
+//        studyEntity.announcement = announcement
+//        studyEntity.startDate = startDate
+//        studyEntity.finishDay = Int64(finishDay)
+//        studyEntity.fine = Int64(fine)
+//        studyEntity.memberCount = Int64(members.count)
+//        studyEntity.isNewStudy = isNewStudy
+//
+//        addNewMembers(members: members, study: studyEntity)
+//
+//        let contentEntity = Content(context: persistentContainer.viewContext)
+//
+//        // 현재 날짜를 기준으로 선택한 마감일의 날짜를 구함
+//        let finishDate = Date().calcCurrentFinishDate(setDay: finishDay)
+//
+//        contentEntity.currentWeekNumber = Int64(startDate.calculateWeekNumber(finishDate: finishDate!))
+//        contentEntity.finishDate = finishDate
+//        contentEntity.plusFine = 0
+//        contentEntity.totalFine = 0
+//        contentEntity.finishWeekDay = Int64(Int(finishDay))
+//        studyEntity.addToContents(contentEntity)
+//
+//        addContentMembers(members: members, content: contentEntity)
+//
+//        saveContext()
+//        completion()
+//    }
+//
+//    func createContent(studyEntity: Study) -> Content {
+//        let contentEntity = Content(context: persistentContainer.viewContext)
+//
+//        let finishDate = Date().calcCurrentFinishDate(setDay: Int(studyEntity.finishDay))!
+//
+//        contentEntity.currentWeekNumber = Int64(studyEntity.startDate?.calculateWeekNumber(finishDate: finishDate) ?? 0)
+//        contentEntity.finishDate = finishDate
+//        contentEntity.plusFine = 0
+//        contentEntity.totalFine = 0
+//        contentEntity.finishWeekDay = studyEntity.finishDay
+//        studyEntity.addToContents(contentEntity)
+//
+//        let members: [User] = fetchCoreDataMembers(study: studyEntity)
+//
+//        addContentMembers(members: members, content: contentEntity)
+//
+//        return contentEntity
+//    }
+//
+//
+//    // 새로 생성할때 스터디엔티티에 멤버 연결
+//    func addNewMembers(members: [User], study: Study) {
+//        for member in members {
+//            study.addToMembers(member)
+//        }
+//    }
+//
+//    // 공지사항 생성할때 콘텐트 엔티티에 연결
+//    func addContentMembers(members: [User], content: Content) {
+//        for member in members {
+//            let contentMember = ContentUser(context: persistentContainer.viewContext)
+//            contentMember.name = member.name
+//            contentMember.postUrl = nil
+//            contentMember.fine = member.fine
+//
+//            content.addToMembers(contentMember)
+//        }
+//    }
+//
+//    // MARK: READ
+//    // 스터디 가져오기
+//    func fetchStudys() -> [Study] {
+//        let request: NSFetchRequest<Study> = Study.fetchRequest()
+//        request.sortDescriptors = [NSSortDescriptor(key: "createDate", ascending: true)]
+//        var fetchedStudys: [Study] = []
+//
+//        do {
+//            fetchedStudys = try persistentContainer.viewContext.fetch(request)
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        return fetchedStudys
+//    }
+//
+//    // 해당 id의 스터디 가지고오기
+//    func getStudy(id: NSManagedObjectID) -> Study? {
+//        do {
+//            return try context.existingObject(with: id) as? Study
+//        } catch {
+//            print("error")
+//            return nil
+//        }
+//    }
+//
+//    // content 가져오기
+//    func fetchContent(studyEntity: Study) -> [Content] {
+//        let request: NSFetchRequest<Content> = Content.fetchRequest()
+//        request.predicate = NSPredicate(format: "study = %@", studyEntity)
+//        request.sortDescriptors = [NSSortDescriptor(key: "finishDate", ascending: true)]
+//        var fetchedContents: [Content] = []
+//
+//        do {
+//            fetchedContents = try persistentContainer.viewContext.fetch(request)
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        return fetchedContents
+//    }
+//
+//    func fetchLastContent(studyEntity: Study) -> Content? {
+//        let request: NSFetchRequest<Content> = Content.fetchRequest()
+//        request.predicate = NSPredicate(format: "study = %@", studyEntity)
+//        request.sortDescriptors = [NSSortDescriptor(key: "finishDate", ascending: true)]
+//
+//        do {
+//            let contents = try persistentContainer.viewContext.fetch(request)
+//            return contents.last
+//        } catch {
+//            print("error")
+//            return nil
+//        }
+//    }
+//
+//
+//    // MARK: UPDATE
+//    func updateMembersFine(studyEntity: Study, contentEntity: Content, fine: (total: Int,plus: Int), membersPost: [PostResponse], completion: @escaping () -> ()) {
+//
+//        // study에 저장된 멤버 데이터 가지고오기
+//        let studyMembers: [User] = fetchCoreDataMembers(study: studyEntity)
+//
+//        // 마지막 content에 저장된 멤버 데이터 가지고오기
+//        var lastContentMembers = fetchCoreDataContentMembers(content: contentEntity)
+//
+//        // content에 벌금 업데이트
+//        contentEntity.totalFine = Int64(fine.total)
+//        contentEntity.plusFine = Int64(fine.plus)
+//
+//        // 게시글 작성하지 않은 멤버 카운트
+//        let notPostMemberCount = membersPost.filter({$0.data == nil}).count
+//
+//        // 이름 비교를 위해
+//        let lastContentMembersName = lastContentMembers.map({$0.name})
+//        let membersPostName = membersPost.map({$0.name})
+//
+//        // 이름만 따로 가져오고
+//        let names = lastContentMembersName.filter({ !membersPostName.contains($0) })
+//
+//        // 스터디 멤버에 속하지 않는 멤버 삭제
+//        if !names.isEmpty {
+//            for name in names {
+//                let deleteMember = lastContentMembers.filter({$0.name == name})
+//                deleteContentMember(user: deleteMember[0])
+//            }
+//        }
+//
+//        // 벌금 업데이트하는데
+//        // content에 있는 멤버는 업데이트하고
+//        // 없는 멤버는 추가
+//        for post in membersPost {
+//            // content에 해당 멤버가 있으면
+//            if let index = lastContentMembers.firstIndex(where: {$0.name == post.name}) {
+//
+//                // 작성한 게시글이 있으면
+//                if post.data != nil {
+//                    if let index = studyMembers.firstIndex(where: {$0.name == post.name}) {
+//                        studyMembers[index].fine += Int64(fine.plus)
+//                    }
+//
+//                    lastContentMembers[index].postUrl = post.data?.postUrl
+//                    lastContentMembers[index].title = post.data?.title
+//                } else {
+//                    if let index = studyMembers.firstIndex(where: {$0.name == post.name}) {
+//                        studyMembers[index].fine -= Int64(fine.total) / Int64(notPostMemberCount)
+//                    }
+//                }
+//            } else {
+//
+//                if let index = studyMembers.firstIndex(where: {$0.name == post.name}) {
+//                    // 새로 추가된 멤버 추가하기
+//                    if post.data != nil {
+//                        studyMembers[index].fine += Int64(fine.plus)
+//                        let contentMember = ContentUser(context: persistentContainer.viewContext)
+//                        contentMember.name = post.name
+//                        contentMember.postUrl = post.data?.postUrl
+//                        contentMember.title = post.data?.title
+//                        contentMember.fine = Int64(Int(studyEntity.fine).convertFineInt())
+//                        contentEntity.addToMembers(contentMember)
+//                        lastContentMembers.append(contentMember)
+//                    } else {
+//                        studyMembers[index].fine -= Int64(fine.total) / Int64(notPostMemberCount)
+//                        let contentMember = ContentUser(context: persistentContainer.viewContext)
+//                        contentMember.name = post.name
+//                        contentMember.postUrl = nil
+//                        contentMember.title = nil
+//                        contentMember.fine = Int64(Int(studyEntity.fine).convertFineInt())
+//                        contentEntity.addToMembers(contentMember)
+//                        lastContentMembers.append(contentMember)
+//                    }
+//                }
+//            }
+//        }
+//
+//        let nextContentEntity = Content(context: persistentContainer.viewContext)
+//        // 현재 공지의 마감일을 기준으로 한주 뒤에 마감일 언제인지
+//        let setDay = Int(studyEntity.finishDay) //Int(contentEntity.finishWeekDay)
+//        let nextWeekFinishDate = contentEntity.finishDate?.getFinishDate(finishDayNum: setDay, type: .nextWeek)
+//
+//        nextContentEntity.currentWeekNumber = Int64((studyEntity.startDate?.calculateWeekNumber(finishDate: nextWeekFinishDate!))!)
+//        nextContentEntity.finishDate = nextWeekFinishDate
+//        nextContentEntity.plusFine = 0
+//        nextContentEntity.finishWeekDay = studyEntity.finishDay
+//
+//
+//        // Content 멤버에 study member에 저장한 데이터 그대로 업데이트 해야함
+//        for member in studyMembers {
+//            let contentMember = ContentUser(context: persistentContainer.viewContext)
+//            contentMember.name = member.name
+//            contentMember.fine = member.fine
+//
+//            nextContentEntity.addToMembers(contentMember)
+//        }
+//
+//        studyEntity.addToContents(nextContentEntity)
+//
+//        saveContext()
+//
+//        completion()
+//    }
+//
+//    // 시작 날짜 변경시 content의 CurrentWeekNumber 다시 계산해서 업데이트
+//    func updateContentCurrentWeekNumber(startDate: Date, studyEntity: Study, completion: @escaping () -> ()) {
+//
+//        let contents = fetchContent(studyEntity: studyEntity)
+//
+//        for i in contents {
+//            let calcWeekNumber = startDate.calculateWeekNumber(finishDate: i.finishDate!)
+//            i.currentWeekNumber = Int64(calcWeekNumber)
+//        }
+//
+//        completion()
+//    }
+//
+//    func updateLastContentMembers(lastContent: Content, studyMembers: [User]) {
+//        let lastContentMembers = fetchCoreDataContentMembers(content: lastContent)
+//
+//        // 공지사항에 있는 멤버들의 벌금을 Study에 속한 멤버 데이터에 업데이트 (벌금 상태 동기화)
+//        for member in lastContentMembers {
+//            if let index = studyMembers.firstIndex(where: {$0.name == member.name}) {
+//                studyMembers[index].fine = member.fine
+//            }
+//        }
+//    }
+//
+//
+//
+//
+//    // 멤버 가져오기
+//    // 데이터 변경시
+//    func fetchCoreDataMembers(study: Study) -> [User] {
+//        let request: NSFetchRequest<User> = User.fetchRequest()
+//        request.predicate = NSPredicate(format: "study = %@", study)
+//        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+//
+//        var result = [User]()
+//
+//        do {
+//            result = try persistentContainer.viewContext.fetch(request)
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        return result
+//    }
+//
+//    // 멤버 가져오기
+//    // 블로그 데이터 가져올때
+//    func fetchCoreDataMembers(study: Study) -> [UserModel] {
+//        let request: NSFetchRequest<User> = User.fetchRequest()
+//        request.predicate = NSPredicate(format: "study = %@", study)
+//        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+//
+//        var result = [UserModel]()
+//
+//        do {
+//            let members = try persistentContainer.viewContext.fetch(request)
+//
+//            members.forEach { member in
+//                let userModel = UserModel(name: member.name, blogUrl: member.blogUrl, fine: Int(member.fine))
+//                result.append(userModel)
+//            }
+//
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        return result
+//    }
+//
+//    func fetchCoreDataContentMembers(content: Content) -> [ContentUser] {
+//        let request: NSFetchRequest<ContentUser> = ContentUser.fetchRequest()
+//        request.predicate = NSPredicate(format: "content = %@", content)
+//        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+//
+//        var result: [ContentUser] = []
+//
+//        do {
+//            result = try persistentContainer.viewContext.fetch(request)
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        return result
+//    }
+//
+//
+//    // MARK: DELETE
+//    func deleteStudy(study: Study) {
+//        let context = persistentContainer.viewContext
+//        context.delete(study)
+//        saveContext()
+//    }
+//
+//    func deleteContent(content: Content) {
+//        let context = persistentContainer.viewContext
+//        context.delete(content)
+//        saveContext()
+//    }
+//
+//    func deleteStudyMember(user: User) {
+//        let context = persistentContainer.viewContext
+//        context.delete(user)
+////        saveContext()
+//    }
+//
+////    func deleteStudyMemberTest(user: User) {
+////        let context = persistentContainer.viewContext
+////        context.delete(user)
+////    }
+//
+//    func deleteContentMember(user: ContentUser) {
+//        let context = persistentContainer.viewContext
+//        context.delete(user)
+//        saveContext()
+//    }
+//
+//    func deleteContentMembers(members: [ContentUser]) {
+//
+//        let context = persistentContainer.viewContext
+//        members.forEach { member in
+//            context.delete(member)
+//        }
+//    }
+//
+//    func deletaAll() {
+//        let readRequest = NSFetchRequest<NSManagedObject>(entityName: "Study")
+//        let readRequest2 = NSFetchRequest<NSManagedObject>(entityName: "User")
+//        let studyDatas = try! context.fetch(readRequest)
+//        let userDatas = try! context.fetch(readRequest2)
+//
+//        for data in studyDatas {
+//            context.delete(data)
+//        }
+//
+//        for data in userDatas {
+//            context.delete(data)
+//        }
+//
+//        saveContext()
+//    }
+    
+    
     
     
     
@@ -623,7 +858,7 @@ class CoreDataManager {
 //        return nil
 //    }
     
-}
+//}
 
 
 

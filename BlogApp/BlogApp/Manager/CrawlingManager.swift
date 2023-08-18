@@ -22,20 +22,10 @@ enum CrawlingError: Error {
     case notFoundId
     case notFoundTitleAndDate
     
+    case categoryNumberError
 }
 
 struct CrawlingManager {
-    
-    /// Blog URL에 "/category" 문자열을 추가하는 메소드
-    /// 이 메소드는 주어진 블로그 URL 뒤에 "/category" 문자열을 추가하여 새로운 URL을 반환합니다.
-    /// --------------------------------------------------------------
-    /// - Parameter blogUrl: 블로그 URL
-    /// - Returns: "/category"가 추가된 새로운 URL. blogUrl이 nil이거나 올바른 URL 형식이 아닌 경우, 이 메소드는 nil을 반환합니다.
-    static func addCategoryStr(blogUrl: String?) -> URL? {
-        guard let url = blogUrl else { return nil }
-        return URL(string: url + "/category")
-    }
- 
     /// HTML 문자열에서 head 부분만 가지고오는 메소드
     /// 이 메소드는 HTML 문자열에서 body 부분을 제외한 head 부분만 새로운 문자열로 반환합니다.
     /// --------------------------------------------------------------
@@ -52,110 +42,162 @@ struct CrawlingManager {
     }
     
     
+    enum BlogURLError: Error {
+        case notTistoryURL
+        case invalidURL
+        case requestFailed
+    }
     
-    /// 파라미터로 전달한 시작 날짜와 마감 날짜를 기준으로 해당 기간내에 작성한 게시글을 가져오는 메소드 입니다.
-    /// postUrl이 nil 여부를 체크하여 nil인경우 작성된 게시물 없음, 잘못된 URL등 Error메시지를 저장하며 nil이 아닌 경우
-    /// 전달받은 post 데이터를 저장합니다.
-    /// - Parameters:
-    ///   - members: <#members description#>
-    ///   - startDate: <#startDate description#>
-    ///   - endDate: <#endDate description#>
-    ///   - completion: <#completion description#>
-    static func fetchMemberPostData(members: [User], startDate: Date, endDate: Date, completion: @escaping (Result<[PostResponse],CrawlingError>) -> ())  {
+    /// 새로운 멤버를 추가할 경우 입력한 URL이 정상적인 URL인지 검사하는 메소드 입니다.
+    ///
+    /// - Parameter url: <#url description#>
+    static func validateBlogURL(url: String, completion: @escaping (Result<Void, BlogURLError>) -> ())  {
+        
+        if !url.contains("tistory") {
+            completion(.failure(.notTistoryURL))
+        }
+        
+        guard let validURL = URL(string: url) else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        
+        AF.request(validURL).responseString { result in
+            switch result.result {
+            case .success(_):
+                completion(.success(()))
+            case .failure( _):
+                completion(.failure(.requestFailed))
+            }
+        }
+    }
+
+
+    // 멤버별 블로그 게시글 목록 가지고오기
+    static func fetchMembersBlogPost(members: [User], startDate: Date?, deadlineDate: Date?, completion: @escaping ([PostResponse]) -> ()){
         
         let group = DispatchGroup()
         
-        var resultMembersData = Array(repeating: PostResponse(), count: members.count)
-        
-        for (index, member) in members.enumerated() {
-            
+        var resultPostsData = Array(repeating: PostResponse(), count: members.count)
+    
+        for i in 0 ..< members.count {
+    
             group.enter()
+            getCategoryLastPageNumber(blogUrl: members[i].blogUrl ?? "") { result in
             
-            if let url = addCategoryStr(blogUrl: member.blogUrl) {
-                getPostsURL(url: url) { result in
-                    switch result {
-                    case .success(let urls):
+                switch result {
+                case .success(let lastPageNumber):
+                    
+                    fetchPostsByPage(lastPageNumber: lastPageNumber, baseUrl: members[i].blogUrl ?? "", startDate: startDate, deadlineDate: deadlineDate) { result in
                         
-                        getPostTitleAndDate(urls: urls, startDate: startDate, endDate: endDate) { result in
-                            switch result {
-                            case .success(let postData):
-                                if let postData = postData {
-                                    resultMembersData[index] = postData.postUrl == nil ? PostResponse(name: member.name, data: nil, errorMessage: "작성된 게시글이 없습니다.") : PostResponse(name: member.name, data: postData, errorMessage: nil)
-                                }
-                                group.leave()
-                            case .failure(let error):
-                                print(error)
-                                group.leave()
+                        switch result {
+                        case .success(let postData):
+                            if postData?.title == nil {
+                                resultPostsData[i] = PostResponse(name: members[i].name, data: nil, errorMessage: "작성된 게시물이 없습니다.")
+                            } else {
+                                resultPostsData[i] = PostResponse(name: members[i].name, data: postData, errorMessage: nil)
                             }
+                            
+                            group.leave()
+                            
+                        case .failure( _):
+                            resultPostsData[i] = PostResponse(name: members[i].name, data: nil, errorMessage: "URL을 확인해주세요!")
+                            group.leave()
                         }
-                    case .failure(let error):
-                        resultMembersData[index] = PostResponse(name: member.name, data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
-                        group.leave()
                     }
+                case .failure( _):
+                    resultPostsData[i] = PostResponse(name: members[i].name, data: nil, errorMessage: "URL을 확인해주세요!")
+                    group.leave()
                 }
-            } else {
-                // URL이 잘못된 경우
-                resultMembersData[index] = PostResponse(name: member.name, data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
-                group.leave()
             }
         }
         
         group.notify(queue: .main) {
-            completion(.success(resultMembersData))
+            completion(resultPostsData)
         }
     }
-    
-    // 페이지 마지막 번호 가지고오기2
-    static func getLastPageNumber(member: UserModel, completion: @escaping (Result<[Int], CrawlingError>) -> ()) {
 
-        let url = addCategoryStr(blogUrl: member.blogUrl ?? "")
-
-        // URL에 공백있으면 에러 
-        if let url = url {
+    // #1
+    static func getCategoryLastPageNumber(blogUrl: String, completion: @escaping (Result<Int, CrawlingError>) -> ()){
+        
+        // URL nil 체크
+        if let url = URL(string: blogUrl + "/category") {
             AF.request(url).responseString { result in
                 switch result.result {
-                case .success(let data):
-                    guard let html = result.value else {
-                        completion(.failure(.urlError))
-                        return
-                    }
+                case .success( _):
+                    guard let html = result.value else { return }
                     
                     do {
                         let pattern = #"(/category\?page=\d+)""#
                         let regex = try NSRegularExpression(pattern: pattern, options: [])
-
                         let range = NSRange(html.startIndex..<html.endIndex, in: html)
                         let matches = regex.matches(in: html, options: [], range: range)
-
                         let matchedStrings = matches.compactMap { match -> Int? in
-                            guard let range = Range(match.range(at: 1), in: html) else {
-                                return nil
-                            }
-
+                            guard let range = Range(match.range(at: 1), in: html) else { return nil }
+                            
                             let pageNumber = Int(String(html[range]).components(separatedBy: "=")[1])
-
+                            
                             return pageNumber
                         }
-
-                        let pagesNumber = matchedStrings.sorted()
-                        completion(.success(pagesNumber))
-
+                        
+                        completion(.success(matchedStrings.sorted().last ?? 0))
+                        
+                        
                     } catch {
-                        print("getLastPageNumber error")
+                        print("fetchMemberBlogPostList - Error")
+                        completion(.failure(.tryError))
                     }
-                case .failure(let error):
+                case .failure( _):
                     print("category 번호 못가져옴")
-                    completion(.failure(.error))
+                    completion(.failure(.categoryNumberError))
                 }
             }
         } else {
+            print("URL 변환 실패")
             completion(.failure(.urlError))
         }
     }
     
-    // 작성한 게시글들 url 가지고오기2
-    static func getPostsURL(url: URL, completion: @escaping (Result<[String], CrawlingError>) -> ()) {
+    // 페이지별로 게시글 URL 가지고오기
+    static func fetchPostsByPage(lastPageNumber: Int, baseUrl: String, startDate: Date?, deadlineDate: Date?, completion: @escaping (Result<PostModel?,CrawlingError>) -> ()) {
+        
+        var currentPage = 1
+        
+        func checkBlogPostInPage() {
+            
+            guard currentPage <= lastPageNumber else { return }
+            
+            if let url = URL(string: baseUrl + "/category" + "/?page=\(currentPage)") {
+                getPostsUrl(url: url) { result in
+                    switch result {
+                    case .success(let urls):
+                   
+                        checkBlogPostsInRange(urls: urls, startDate: startDate, deadlineDate: deadlineDate) { result  in
+                            switch result {
+                            case .success(let postData):
+                                if let post = postData {
+                                    completion(.success(post))
+                                } else {
+                                    currentPage += 1
+                                    checkBlogPostInPage()
+                                }
+                            case .failure( _):
+                                currentPage += 1
+                                checkBlogPostInPage()
+                            }
+                        }
+                    case .failure( _):
+                        currentPage += 1
+                        checkBlogPostInPage()
+                    }
+                }
+            }
+        }
+        checkBlogPostInPage()
+    }
     
+    // 해당 페이지의 게시글들의 URL 가지고오기
+    static func getPostsUrl(url: URL, completion: @escaping (Result<[String],CrawlingError>) -> ()) {
         AF.request(url).responseString { result in
             switch result.result {
             case .success(let html):
@@ -163,7 +205,7 @@ struct CrawlingManager {
                     completion(.failure(.htmlError))
                     return
                 }
-                
+    
                 do {
                     let doc = try SwiftSoup.parse(headContent)
                     let scriptElements = try doc.select("script[type=application/ld+json]")
@@ -194,87 +236,78 @@ struct CrawlingManager {
             }
         }
     }
- 
-    static func getPostTitleAndDate(urls: [String], startDate: Date?, endDate: Date?, completion: @escaping (Result<PostModel?, CrawlingError>) -> ()) {
     
-        var currentIndex = 0
-        let calendar = Calendar.current
-
-        func next() {
-
-            guard currentIndex < urls.count else {
-                print("없음 - \(urls)")
-                completion(.success(nil))
-                return
-            }
+    static func checkBlogPostsInRange(urls: [String], startDate: Date?, deadlineDate: Date?, completion: @escaping (Result<PostModel?,CrawlingError>) -> ()) {
+        var currentCount = 0
+        
+        func checkPost() {
+            guard currentCount < urls.count else { return completion(.success(nil)) }
             
-            let currentUrl = urls[currentIndex]
-
+            let currentUrl = urls[currentCount]
+            
             if let url = URL(string: currentUrl) {
                 AF.request(url).responseString { result in
                     switch result.result {
                     case .success(let html):
-
+                        
                         let headContent = getHtmlHead(html: html)
-
+                        
                         do {
                             let doc = try SwiftSoup.parse(headContent ?? "")
                             let title = try doc.select("meta[property=og:title]").first()?.attr("content")
-                            let date = try doc.select("meta[property=article:published_time]").first()?.attr("content")
-
-                            // 날짜 비교
-                            let dateRange = DateInterval(start: startDate!, end: endDate!)
+                            let dateStr = try doc.select("meta[property=article:published_time]").first()?.attr("content")
                             
-                            if dateRange.contains((date?.convertToDate())!) {
-                                let postModel = PostModel(title: title, date: date, postUrl: currentUrl)
-                                completion(.success(postModel))
+                            let postDate = dateStr?.toDate() ?? Date()
+                            let startDate = startDate ?? Date()
+                            let deadlineDate = deadlineDate ?? Date()
+
+                            // 시작일 ~ 마감일안에 포함된 경우만
+                            if postDate >= startDate && postDate <= deadlineDate {
+                                completion(.success(PostModel(title: title, date: dateStr, postUrl: urls[currentCount])))
                             } else {
-                                
-                                let result = calendar.compare((date?.convertToDate())!, to: startDate!, toGranularity: .day)
-                                
-                                switch result {
-                                case .orderedAscending:
-                                    let postModel = PostModel(title: nil, date: nil, postUrl: nil)
-                                    completion(.success(postModel))
-                                case .orderedDescending:
-                                    currentIndex += 1
-                                    next()
-                                default:
-                                    currentIndex += 1
-                                    next()
+                                // 포함되지 않은 경우에는 다음 게시물 체크
+                                if postDate <= startDate {
+                                    completion(.success(PostModel(title: nil, date: nil, postUrl: nil)))
+                                } else {
+                                    currentCount += 1
+                                    checkPost()
                                 }
                             }
                         } catch {
-                            completion(.failure(.tryError))
+                            completion(.failure(.error))
                         }
                     case .failure(_):
-                        completion(.failure(.urlError))
+                        completion(.failure(.error))
                     }
                 }
             }
         }
-        next()
-    }
-    
-    
-    /// 새로운 멤버를 추가할 경우 입력한 URL이 정상적인 URL인지 검사하는 메소드 입니다.
-    ///
-    /// - Parameter url: <#url description#>
-    static func validateBlogURL(url: String, completion: @escaping (Bool) -> ())  {
-        if let url = URL(string: url) {
-            AF.request(url).responseString { result in
-                switch result.result {
-                case .success(_):
-                    completion(true)
-                case .failure(let error):
-                    completion(false)
-                }
-            }
-        } else {
-            completion(false)
-        }
+        checkPost()
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/// Blog URL에 "/category" 문자열을 추가하는 메소드
+/// 이 메소드는 주어진 블로그 URL 뒤에 "/category" 문자열을 추가하여 새로운 URL을 반환합니다.
+/// --------------------------------------------------------------
+/// - Parameter blogUrl: 블로그 URL
+/// - Returns: "/category"가 추가된 새로운 URL. blogUrl이 nil이거나 올바른 URL 형식이 아닌 경우, 이 메소드는 nil을 반환합니다.
+//    static func addCategoryStr(blogUrl: String?) -> URL? {
+//        guard let url = blogUrl else { return nil }
+//        return URL(string: url + "/category")
+//    }
 
 //enum CrawlingManager {
 //
@@ -681,3 +714,205 @@ struct CrawlingManager {
 //        }
 //    }
 
+///// 파라미터로 전달한 시작 날짜와 마감 날짜를 기준으로 해당 기간내에 작성한 게시글을 가져오는 메소드 입니다.
+///// postUrl이 nil 여부를 체크하여 nil인경우 작성된 게시물 없음, 잘못된 URL등 Error메시지를 저장하며 nil이 아닌 경우
+///// 전달받은 post 데이터를 저장합니다.
+///// - Parameters:
+/////   - members: <#members description#>
+/////   - startDate: <#startDate description#>
+/////   - endDate: <#endDate description#>
+/////   - completion: <#completion description#>
+//static func fetchMemberPostData(members: [User], startDate: Date, endDate: Date, completion: @escaping (Result<[PostResponse],CrawlingError>) -> ())  {
+//
+//    let group = DispatchGroup()
+//
+//    var resultMembersData = Array(repeating: PostResponse(), count: members.count)
+//
+//    for (index, member) in members.enumerated() {
+//
+//        group.enter()
+//
+//        if let url = URL(string: member.blogUrl ?? "" + "/category") {//addCategoryStr(blogUrl: member.blogUrl) {
+//            getPostsURL(url: url) { result in
+//                switch result {
+//                case .success(let urls):
+//
+//                    getPostTitleAndDate(urls: urls, startDate: startDate, endDate: endDate) { result in
+//                        switch result {
+//                        case .success(let postData):
+//                            if let postData = postData {
+//                                resultMembersData[index] = postData.postUrl == nil ? PostResponse(name: member.name, data: nil, errorMessage: "작성된 게시글이 없습니다.") : PostResponse(name: member.name, data: postData, errorMessage: nil)
+//                            }
+//                            group.leave()
+//                        case .failure(let error):
+//                            print(error)
+//                            group.leave()
+//                        }
+//                    }
+//                case .failure(let error):
+//                    resultMembersData[index] = PostResponse(name: member.name, data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
+//                    group.leave()
+//                }
+//            }
+//        } else {
+//            // URL이 잘못된 경우
+//            resultMembersData[index] = PostResponse(name: member.name, data: nil, errorMessage: "블로그 URL을 확인 해주세요.")
+//            group.leave()
+//        }
+//    }
+//
+//    group.notify(queue: .main) {
+//        completion(.success(resultMembersData))
+//    }
+//}
+//
+//// 페이지 마지막 번호 가지고오기2
+//static func getLastPageNumber(member: UserModel, completion: @escaping (Result<[Int], CrawlingError>) -> ()) {
+//
+//    let url = URL(string: member.blogUrl ?? "" + "/category")
+//
+//    // URL nil 체크
+//    if let url = url {
+//        AF.request(url).responseString { result in
+//            switch result.result {
+//            case .success(let data):
+//                guard let html = result.value else {
+//                    completion(.failure(.urlError))
+//                    return
+//                }
+//
+//                do {
+//                    let pattern = #"(/category\?page=\d+)""#
+//                    let regex = try NSRegularExpression(pattern: pattern, options: [])
+//
+//                    let range = NSRange(html.startIndex..<html.endIndex, in: html)
+//                    let matches = regex.matches(in: html, options: [], range: range)
+//
+//                    let matchedStrings = matches.compactMap { match -> Int? in
+//                        guard let range = Range(match.range(at: 1), in: html) else {
+//                            return nil
+//                        }
+//
+//                        let pageNumbers = Int(String(html[range]).components(separatedBy: "=")[1])
+//
+//                        return pageNumbers
+//                    }
+//
+//                    let pagesNumbers = matchedStrings.sorted()
+//                    completion(.success(pagesNumbers))
+//
+//                } catch {
+//                    print("getLastPageNumber error")
+//                }
+//            case .failure(let error):
+//                print("category 번호 못가져옴")
+//                completion(.failure(.error))
+//            }
+//        }
+//    } else {
+//        completion(.failure(.urlError))
+//    }
+//}
+//
+//// 작성한 게시글들 url 가지고오기2
+//static func getPostsURL(url: URL, completion: @escaping (Result<[String], CrawlingError>) -> ()) {
+//
+//    AF.request(url).responseString { result in
+//        switch result.result {
+//        case .success(let html):
+//            guard let headContent = getHtmlHead(html: html) else {
+//                completion(.failure(.htmlError))
+//                return
+//            }
+//
+//            do {
+//                let doc = try SwiftSoup.parse(headContent)
+//                let scriptElements = try doc.select("script[type=application/ld+json]")
+//                let jsonData = try scriptElements.first()?.html()
+//
+//                guard let data = jsonData?.data(using: .utf8),
+//                      let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+//                      let itemList = json["itemListElement"] as? [[String: Any]] else {
+//                    completion(.failure(.notFoundItemListElement))
+//                    return
+//                }
+//
+//                var urls = [String]()
+//
+//                itemList.forEach { item in
+//                    if let item = item["item"] as? [String: String],
+//                       let url = item["@id"] {
+//                        urls.append(url)
+//                    }
+//                }
+//                completion(.success(urls))
+//            } catch {
+//                completion(.failure(.tryError))
+//            }
+//
+//        case .failure(_):
+//            completion(.failure(.getPostURLError))
+//        }
+//    }
+//}
+//
+//static func getPostTitleAndDate(urls: [String], startDate: Date?, endDate: Date?, completion: @escaping (Result<PostModel?, CrawlingError>) -> ()) {
+//
+//    var currentIndex = 0
+//    let calendar = Calendar.current
+//
+//    func next() {
+//
+//        guard currentIndex < urls.count else {
+//            print("없음 - \(urls)")
+//            completion(.success(nil))
+//            return
+//        }
+//
+//        let currentUrl = urls[currentIndex]
+//
+//        if let url = URL(string: currentUrl) {
+//            AF.request(url).responseString { result in
+//                switch result.result {
+//                case .success(let html):
+//
+//                    let headContent = getHtmlHead(html: html)
+//
+//                    do {
+//                        let doc = try SwiftSoup.parse(headContent ?? "")
+//                        let title = try doc.select("meta[property=og:title]").first()?.attr("content")
+//                        let dateStr = try doc.select("meta[property=article:published_time]").first()?.attr("content")
+//
+//                        // 날짜 비교
+//                        let dateRange = DateInterval(start: startDate!, end: endDate!)
+//
+//                        if dateRange.contains(dateStr?.toDate() ?? Date()) {
+//                            let postModel = PostModel(title: title, date: dateStr, postUrl: currentUrl)
+//                            completion(.success(postModel))
+//                        } else {
+//
+//                            let result = calendar.compare(dateStr?.toDate() ?? Date(), to: startDate!, toGranularity: .day)
+//
+//                            switch result {
+//                            case .orderedAscending:
+//                                let postModel = PostModel(title: nil, date: nil, postUrl: nil)
+//                                completion(.success(postModel))
+//                            case .orderedDescending:
+//                                currentIndex += 1
+//                                next()
+//                            default:
+//                                currentIndex += 1
+//                                next()
+//                            }
+//                        }
+//                    } catch {
+//                        completion(.failure(.tryError))
+//                    }
+//                case .failure(_):
+//                    completion(.failure(.urlError))
+//                }
+//            }
+//        }
+//    }
+//    next()
+//}

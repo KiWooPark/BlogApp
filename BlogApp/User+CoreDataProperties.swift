@@ -2,7 +2,7 @@
 //  User+CoreDataProperties.swift
 //  BlogApp
 //
-//  Created by PKW on 2023/06/22.
+//  Created by PKW on 2023/07/29.
 //
 //
 

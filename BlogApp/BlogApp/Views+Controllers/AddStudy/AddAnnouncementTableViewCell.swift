@@ -42,12 +42,12 @@ class AddAnnouncementTableViewCell: UITableViewCell {
     }
     
     func configData() {
-        if viewModel?.announcement.value == nil {
-            AnnouncementTextView.text = textViewPlaceHolder
-            AnnouncementTextView.textColor = .lightGray
-        }
-
-        //AnnouncementTextView.text = viewModel?.announcement.value == nil ? "공지사항 및 스터디 소개를 작성해주세요." : viewModel?.announcement.value ?? ""
+//        if viewModel?.announcement.value == nil {
+//            AnnouncementTextView.text = textViewPlaceHolder
+//            AnnouncementTextView.textColor = .lightGray
+//        } else {
+//            AnnouncementTextView.text = viewModel?.announcement.value ?? ""
+//        }
     }
 }
 
@@ -56,7 +56,7 @@ extension AddAnnouncementTableViewCell: UITextViewDelegate {
         delegate?.updateHeightOfRow(self, textView)
         
         let text = textView.text == "" ? nil : textView.text
-        viewModel?.updateStudyProperty(.announcement, value: text)
+//        viewModel?.updateStudyProperty(.announcement, value: text)
     }
 
     // 포커스를 얻는 경우

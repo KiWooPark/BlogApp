@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22F66" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Content" representedClassName="Content" syncable="YES">
-        <attribute name="currentWeekNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="finishDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="finishWeekDay" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="contentNumber" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="deadlineDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="deadlineDay" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="fine" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="plusFine" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="totalFine" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="members" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ContentUser" inverseName="content" inverseEntity="ContentUser"/>
         <relationship name="study" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Study" inverseName="contents" inverseEntity="Study"/>
@@ -17,13 +19,12 @@
         <relationship name="content" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Content" inverseName="members" inverseEntity="Content"/>
     </entity>
     <entity name="Study" representedClassName="Study" syncable="YES">
-        <attribute name="announcement" optional="YES" attributeType="String"/>
         <attribute name="createDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="deadlineDay" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="fine" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="finishDay" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="firstStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="isNewStudy" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="memberCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="contents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Content" inverseName="study" inverseEntity="Content"/>
         <relationship name="members" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="User" inverseName="study" inverseEntity="User"/>

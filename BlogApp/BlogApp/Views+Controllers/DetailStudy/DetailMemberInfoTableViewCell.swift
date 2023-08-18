@@ -8,7 +8,7 @@
 import UIKit
 
 protocol DetailMemberInfoTableViewCellDelegate: AnyObject {
-    func showBlogWebView(urlStr: String)
+    func showBlogWebView(blogURL: String)
 }
 
 class DetailMemberInfoTableViewCell: UITableViewCell {
@@ -20,13 +20,7 @@ class DetailMemberInfoTableViewCell: UITableViewCell {
     
     @IBOutlet weak var nameLabel: UILabel!
     
-    @IBOutlet weak var blogNameLable: UILabel!
-    
-    @IBOutlet weak var newPostCheckLabel: UILabel!
-    
-    @IBOutlet weak var postTitleLabel: UILabel!
-    
-    @IBOutlet weak var postDateLabel: UILabel!
+    @IBOutlet weak var blogNameLabel: UILabel!
     
     @IBOutlet weak var fineLabel: UILabel!
     
@@ -42,9 +36,7 @@ class DetailMemberInfoTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        blogNameLable.isHidden = false
-        newPostCheckLabel.isHidden = false
-        postDateLabel.isHidden = false
+        blogNameLabel.isHidden = false
         showPostButton.isEnabled = true
     }
     
@@ -62,22 +54,12 @@ class DetailMemberInfoTableViewCell: UITableViewCell {
     }
     
     func configData(indexPath: IndexPath) {
-
+        
         let target = viewModel?.members[indexPath.row - 1]
-
+        
         nameLabel.text = target?.name ?? ""
-        blogNameLable.text = target?.blogName ?? ""
-        fineLabel.text = "\(target?.fine ?? 0)"
-
-        if target?.postData?.data == nil {
-            postTitleLabel.text = target?.postData?.errorMessage ?? ""
-            newPostCheckLabel.text = "X"
-            postDateLabel.text = ""
-        } else {
-            newPostCheckLabel.text = "O"
-            postTitleLabel.text = target?.postData?.data?.title ?? ""
-            postDateLabel.text = (target?.postData?.data?.date ?? "").convertDateFormat(type: .mmdd)
-        }
+        blogNameLabel.text = target?.blogUrl ?? ""
+        fineLabel.text = "보증금 | \(target?.fine ?? 0)"
     }
     
     func configLayout(indexPath: IndexPath) {
@@ -87,17 +69,18 @@ class DetailMemberInfoTableViewCell: UITableViewCell {
             contentView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         }
 
-        if viewModel?.members[indexPath.row - 1].postData?.data == nil {
-            blogNameLable.isHidden = true
-            newPostCheckLabel.isHidden = viewModel?.members[indexPath.row - 1].postData?.errorMessage == "URL을 확인해주세요." ? true : false
-            postDateLabel.isHidden = true
-            showPostButton.isEnabled = false
-        }
+//        if viewModel?.members[indexPath.row - 1].postData?.data == nil {
+//            blogNameLable.isHidden = true
+//            newPostCheckLabel.isHidden = viewModel?.members[indexPath.row - 1].postData?.errorMessage == "URL을 확인해주세요." ? true : false
+//            postDateLabel.isHidden = true
+//            showPostButton.isEnabled = false
+//        }
     }
     
     @IBAction func tapShowButton(_ sender: Any) {
         guard let button = sender as? UIButton else { return }
-        let target = viewModel?.members[button.tag - 1]
-        delegate?.showBlogWebView(urlStr: target?.postData?.data?.postUrl ?? "")
+    
+        let blogUrl = viewModel?.members[button.tag - 1].blogUrl ?? ""
+        delegate?.showBlogWebView(blogURL: blogUrl)
     }
 }
