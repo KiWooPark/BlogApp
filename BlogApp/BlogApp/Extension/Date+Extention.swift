@@ -7,13 +7,6 @@
 
 import Foundation
 
-enum DateFormatType {
-    case yyyymmdd
-    case mmdd
-    case yyyyMMddHHmmssZ
-    
-}
-
 enum CompareDateType {
     case startDate
     case deadlineDate
@@ -35,25 +28,6 @@ extension Date {
         
         return dateFormatter.string(from: self)
     }
-    
-//    // 한국 날짜로 변환
-//    func convertToKoreaDate() -> Date? {
-//        if let koreaTimeZone = TimeZone(identifier: "Asia/Seoul") {
-//            let koreaDate = self.addingTimeInterval(TimeInterval(koreaTimeZone.secondsFromGMT()))
-//            return koreaDate
-//        }
-//        return nil
-//    }
-//    
-//    // UTC 날짜로 변환
-//    func convertToUTCDate() -> Date? {
-//        if let koreaTimeZone = TimeZone(identifier: "Asia/Seoul") {
-//            let utcDate = self.addingTimeInterval(-TimeInterval(koreaTimeZone.secondsFromGMT()))
-//            return utcDate
-//        }
-//        return nil
-//    }
-    
     
     // 마감 날짜에 1초를 더해서 시작 날짜 생성
     func convertDeadlineToStartDate() -> Date? {
@@ -106,26 +80,8 @@ extension Date {
         let day = calendar.dateComponents([.weekday], from: self)
         return day.weekday ?? 0
     }
-    
-   
-    /*
-     공지사항에 시작 날짜가 없을때
-     - 마감 날짜 / 현재 날짜
-     
-     공지사항에 시작 날짜가 있을때
-     
-     # 시작 날짜
-     - 마지막 공지사항 마감 날짜 / 마감 날짜 / 현재 날짜
-     
-     # 마감 날짜
-     - 시작 날짜 / 현재 날짜
-     */
-    
-    
-    
-        
+
     // 날짜 비교
-    //func dateCompare(fromDate: Date?, editType: EditDateType, compareType: EditDateType.CompareType)
     func dateCompare(fromDate: Date?, editType: CompareDateType) -> CompareDateType.CompareResult {
        
         var calendar = Calendar(identifier: .iso8601)
@@ -165,73 +121,6 @@ extension Date {
                 return .sameDeadlineDate
             }
         }
-        
-    
-//        switch result {
-//        case .orderedAscending: // 과거
-//            switch editType {
-//            case .startDate:
-//                switch compareType {
-//                case .startDate:
-//                    return .pastLastContentDeadlineDate // "마지막 마감일보다 과거"
-//                case .deadlineDate:
-//                    return .pastDeadlineDate // "마감일보다 과거"
-//                default:
-//                    return .none
-//                }
-//            case .deadlineDate:
-//                switch compareType {
-//                case .startDate:
-//                    return .pastLastContentDeadlineDate // "마지막 마감일보다 과거"
-//                case .deadlineDate:
-//                    return .pastToday // "오늘보다 과거"
-//                default:
-//                    return .none
-//                }
-//            }
-//        case .orderedDescending: // 미래
-//            switch editType {
-//            case .startDate:
-//                switch compareType {
-//                case .startDate:
-//                    return .futureLastContentDeadlineDate // "마지막 마감일보다 미래"
-//                case .deadlineDate:
-//                    return .futureDeadlineDate // "마감일보다 미래"
-//                default:
-//                    return .none
-//                }
-//            case .deadlineDate:
-//                switch compareType {
-//                case .startDate:
-//                    return .futureLastContentDeadlineDate // "마지막 마감일보다 미래"
-//                case .deadlineDate:
-//                    return .futureToday // "오늘보다 미래"
-//                default:
-//                    return .none
-//                }
-//            }
-//        case .orderedSame: // 현재
-//            switch editType {
-//            case .startDate:
-//                switch compareType {
-//                case .startDate:
-//                    return .sameLastContentDeadlineDate // "마지막 마감일과 같음"
-//                case .deadlineDate:
-//                    return .sameDeadlineDate // "마감일과 같음"
-//                default:
-//                    return .none
-//                }
-//            case .deadlineDate:
-//                switch compareType {
-//                case .startDate:
-//                    return .sameLastContentDeadlineDate // "마지막 마감일과 같음"
-//                case .deadlineDate:
-//                    return .sameToday // "오늘과 같음"
-//                default:
-//                    return .none
-//                }
-//            }
-//        }
     }
     
     
@@ -287,35 +176,6 @@ extension Date {
             return (currentDate, nextWeekFinishDate)
         }
     }
-    
-//    func calculateNewContentDeadlineDate(studyDeadlineDay: Int) -> Date? {
-//
-//        var calendar = Calendar(identifier: .iso8601)
-//        calendar.firstWeekday = 2
-//
-//        // self -> 마감일에 1초를 더한 날짜
-//        let nextStartDate = self.convertDeadlineToStartDate()
-//
-//        // 마감일을 기준으로 다음 마감 날짜 구하기
-//        // 마감날짜에 +1초한 날짜를 기준으로 다음 마감 날짜를 구해야하는데
-//        let nowDay = calendar.dateComponents([.weekday], from: nextStartDate!).weekday ?? 0
-//        let calcDay = (studyDeadlineDay + 7 - nowDay) % 7
-//
-//        var deadlineDate = calendar.date(byAdding: .day, value: calcDay, to: nextStartDate!) ?? Date()
-//
-//        let year = calendar.dateComponents([.year], from: deadlineDate).year
-//        let month = calendar.dateComponents([.month], from: deadlineDate).month
-//        let day = calendar.dateComponents([.day], from: deadlineDate).day
-//
-//        let components = DateComponents(year: year, month: month, day: day, hour: 23, minute: 59, second: 59)
-//        deadlineDate = calendar.date(from: components)!
-//
-//        print("nowDay", nowDay)
-//        print("calcDay", calcDay)
-//        print("currentDate", deadlineDate)
-//
-//        return deadlineDate
-//    }
     
     func calculateNewContentFinishDate(deadlineDay: Int) -> Date? {
         // 마감 날짜를 기준으로 다음주를 구함
@@ -377,8 +237,6 @@ extension Date {
     
         return (monday: resultMonday, sunday: resultSunday)
     }
-    
-
     
     enum FinishDateType {
         case nextWeek
@@ -468,10 +326,6 @@ extension Date {
 
         return calendar.date(from: resultComponents)
     }
-    
-
-    
-
 }
 
 

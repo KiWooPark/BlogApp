@@ -63,7 +63,7 @@ class DetailStudyViewController: UIViewController, ViewModelBindableType {
         insertMemberInfoViewsInStackView()
         
         if viewModel?.isDeadlinePassed() == true {
-            makeAlertDialog(title: "마감 날짜가 지났습니다.\n\(viewModel?.lastContent?.contentNumber ?? 0)회차 마감을 진행해 주세요.", message: nil, type: .addContent)
+            makeAlertDialog(title: "마감 날짜가 지났습니다.\n\(viewModel?.lastContent?.contentNumber ?? 0)회차 마감을 진행해 주세요", message: nil, type: .addContent)
         }
     }
     
@@ -81,13 +81,13 @@ class DetailStudyViewController: UIViewController, ViewModelBindableType {
         guard let target = viewModel?.study.value else { return }
         
         if target.isNewStudy == true {
-            studySubTitleLabel.text = "신규로 등록된 스터디에요."
+            studySubTitleLabel.text = "신규로 등록된 스터디에요"
             studyNameLabel.text = target.title ?? ""
             firstStudyDateLabel.text = (target.firstStartDate ?? Date()).toString()
             deadlineDayLabel.text = "\(Int(target.deadlineDay).convertDeadlineDayToString())"
             fineLabel.text = "\(Int(target.fine).insertComma())원"
             
-            studyCountLabel.text = "\(viewModel?.lastContent?.contentNumber ?? 0) 회차 진행중이에요. "
+            studyCountLabel.text = "\(viewModel?.lastContent?.contentNumber ?? 0) 회차 진행중이에요"
             
             let dDay = viewModel?.calculateDday() ?? 0
             
@@ -100,7 +100,7 @@ class DetailStudyViewController: UIViewController, ViewModelBindableType {
             }
         
             if viewModel?.contentList.count == 1 {
-                durationSubTitleLabel.text = "이번 회차는 처음 진행되는 회차에요."
+                durationSubTitleLabel.text = "이번 회차는 처음 진행되는 회차에요"
                 durationLabel.text = "~ \(viewModel?.lastContent?.deadlineDate?.toString() ?? "")"
             } else {
                 durationSubTitleLabel.text = "\((viewModel?.lastContent?.contentNumber ?? 0) - 1) 회차 마감일 이후부터 시작되요!"
@@ -108,16 +108,16 @@ class DetailStudyViewController: UIViewController, ViewModelBindableType {
             }
 
             // 참여자
-            memberCountLabel.text = "현재 \(viewModel?.members.count ?? 0)명이 참여중이에요."
+            memberCountLabel.text = "현재 \(viewModel?.members.count ?? 0)명이 참여중이에요"
             
         } else {
-            studySubTitleLabel.text = "기존에 진행으로 등록된 스터디에요."
+            studySubTitleLabel.text = "기존에 진행으로 등록된 스터디에요"
             studyNameLabel.text = target.title ?? ""
             firstStudyDateLabel.text = (target.firstStartDate ?? Date()).toString()
             deadlineDayLabel.text = "\(Int(target.deadlineDay).convertDeadlineDayToString())"
             fineLabel.text = "\(Int(target.fine).insertComma())원"
             
-            studyCountLabel.text = "\(viewModel?.lastContent?.contentNumber ?? 0) 회차 진행중이에요. "
+            studyCountLabel.text = "\(viewModel?.lastContent?.contentNumber ?? 0) 회차 진행중이에요"
             
             let dDay = viewModel?.calculateDday() ?? 0
             
@@ -132,10 +132,10 @@ class DetailStudyViewController: UIViewController, ViewModelBindableType {
             let startDate = viewModel?.lastContent?.startDate ?? Date()
             let deadlineDate = viewModel?.lastContent?.deadlineDate ?? Date()
             
-            studyCountLabel.text = "\(viewModel?.lastContent?.contentNumber ?? 0) 회차 진행중이에요. "
+            studyCountLabel.text = "\(viewModel?.lastContent?.contentNumber ?? 0) 회차 진행중이에요"
             
             if viewModel?.lastContent?.contentNumber ?? 0 == 1 {
-                durationSubTitleLabel.text = "이번 회차는 처음 진행되는 회차에요."
+                durationSubTitleLabel.text = "이번 회차는 처음 진행되는 회차에요"
             } else {
                 durationSubTitleLabel.text = "\((viewModel?.lastContent?.contentNumber ?? 0) - 1) 회차 마감일 이후부터 시작되요!"
             }
@@ -144,7 +144,7 @@ class DetailStudyViewController: UIViewController, ViewModelBindableType {
             
             durationLabel.text = "\(startDate.toString()) ~ \(deadlineDate.toString())"
             
-            memberCountLabel.text = "현재 \(viewModel?.members.count ?? 0)명이 참여중이에요."
+            memberCountLabel.text = "현재 \(viewModel?.members.count ?? 0)명이 참여중이에요"
         }
     }
     

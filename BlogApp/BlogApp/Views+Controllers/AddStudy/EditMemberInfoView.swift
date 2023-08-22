@@ -11,14 +11,6 @@ import Then
 
 class EditMemberInfoView: UIView {
 
-//    let baseStackView = UIStackView().then {
-//        $0.translatesAutoresizingMaskIntoConstraints = false
-//        $0.backgroundColor = .clear
-//        $0.axis = .horizontal
-//        $0.distribution = .equalSpacing
-//        $0.spacing = 10
-//    }
-    
     let infoStackView = UIStackView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear

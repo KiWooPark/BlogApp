@@ -37,24 +37,24 @@ extension String {
     
     // 날짜 형식 변환
     // return Date로 변경 
-    func convertDateFormat(type: DateFormatType) -> String {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        let date = dateFormatter.date(from: self) ?? Date()
-        
-        switch type {
-        case .yyyymmdd:
-            dateFormatter.dateFormat = "YYYY-MM-dd"
-            return dateFormatter.string(from: date)
-        case .mmdd:
-            dateFormatter.dateFormat = "MM-dd"
-            return dateFormatter.string(from: date)
-        case .yyyyMMddHHmmssZ:
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            return dateFormatter.string(from: date)
-        }
-    }
+//    func convertDateFormat(type: DateFormatType) -> String {
+//        
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+//        let date = dateFormatter.date(from: self) ?? Date()
+//        
+//        switch type {
+//        case .yyyymmdd:
+//            dateFormatter.dateFormat = "YYYY-MM-dd"
+//            return dateFormatter.string(from: date)
+//        case .mmdd:
+//            dateFormatter.dateFormat = "MM-dd"
+//            return dateFormatter.string(from: date)
+//        case .yyyyMMddHHmmssZ:
+//            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//            return dateFormatter.string(from: date)
+//        }
+//    }
     
     func toDate() -> Date {
         let dateFormatter = DateFormatter()

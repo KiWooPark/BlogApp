@@ -10,18 +10,21 @@ import UIKit
 import Then
 import SnapKit
 
+/// 인디케이터 액티비티 뷰의 커스텀 클래스 입니다.
 class ActivityIndicatorView: UIView {
     
     deinit {
-        print("ActivityIndicatorView 해제")
+        print("ActivityIndicatorView 메모리 해제 확인")
     }
     
+    // 액티비티 인디케이터 뷰의 바탕이 되는 뷰 
     var activityIndicatorBaseView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .cellColor
         $0.layer.cornerRadius = .cornerRadius
     }
     
+    // 인디케이터와 레이블을 포함하는 스택 뷰
     var indicatorStackView = UIStackView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .cellColor
@@ -30,29 +33,33 @@ class ActivityIndicatorView: UIView {
         $0.spacing = 20
     }
     
+    // 인디케이터 액티비티 뷰
     var activityIndicatorView = UIActivityIndicatorView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.color = .buttonColor
         $0.style = .large
     }
     
+    // 인디케이터 액티비티 뷰 하단에 표시될 레이블
     var indicatorContentLabel = UILabel().then {
         $0.textAlignment = .center
         $0.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         $0.numberOfLines = 0
     }
    
-    
+    // 초기화 메소드
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         setup()
     }
     
+    // 스토리보드 사용시 초기화 메소드
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         setup()
+        
     }
     
     func setup() {

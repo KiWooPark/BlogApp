@@ -20,6 +20,8 @@ class StudyListViewController: UIViewController, ViewModelBindableType {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+     
     
         // 테이블뷰 셀 등록
         let studyListCellNib = UINib(nibName: "\(StudyListTableViewCell.identifier)", bundle: nil)
@@ -92,7 +94,6 @@ extension StudyListViewController: UITableViewDelegate {
         if viewModel?.listCount != 0 {
             let storyboard = UIStoryboard(name: "DetailStudyViewController", bundle: nil)
             guard let vc = storyboard.instantiateViewController(withIdentifier: "detailStudyVC") as? DetailStudyViewController else { return }
-
             vc.viewModel = StudyDetailViewModel(studyData: viewModel?.list.value[indexPath.row] ?? Study())
 
             self.navigationController?.pushViewController(vc, animated: true)

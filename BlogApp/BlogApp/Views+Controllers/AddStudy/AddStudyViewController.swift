@@ -153,12 +153,12 @@ class AddStudyViewController: UIViewController, ViewModelBindableType {
             switch viewModel?.memberState {
             case .add:
                 insertMemberInfoViewInStackView(index: 0)
-                memberCountLabel.text = "현재 \(viewModel?.studyMembers.value.count ?? 0)명이 참여중이에요."
+                memberCountLabel.text = "현재 \(viewModel?.studyMembers.value.count ?? 0)명이 참여중이에요"
             case .edit:
                 updateMemberInfoViewInStackView(index: viewModel?.editIndex ?? 0)
             case .delete:
                 deleteMemberInfoViewInStackView(index: viewModel?.editIndex ?? 0)
-                memberCountLabel.text = "현재 \(viewModel?.studyMembers.value.count ?? 0)명이 참여중이에요."
+                memberCountLabel.text = "현재 \(viewModel?.studyMembers.value.count ?? 0)명이 참여중이에요"
             default:
                 print("")
             }
@@ -171,7 +171,11 @@ class AddStudyViewController: UIViewController, ViewModelBindableType {
     
     @IBAction func tapCloseButton(_ sender: Any) {
         
-        makeAlertDialog(title: nil, message: "스터디 정보 변경을 취소하시겠습니까?", type: .closeComposeVC)
+        if viewModel?.isEditStudy == true {
+            makeAlertDialog(title: nil, message: "스터디 정보 변경을 취소하시겠습니까?", type: .closeComposeVC)
+        } else {
+            makeAlertDialog(title: nil, message: "스터디 등록을 취소하시겠습니까?", type: .closeComposeVC)
+        }
     }
     
     @IBAction func tapDoneButton(_ sender: Any) {
@@ -258,7 +262,7 @@ class AddStudyViewController: UIViewController, ViewModelBindableType {
     @IBAction func tapAddMemberButton(_ sender: Any) {
         
         if viewModel?.fine.value == nil {
-            makeAlertDialog(title: nil, message: "벌금이 선택되지 않았습니다.", type: .ok)
+            makeAlertDialog(title: nil, message: "벌금이 선택되지 않았습니다", type: .ok)
         } else {
             let storyboard = UIStoryboard(name: "BottomSheetViewController", bundle: nil)
             guard let vc = storyboard.instantiateViewController(withIdentifier: "BottomSheetViewController") as? BottomSheetViewController else { return }
@@ -312,9 +316,9 @@ class AddStudyViewController: UIViewController, ViewModelBindableType {
             deadlineDayLabel.text = viewModel?.deadlineDay.value?.convertDeadlineDayToString()
             deadlineDaySubLabel.text = viewModel?.lastContentDeadlineDate.value?.toString()
             
-            fineLabel.text = "\(viewModel?.fine.value?.insertComma() ?? "")원"//viewModel?.fine.value?.convertFineStr()
+            fineLabel.text = "\(viewModel?.fine.value?.insertComma() ?? "")원"
             
-            memberCountLabel.text = "현재 \(viewModel?.studyMembers.value.count ?? 0)명이 참여중이에요."
+            memberCountLabel.text = "현재 \(viewModel?.studyMembers.value.count ?? 0)명이 참여중이에요"
             
             insertMemberInfoViewsInStackView()
         

@@ -58,7 +58,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
             }
         } else {
             DispatchQueue.main.async {
-                self.makeAlertDialog(title: nil, message: "네트워크 연결을 확인해 주세요.", type: .notConnected, connectedType: .fetchMember)
+                self.makeAlertDialog(title: nil, message: "네트워크 연결을 확인해 주세요", type: .notConnected, connectedType: .fetchMember)
             }
         }
     }
@@ -76,13 +76,13 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
                         DispatchQueue.main.async {
                             self.removeMemberInfoViewsInStackView()
                             self.insertMemberViewsInStackView()
-                            self.memberCountLabel.text = "현재 \(self.viewModel?.contentMembers.value.count ?? 0)명 참여중이에요."
+                            self.memberCountLabel.text = "현재 \(self.viewModel?.contentMembers.value.count ?? 0)명 참여중이에요"
                             LoadingIndicator.hideLoading()
                         }
                     }
                 } else {
                     DispatchQueue.main.async {
-                        self.makeAlertDialog(title: nil, message: "네트워크 연결을 확인해 주세요.", type: .notConnected, connectedType: .addMember)
+                        self.makeAlertDialog(title: nil, message: "네트워크 연결을 확인해 주세요", type: .notConnected, connectedType: .addMember)
                     }
                 }
             case .edit:
@@ -98,7 +98,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
                     }
                 } else {
                     DispatchQueue.main.async {
-                        self.makeAlertDialog(title: nil, message: "네트워크 연결을 확인해 주세요.", type: .notConnected, connectedType: .editMember)
+                        self.makeAlertDialog(title: nil, message: "네트워크 연결을 확인해 주세요", type: .notConnected, connectedType: .editMember)
                     }
                 }
                 
@@ -107,7 +107,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
                 removeMemberInfoViewsInStackView()
                 insertMemberViewsInStackView()
     
-                memberCountLabel.text = "현재 \(viewModel?.contentMembers.value.count ?? 0)명 참여중이에요."
+                memberCountLabel.text = "현재 \(viewModel?.contentMembers.value.count ?? 0)명 참여중이에요"
             default:
                 print("")
             }
@@ -130,7 +130,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.makeAlertDialog(title: nil, message: "네트워크 연결을 확인해 주세요.", type: .notConnected, connectedType: .startDate)
+                    self.makeAlertDialog(title: nil, message: "네트워크 연결을 확인해 주세요", type: .notConnected, connectedType: .startDate)
                 }
             }
         })
@@ -154,7 +154,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.makeAlertDialog(title: nil, message: "네트워크 연결을 확인해 주세요.", type: .notConnected, connectedType: .deadlineDate)
+                    self.makeAlertDialog(title: nil, message: "네트워크 연결을 확인해 주세요", type: .notConnected, connectedType: .deadlineDate)
                 }
             }
         })
@@ -163,7 +163,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
             print("4")
             guard let self = self else { return }
             
-            deadlineDayLabel.text = "\(deadlineDay?.convertWeekDayToString() ?? "")로 마감 됩니다."
+            deadlineDayLabel.text = "\(deadlineDay?.convertWeekDayToString() ?? "")로 마감 됩니다"
         })
         
         viewModel?.fine.bind({ [weak self] fine in
@@ -192,13 +192,13 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
     
     func configData() {
         contentNumberLabel.text = "현재 마감할 회차는 \(viewModel?.lastContent.value?.contentNumber ?? 0)회에요!"
-        deadlineDayLabel.text = "\(viewModel?.deadlineDate.value?.getDayOfCurrentDate().convertDeadlineDayToString().components(separatedBy: " ")[1] ?? "")로 마감 됩니다."
+        deadlineDayLabel.text = "\(viewModel?.deadlineDate.value?.getDayOfCurrentDate().convertDeadlineDayToString().components(separatedBy: " ")[1] ?? "")로 마감 됩니다"
         
         startDateLabel.text = viewModel?.startDate.value == nil ? "시작일을 선택해 주세요." : "시작일 : \(viewModel?.startDate.value?.makeStartDate()?.toString() ?? "")"
         deadlineDateLabel.text = "마감일 : \(viewModel?.deadlineDate.value?.toString() ?? "")"
         
         fineLabel.text = "\(viewModel?.fine.value?.insertComma() ?? "")원"
-        memberCountLabel.text = "현재 \(viewModel?.studyMembers.value.count ?? 0)명 참여중이에요."
+        memberCountLabel.text = "현재 \(viewModel?.studyMembers.value.count ?? 0)명 참여중이에요"
     }
 
     func insertMemberViewsInStackView() {
@@ -241,7 +241,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
         isProcessing = true
         
         if viewModel?.startDate.value == nil {
-            makeAlertDialog(title: nil, message: "시작일을 선택해 주세요.", type: .ok)
+            makeAlertDialog(title: nil, message: "시작일을 선택해 주세요", type: .ok)
             isProcessing = false
         } else {
             LoadingIndicator.showLoading(type: .saveContent)
@@ -270,7 +270,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
             
             self.present(vc, animated: false)
         } else {
-            makeAlertDialog(title: nil, message: "시작일은 변경할 수 없습니다.", type: .ok)
+            makeAlertDialog(title: nil, message: "시작일은 변경할 수 없습니다", type: .ok)
         }
         
        
@@ -279,7 +279,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
     @IBAction func tapEditDeadlineDateButton(_ sender: Any) {
         
         if viewModel?.startDate.value == nil {
-            makeAlertDialog(title: nil, message: "시작일이 선택되지 않았습니다.", type: .ok)
+            makeAlertDialog(title: nil, message: "시작일이 선택되지 않았습니다", type: .ok)
         } else {
             let storyboard = UIStoryboard(name: "BottomSheetViewController", bundle: nil)
             guard let vc = storyboard.instantiateViewController(withIdentifier: "BottomSheetViewController") as? BottomSheetViewController else { return }

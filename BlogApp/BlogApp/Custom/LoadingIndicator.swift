@@ -8,19 +8,26 @@
 import Foundation
 import UIKit
 
+// 인디케이터 액티비티 뷰를 보여주거나 숨기는 경우에 사용하는 커스텀 클래스 입니다.
 class LoadingIndicator {
     
+    /// 인디케이터 뷰의 종류를 정의하는 열거형
     enum IndicatorViewType {
         case fetchPost
         case saveContent
     }
     
+    /// 인디케이터 액티비티뷰를 보여주는 메소드 입니다.
+    /// - Parameter type: 커스텀 인디케이터 액티비티뷰
     static func showLoading(type: IndicatorViewType) {
         DispatchQueue.main.async {
+            
             // 최상단에 있는 window 객체 획득
             guard let window = UIApplication.shared.windows.last else { return }
 
             var loadingIndicatorView: UIView
+            
+            
             if let existedView = window.subviews.first(where: { $0 is UIActivityIndicatorView } ) as? UIActivityIndicatorView {
                 loadingIndicatorView = existedView
             } else {
@@ -47,7 +54,8 @@ class LoadingIndicator {
             }
         }
     }
-
+    
+    /// 인디케이터 액티비티뷰를 숨기는 메소드 입니다.
     static func hideLoading() {
         DispatchQueue.main.async {
             guard let window = UIApplication.shared.windows.last else { return }

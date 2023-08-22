@@ -58,7 +58,7 @@ class StudyListTableViewCell: UITableViewCell {
         if dDay == 0 {
             dDayLabel.text = "D-오늘!"
         } else if dDay < 0 {
-            dDayLabel.text = "\(abs(dDay))일 지났어요."
+            dDayLabel.text = "\(abs(dDay))일 지났어요"
         } else {
             dDayLabel.text = "D-\(dDay)"
         }
