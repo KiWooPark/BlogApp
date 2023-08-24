@@ -135,7 +135,7 @@ class BottomSheetViewController: UIViewController {
             if dayButtons.filter({$0.isSelected == true}).count != 0 {
                 let selectedButton = dayButtons.filter({$0.isSelected == true})[0]
                 
-                let deadlineDate = Date().calculateFinishDate(deadlineDay: selectedButton.tag)
+                let deadlineDate = Date().calculateDeadlineDate(deadlineDay: selectedButton.tag)
                 
                 if deadlineDate.nextWeekFinishDate == nil {
                     composeViewModel?.updateStudyProperty(.deadlineDay, value: (selectedButton.tag, deadlineDate.currentDate))
@@ -497,25 +497,25 @@ class BottomSheetViewController: UIViewController {
                 switch composeViewModel?.deadlineDay.value {
                 case 2:
                     dayButtons[0].isSelected = true
-                    deadlineDate = Date().calculateFinishDate(deadlineDay: 2)
+                    deadlineDate = Date().calculateDeadlineDate(deadlineDay: 2)
                 case 3:
                     dayButtons[1].isSelected = true
-                    deadlineDate = Date().calculateFinishDate(deadlineDay: 3)
+                    deadlineDate = Date().calculateDeadlineDate(deadlineDay: 3)
                 case 4:
                     dayButtons[2].isSelected = true
-                    deadlineDate = Date().calculateFinishDate(deadlineDay: 4)
+                    deadlineDate = Date().calculateDeadlineDate(deadlineDay: 4)
                 case 5:
                     dayButtons[3].isSelected = true
-                    deadlineDate = Date().calculateFinishDate(deadlineDay: 5)
+                    deadlineDate = Date().calculateDeadlineDate(deadlineDay: 5)
                 case 6:
                     dayButtons[4].isSelected = true
-                    deadlineDate = Date().calculateFinishDate(deadlineDay: 6)
+                    deadlineDate = Date().calculateDeadlineDate(deadlineDay: 6)
                 case 7:
                     dayButtons[5].isSelected = true
-                    deadlineDate = Date().calculateFinishDate(deadlineDay: 7)
+                    deadlineDate = Date().calculateDeadlineDate(deadlineDay: 7)
                 case 1:
                     dayButtons[6].isSelected = true
-                    deadlineDate = Date().calculateFinishDate(deadlineDay: 1)
+                    deadlineDate = Date().calculateDeadlineDate(deadlineDay: 1)
                 default:
                     print("")
                 }
@@ -634,7 +634,7 @@ class BottomSheetViewController: UIViewController {
             button.isSelected = button.tag == selectedButton.tag ? true : false
         }
         
-        let deadlineDate = Date().calculateFinishDate(deadlineDay: selectedButton.tag)
+        let deadlineDate = Date().calculateDeadlineDate(deadlineDay: selectedButton.tag)
         
         if deadlineDate.nextWeekFinishDate == nil {
             selectedDayLabel.isHidden = false

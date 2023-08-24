@@ -100,7 +100,7 @@ class CoreDataManager {
         // 시작 날짜는 이전 마감일로부터 + 1일
         contentEntity.startDate = lastContent?.deadlineDate?.convertDeadlineToStartDate()
         // 스터디에 설정된 마감요일에 날짜로 새로 계산
-        let calcDeadlineDate = contentEntity.startDate?.calculateFinishDate(deadlineDay: studyDeadlineDay)
+        let calcDeadlineDate = contentEntity.startDate?.calculateDeadlineDate(deadlineDay: studyDeadlineDay)
         
         if calcDeadlineDate?.nextWeekFinishDate == nil {
             contentEntity.deadlineDate = calcDeadlineDate?.currentDate
