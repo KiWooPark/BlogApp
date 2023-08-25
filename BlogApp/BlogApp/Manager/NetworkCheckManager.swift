@@ -11,7 +11,17 @@ import Network
 /// 네트워크 상태를 확인하는 클래스 입니다.
 final class NetworkCheckManager {
     
-    // MARK:  ===== [Propertys] =====
+    // MARK:  ===== [Enum] =====
+    
+    /// 네트워크 연결 타입 열거형
+    enum ConnectionType {
+        case wifi
+        case cellular
+        case ethernet
+        case unknown
+    }
+    
+    // MARK:  ===== [Property] =====
     
     // 싱글톤 인스턴스
     static let shared = NetworkCheckManager()
@@ -24,17 +34,9 @@ final class NetworkCheckManager {
     // 현재 연결된 네트워크 타입을 나타내는 변수
     public private(set) var connectionType: ConnectionType = .unknown
 
-    // MARK:  ===== [Enum] =====
     
-    // 네트워크 연결 타입 열거형
-    enum ConnectionType {
-        case wifi
-        case cellular
-        case ethernet
-        case unknown
-    }
 
-    // MARK:  ===== [init] =====
+    // MARK:  ===== [Init] =====
     
     // monotior 초기화
     private init() {

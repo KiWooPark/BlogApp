@@ -18,7 +18,7 @@ class CoreDataManager {
     // 초기화
     private init() {}
     
-    // CoreDataEntity 이름
+    // CoreDataEntity 이름을 나타내는 상수
     private let entityName = "CoreData"
     
     var context: NSManagedObjectContext {
@@ -56,7 +56,7 @@ class CoreDataManager {
     ///   - deadlineDay: 마감일
     ///   - deadlineDate: 마감 날짜
     ///   - fine: 벌금
-    ///   - members: 현재 등록된 멤버 목록
+    ///   - members: 현재 등록된 멤버 배열
     ///   - completion: 스터디가 생성 완료된 후 호출할 콜백 함수입니다.
     func createStudy(isNewStudy: Bool?, lastProgressNumber: Int?, lastProgressDeadlineDate: Date?, title: String?, firstStudyDate: Date?, deadlineDay: Int?, deadlineDate: Date?, fine: Int?, members: [User], completion: @escaping () -> ()) {
         
@@ -124,8 +124,8 @@ class CoreDataManager {
     ///   - fine: 스터디에 등록된 벌금
     ///   - totalFine: 총 벌금
     ///   - plusFine: 증액 해야하는 금액
-    ///   - studyMembers: 스터디에 등록된 멤버 목록
-    ///   - contentMembers: 마감 정보에 등록할 멤버 목록
+    ///   - studyMembers: 스터디에 등록된 멤버 배열
+    ///   - contentMembers: 마감 정보에 등록할 멤버 배열
     ///   - completion: 마감 정보가 생성 완료된 후 호출할 콜백 함수입니다.
     func createContent(lastContent: Content?, deadlineDay: Int?, startDate: Date?, deadlineDate: Date?, fine: Int?, totalFine: Int?, plusFine: Int?, studyMembers: [User], contentMembers: [ContentUser], completion: @escaping () -> ()) {
     
@@ -193,7 +193,7 @@ class CoreDataManager {
             print(error.localizedDescription)
         }
         
-        // 스터디 목록을 반환합니다.
+        // 스터디 배열을 반환합니다.
         return fetchedStudys
     }
     
@@ -232,7 +232,7 @@ class CoreDataManager {
             print(error.localizedDescription)
         }
         
-        // 마감 정보 목록을 반환합니다.
+        // 마감 정보 배열을 반환합니다.
         return fetchedContents
     }
     
@@ -274,7 +274,7 @@ class CoreDataManager {
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         
         do {
-            // 멤버 목록을 반환합니다.
+            // 멤버 배열을 반환합니다.
             return try persistentContainer.viewContext.fetch(request)
         } catch {
             print(error.localizedDescription)
@@ -299,7 +299,7 @@ class CoreDataManager {
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
     
         do {
-            // 멤버 목록을 반환합니다.
+            // 멤버 배열을 반환합니다.
             return try persistentContainer.viewContext.fetch(request)
         } catch {
             print(error.localizedDescription)
@@ -321,7 +321,7 @@ class CoreDataManager {
     ///   - deadlineDay: 변경할 마감일
     ///   - deadlineDate: 변경할 마감 날짜
     ///   - fine: 변경할 벌금
-    ///   - members: 변경할 멤버 목록
+    ///   - members: 변경할 멤버 배열
     ///   - completion: 스터디 정보가 업데이트 완료된 후 호출할 콜백 함수입니다.
     func updateStudy(id: NSManagedObjectID?, title: String?, deadlineDay: Int?, deadlineDate: Date?, fine: Int?, members: [User], completion: @escaping () -> ()) {
         

@@ -11,14 +11,14 @@ import Foundation
 extension Date {
     
     // MARK: ===== [Enum] =====
-    /// 날짜 비교 유형을 나타내는 열거형 입니다.
+    /// 날짜 비교 유형을 나타내는 열거형
     enum CompareDateType {
         // 시작 날짜 비교
         case startDate
         // 마감 날짜 비교
         case deadlineDate
         
-        // 시작 날짜나 마감 날짜와 특정 날짜를 비교했을 때의 결과를 나타내는 열거형 입니다.
+        // 시작 날짜나 마감 날짜와 특정 날짜를 비교했을 때의 결과를 나타내는 열거형
         enum CompareResult {
             /// 비교 대상 날짜가 시작 날짜보다 이전
             case pastStartDate

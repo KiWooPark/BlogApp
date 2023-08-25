@@ -7,28 +7,54 @@
 
 import Foundation
 
+// MARK:  ===== [Class or Struct] =====
+/// 마감 정보 공유를 관리하는 ViewModel 입니다.
 class ShareContentViewModel {
     
-    var study: Study?
-    var contentList: [Content]?
+    // MARK:  ===== [Property] =====
     
+    // 스터디 객체를 나타내는 변수
+    var study: Study?
+
+    // 마감 정보 목록을 나타내는 변수
+    var contentList: [Content]?
+
+    // 현재 마감 정보의 인덱스를 나타내는 변수
     var currentIndex = 0
     
+    // MARK:  ===== [Init] =====
+    
+    // Study 객체를 사용하여 ShareContentViewModel을 초기화합니다.
     init(study: Study?) {
         if let studyEntity = study {
             self.study = studyEntity
+            // 마감 정보 목록을 가져옵니다.
             self.contentList = CoreDataManager.shared.fetchContentList(studyEntity: studyEntity)
         }
     }
- 
+    
+    /// 해당 인덱스에 해당하는 스터디 정보와 멤버 정보를 문자열로 반환합니다.
+    ///
+    /// 이 메소드는 공유를 위한 문자열 입니다.
+    ///
+    /// - Parameter index: 정보를 가져올 인덱스
+    /// - Returns: 스터디 정보와 멤버 정보를 결합한 문자열을 반환합니다.
     func fetchContent(index: Int) -> String {
         
+        // 스터디 정보를 문자열로 가져옵니다.
         let studyInfo = fetchStudyInfoStr(index: index)
+
+        // 멤버 정보를 문자열로 가져옵니다.
         let contentMembers = fetchMembers(index: index)
 
+        // 위 두 문자열을 더해 반환합니다.
         return studyInfo + contentMembers
     }
-
+    
+    /// 스터디 정보중 공유 포멧에 맞춰 가져옵니다.
+    ///
+    /// - Parameter index: 정보를 가져올 인덱스
+    /// - Returns: 스터디 정보중 공유할 내용을 새로운 문자열로 반환합니다.
     private func fetchStudyInfoStr(index: Int) -> String {
         let target = contentList?[index]
         
@@ -50,6 +76,10 @@ class ShareContentViewModel {
        return studyInfoStr
     }
 
+    /// 멤버 정보중 공유 포맷애 맞춰 가져옵니다.
+    /// 
+    /// - Parameter index: 정보를 가져올 인덱스
+    /// - Returns: 멤버 정보중 공유할 내용을 새로운 문자열로 반환합니다.
     private func fetchMembers(index: Int) -> String {
         if let contentEntity = contentList?[index] {
             let contentMembers = CoreDataManager.shared.fetchContentMembers(contentEntity: contentEntity)

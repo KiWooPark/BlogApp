@@ -12,7 +12,7 @@ import UIKit
 /// 인터페이스 빌더에서 레이블의 패딩을 조절할 수 있는 커스텀 클래스 입니다.
 class BasePaddingLabel: UILabel {
     
-    // MARK: ===== [Propertys] =====
+    // MARK: ===== [Property] =====
     // @IBInspectable로 Interface Builder에서 이 속성들을 직접 설정할 수 있게 해줍니다.
     @IBInspectable var topInset: CGFloat = 2.0 // 상단 여백
     @IBInspectable var bottomInset: CGFloat = 2.0 // 하단 여백

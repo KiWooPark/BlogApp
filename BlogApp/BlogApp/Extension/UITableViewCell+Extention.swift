@@ -11,7 +11,7 @@ import UIKit
 // MARK: ===== [Extention] =====
 extension UITableViewCell {
     
-    // MARK:  ===== [Propertys] =====
+    // MARK:  ===== [Property] =====
     
     /// 현재 셀이 속한 테이블 뷰를 반환합니다.
     ///

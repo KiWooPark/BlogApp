@@ -104,10 +104,10 @@ struct CrawlingManager {
     /// 이후 모든 멤버에 대한 조회가 완료되면 콜백 함수를 호출합니다.
     ///
     /// - Parameters:
-    ///   - members: 멤버 목록
+    ///   - members: 멤버 배열
     ///   - startDate: 해당 회차 시작 날짜
     ///   - deadlineDate: 해당 회차 마감 날짜
-    ///   - completion: 작업이 완료된 후에 호출할 콜백 함수 입니다. 완료시 멤버별 작성 게시물의 정보 목록을 반환합니다.
+    ///   - completion: 작업이 완료된 후에 호출할 콜백 함수 입니다. 완료시 멤버별 작성 게시물의 정보 배열을 반환합니다.
     static func fetchMembersBlogPost(members: [User], startDate: Date?, deadlineDate: Date?, completion: @escaping ([PostResponse]) -> ()){
         
         let group = DispatchGroup()
@@ -151,7 +151,7 @@ struct CrawlingManager {
             }
         }
         group.notify(queue: .main) {
-            // 멤버별 작성 게시물의 정보 목록을 반환
+            // 멤버별 작성 게시물의 정보 배열을 반환
             completion(resultPostsData)
         }
     }
@@ -260,7 +260,7 @@ struct CrawlingManager {
                             }
                         }
                     case .failure( _):
-                        // URL 목록 가져오기에 실패하면 다음 페이지로 넘어가서 다시 검사합니다.
+                        // URL 배열 가져오기에 실패하면 다음 페이지로 넘어가서 다시 검사합니다.
                         currentPage += 1
                         checkBlogPostInPage()
                     }
@@ -276,7 +276,7 @@ struct CrawlingManager {
     ///
     /// - Parameters:
     ///   - url: 게시물 URL 목록을 가지고오기 위한 URL
-    ///   - completion: URL 목록을 성공적으로 가져오면 반환하며, 오류 발생 시 에러를 반환합니다.
+    ///   - completion: URL 배열을 성공적으로 가져오면 반환하며, 오류 발생 시 에러를 반환합니다.
     static func getPostsUrl(url: URL, completion: @escaping (Result<[String],CrawlingError>) -> ()) {
         
         // URL로 요청을 보냅니다.
@@ -300,7 +300,7 @@ struct CrawlingManager {
                     // 첫 번째 스크립트 태그의 내용을 가져옵니다.
                     let jsonData = try scriptElements.first()?.html()
                     
-                    // JSON 데이터를 디코딩하여 URL 목록을 가져옵니다.
+                    // JSON 데이터를 디코딩하여 URL 배열을 가져옵니다.
                     guard let data = jsonData?.data(using: .utf8),
                           let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                           let itemList = json["itemListElement"] as? [[String: Any]] else {
@@ -318,7 +318,7 @@ struct CrawlingManager {
                         }
                     }
                     
-                    // 완성된 URL 목록을 반환합니다.
+                    // 완성된 URL 배열을 반환합니다.
                     completion(.success(urls))
                 } catch {
                     // 파싱 중에 오류가 발생하면 해당 오류를 반환합니다.
@@ -334,7 +334,7 @@ struct CrawlingManager {
     /// 시작 날짜와 마감 날짜 범위내에 작성된 게시물이 있는지 확인합니다.
     ///
     /// - Parameters:
-    ///   - urls: 게시물 URL 목록
+    ///   - urls: 게시물 URL 배열
     ///   - startDate: 시작 날짜
     ///   - deadlineDate: 마감 날짜
     ///   - completion: 기간 내의 작성된 게시물을 확인하면 반환하며, 오류 발생 시 에러를 반환합니다.

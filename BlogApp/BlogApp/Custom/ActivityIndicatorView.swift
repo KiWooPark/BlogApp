@@ -18,7 +18,7 @@ class ActivityIndicatorView: UIView {
         print("ActivityIndicatorView 메모리 해제 확인")
     }
     
-    // MARK: ===== [Propertys] =====
+    // MARK: ===== [Property] =====
     // 액티비티 인디케이터를 포함하며 배경이 되는 뷰
     var activityIndicatorBaseView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false

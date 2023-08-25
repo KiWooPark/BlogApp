@@ -7,63 +7,123 @@
 
 import Foundation
 
-class NewContentViewModel {
+// MARK:  ===== [Class or Struct] =====
 
+/// 새로운 마감 정보 생성을 관리하는 ViewModel 입니다.
+class NewContentViewModel {
+    
+    // MARK:  ===== [Enum] =====
+    
+    // 업데이트할 마감 정보의 프로퍼티 타입 열거형
     enum ContentProperty {
+        // 시작 날짜
         case startDate
+        
+        // 마감 날짜
         case deadlineDate
+        
+        // 벌금
         case fine
+        
+        // 멤버 추가
         case addContentMember
+        
+        // 멤버 수정
         case editContentMember
+        
+        // 멤버 삭제
         case deleteContentMember
     }
     
+    // MARK:  ===== [Property] =====
+    
+    // 마지막 마감 정보를 나타내는 변수
     var lastContent: Observable<Content?> = Observable(nil)
+    
+    // 마감일을 나타내는 변수
     var deadlineDay: Observable<Int?> = Observable(nil)
+    
+    // 시작 날짜를 나타내는 변수
     var startDate: Observable<Date?> = Observable(nil)
+    
+    // 마감 날짜를 나타내는 변수
     var deadlineDate: Observable<Date?> = Observable(nil)
+    
+    // 벌금을 나타내는 변수
     var fine: Observable<Int?> = Observable(nil)
     
+    // 스터디 정보에 저장된 멤버 배열을 나타내는 변수
     var studyMembers: Observable<[User]> = Observable([])
     
+    // 마감 정보에 저장된 멤버 배열을 나타내는 변수
     var contentMembers: Observable<[ContentUser]> = Observable([])
     
+    // 작성한 게시물 배열을 나타내는 변수
     var postsData: Observable<[PostResponse]> = Observable([])
     
+    // 벌금의 총 합을 나타내는 변수
     var totalFine = 0
+    
+    // 증액해야할 벌금을 나타내는 변수
     var plusFine = 0
     
-    var memberState = MemberState.none
+    // 멤버 정보 상태를 나타내는 변수
+    var memberState = StudyComposeViewModel.MemberState.none
+    
+    // 수정중인 인덱스 번호를 나타내는 변수
     var editIndex = 0
-
+    
+    // MARK:  ===== [Init] =====
+    
+    // Study 객체를 사용하여 NewContentViewModel을 초기화 합니다.
     init(studyEntity: Study?) {
         if let studyEntity = studyEntity {
-
+            
+            // 마지막 마감 정보를 가져옵니다.
             self.lastContent.value = CoreDataManager.shared.fetchLastContent(studyEntity: studyEntity)
+            
+            // 스터디 정보에 저장된 마감일을 가져옵니다.
             self.deadlineDay.value = Int(studyEntity.deadlineDay)
             
             if lastContent.value?.startDate != nil {
+                // 마지막 마감 정보의 시작일을 가져옵니다.
                 self.startDate.value = self.lastContent.value?.startDate
             }
-        
+            
+            // 마지막 마감 정보의 마감일을 가져옵니다.
             self.deadlineDate.value = self.lastContent.value?.deadlineDate
+            
+            // 스터디 정보에 저장된 벌금을 가져옵니다.
             self.fine.value = Int(studyEntity.fine)
+            
+            // 스터디 정보에 저장된 멤버 목록을 가져옵니다.
             self.studyMembers.value = CoreDataManager.shared.fetchStudyMembers(studyEntity: studyEntity)
         }
     }
     
+    // MARK:  ===== [Function] =====
+    
+    /// 마감 정보의 프로퍼티를 업데이트합니다.
+    ///
+    /// 마감 정보의 여러 프로퍼티(startDate, deadlineDate, fine)중 하나를 선택하여 업데이트 합니다.
+    /// 멤버에 관한 프로퍼티(추가, 삭제, 수정)도 업데이트 합니다.
+    ///
+    /// - Parameters:
+    ///   - property: 업데이트할 마감 정보의 프로퍼티
+    ///   - value: 업데이트할 새로운 값
     func updateContentProperty(_ property: ContentProperty, value: Any) {
         
         switch property {
         case .startDate:
             self.startDate.value = (value as? Date)?.makeStartDate()
         case .deadlineDate:
-            self.deadlineDate.value = (value as? Date)?.makeDeadlineDate()
-            // 마감 날짜도 변경
             self.deadlineDay.value = (value as? Date)?.getDayOfCurrentDate()
+            self.deadlineDate.value = (value as? Date)?.makeDeadlineDate()
         case .fine:
             self.fine.value = value as? Int
         case .addContentMember:
+            
+            // 멤버 정보 업데이트 상태값 변경
             memberState = .add
             
             if let value = value as? (String, String, Int),
@@ -77,10 +137,12 @@ class NewContentViewModel {
                 self.studyMembers.value.insert(member, at: 0)
                 studyEntity.addToMembers(member)
             }
-    
+            
         case .editContentMember:
+            
+            // 멤버 정보 업데이트 상태값 변경
             memberState = .edit
-           
+            
             if let value = value as? (String, String, Int, Int) {
                 
                 editIndex = value.3
@@ -93,11 +155,13 @@ class NewContentViewModel {
                 self.studyMembers.value[value.3] = member
             }
         case .deleteContentMember:
+            
+            // 멤버 정보 업데이트 상태값 변경
             memberState = .delete
             
             if let index = value as? Int {
                 editIndex = index
-               
+                
                 contentMembers.value.remove(at: index)
                 postsData.value.remove(at: index)
                 
@@ -109,7 +173,13 @@ class NewContentViewModel {
         }
     }
     
+    /// 시작 날짜와 마감 날짜 범위에 포함된 게시물을 가져옵니다.
+    ///
+    /// 작성된 게시물이 없을 경우 PostResponse.data의 값은 nil이며, errorMessage에 에러 메시지가 포함됩니다.
+    ///
+    /// - Parameter completion: 모든 멤버들의 게시물을 가져온 후 호출할 콜백 함수 입니다.
     func fetchBlogPosts(completion: @escaping () -> ()) {
+        
         CrawlingManager.fetchMembersBlogPost(members: studyMembers.value, startDate: startDate.value?.makeStartDate(), deadlineDate: deadlineDate.value?.makeDeadlineDate()) { postsData in
             
             self.postsData.value.removeAll()
@@ -120,6 +190,10 @@ class NewContentViewModel {
         }
     }
     
+    /// 마감 정보에 저장할 멤버 정보를 가져옵니다.
+    ///
+    /// 이 메소드는 각 멤버별 작성한 게시물을 확인하고
+    /// 게시물 작성 유무에 따라 게시물 제목, 게시물 URL, 게산된 보증금 정보를 contentMembers 배열에 추가합니다.
     func fetchContentMembers() {
         
         self.calculateFine()
@@ -146,6 +220,11 @@ class NewContentViewModel {
         }
     }
     
+    
+    /// 게시물 작성 유무에따라 보증금을 계산합니다.
+    ///
+    /// 이 메소드는 모든 멤버가 게시물을 작성하거나, 작성하지 않은 경우에는
+    /// totalFine과 plusFine이 0원이며, 게시물 작성 유무에따라 보증금을 계산합니다.
     func calculateFine() {
         let notPostMemberCount = self.postsData.value.filter({$0.data == nil}).count
         
@@ -158,354 +237,17 @@ class NewContentViewModel {
         }
     }
     
+    
+    /// 마감 정보를 CoreData에 저장합니다.
+    ///
+    /// 이 메소드는 마감 정보를 저장하며, 새로운 멤버가 추가되거나 기존 멤버를 삭제할 경우
+    /// 스터디 정보에도 멤버 데이터를 업데이트합니다.
+    /// 스터디 정보에 업데이트 될 경우 게시물 작성 유무에 따라 보증금이 계산되어 업데이트 됩니다.
+    ///
+    /// - Parameter completion: 데이터가 저장된 후 호출할 콜백 함수 입니다.
     func createContentData(completion: @escaping () -> ()) {
         CoreDataManager.shared.createContent(lastContent: lastContent.value, deadlineDay: deadlineDay.value, startDate: startDate.value, deadlineDate: deadlineDate.value, fine: fine.value, totalFine: totalFine, plusFine: plusFine, studyMembers: studyMembers.value, contentMembers: contentMembers.value) {
             completion()
         }
     }
-    
-    
-    
-//    func addContentMember(member: User, completion: @escaping () -> ()) {
-//        CrawlingManager.fetchMembersBlogPost(members: [member], startDate: startDate.value, deadlineDate: deadlineDate.value) { postsData in
-//
-//            let target = postsData[0]
-//
-//            self.postsData.value.insert(target, at: 0)
-//
-//            self.calculateFine()
-//
-//            let contentMember = ContentUser(context: CoreDataManager.shared.persistentContainer.viewContext)
-//            contentMember.name = member.name
-//
-//            if target.data == nil {
-//                contentMember.title = target.errorMessage ?? ""
-//                contentMember.postUrl = nil
-//                contentMember.fine = Int64(Int(member.fine) - (self.fine.value ?? 0))
-//            } else {
-//                contentMember.title = target.data?.title
-//                contentMember.postUrl = target.data?.postUrl
-//                contentMember.fine = Int64(Int(member.fine) + self.plusFine)
-//            }
-//
-//            self.contentMembers.value.insert(contentMember, at: 0)
-//
-//            completion()
-//        }
-//    }
-//
-//    func editContentMember(member: User, index: Int, completion: @escaping () -> ()) {
-//        CrawlingManager.fetchMembersBlogPost(members: [member], startDate: startDate.value, deadlineDate: deadlineDate.value) { postsData in
-//
-//            let target = postsData[0]
-//
-//            self.postsData.value[index] = target
-//
-//            self.calculateFine()
-//
-//            let contentMember = self.contentMembers.value[index]
-//            contentMember.name = member.name
-//
-//            if target.data == nil {
-//                contentMember.title = target.errorMessage ?? ""
-//                contentMember.postUrl = nil
-//                contentMember.fine = Int64(Int(member.fine) - (self.fine.value ?? 0))
-//            } else {
-//                contentMember.title = target.data?.title
-//                contentMember.postUrl = target.data?.postUrl
-//                contentMember.fine = Int64(Int(member.fine) + self.plusFine)
-//            }
-//
-//            self.contentMembers.value[index] = contentMember
-//            completion()
-//        }
-//    }
-    
-    
-//    func fetchBlogPosts(completion: @escaping () -> ()) {
-//        CrawlingManager.fetchMembersBlogPost(members: studyMembers.value, startDate: startDate.value, deadlineDate: deadlineDate.value) { postsData in
-//
-//            self.postsData.value = postsData
-//            // 벌금 계산
-//            self.calculateFine()
-//
-//            self.createContentMembers()
-//
-//            completion()
-//        }
-//    }
-//
-//    func calculateFine() {
-//        let notPostMemberCount = postsData.value.filter({$0.data == nil}).count
-//
-//        if notPostMemberCount == 0 || notPostMemberCount == postsData.value.count {
-//            self.totalFine = 0
-//            self.plusFine = 0
-//        } else {
-//            //self.totalFine = (fine.value?.convertFineInt() ?? 0) * notPostMemberCount
-//            self.plusFine =  totalFine / (postsData.value.count - notPostMemberCount)
-//        }
-//    }
-//
-//    func createContentMembers() {
-//        for i in 0 ..< self.studyMembers.value.count {
-//            let contentMember = ContentUser(context: CoreDataManager.shared.persistentContainer.viewContext)
-//            contentMember.name = self.studyMembers.value[i].name
-//
-//            if let index = self.postsData.value.firstIndex(where: {$0.name == contentMember.name}) {
-//
-//                if self.postsData.value[index].data == nil {
-//                    contentMember.title = self.postsData.value[index].errorMessage ?? ""
-//                    contentMember.postUrl = nil
-//                    contentMember.fine = Int64(Int(self.studyMembers.value[index].fine) - (self.fine.value ?? 0))
-//                } else {
-//                    contentMember.title = self.postsData.value[index].data?.title
-//                    contentMember.postUrl = self.postsData.value[index].data?.postUrl
-//                    contentMember.fine = Int64(Int(self.studyMembers.value[index].fine) + self.plusFine)
-//                }
-//            }
-//            self.contentMembers.value.append(contentMember)
-//        }
-//    }
-//
-//    func addContentMember(member: User, completion: @escaping () -> ()) {
-//        CrawlingManager.fetchMembersBlogPost(members: [member], startDate: startDate.value, deadlineDate: deadlineDate.value) { postsData in
-//
-//            let target = postsData[0]
-//
-//            self.postsData.value.insert(target, at: 0)
-//
-//            self.calculateFine()
-//
-//            let contentMember = ContentUser(context: CoreDataManager.shared.persistentContainer.viewContext)
-//            contentMember.name = member.name
-//
-//            if target.data == nil {
-//                contentMember.title = target.errorMessage ?? ""
-//                contentMember.postUrl = nil
-//                contentMember.fine = Int64(Int(member.fine) - (self.fine.value ?? 0))
-//            } else {
-//                contentMember.title = target.data?.title
-//                contentMember.postUrl = target.data?.postUrl
-//                contentMember.fine = Int64(Int(member.fine) + self.plusFine)
-//            }
-//
-//            self.contentMembers.value.insert(contentMember, at: 0)
-//
-//            completion()
-//        }
-//    }
-//
-//    func editContentMember(member: User, index: Int, completion: @escaping () -> ()) {
-//        CrawlingManager.fetchMembersBlogPost(members: [member], startDate: startDate.value, deadlineDate: deadlineDate.value) { postsData in
-//
-//            let target = postsData[0]
-//
-//            self.postsData.value[index] = target
-//
-//            self.calculateFine()
-//
-//            let contentMember = self.contentMembers.value[index]
-//            contentMember.name = member.name
-//
-//            if target.data == nil {
-//                contentMember.title = target.errorMessage ?? ""
-//                contentMember.postUrl = nil
-//                contentMember.fine = Int64(Int(member.fine) - (self.fine.value ?? 0))
-//            } else {
-//                contentMember.title = target.data?.title
-//                contentMember.postUrl = target.data?.postUrl
-//                contentMember.fine = Int64(Int(member.fine) + self.plusFine)
-//            }
-//        }
-//    }
-    
-    
-    
-//    func updateContentProperty(_ property: ContentProperty, value: Any, isAddMember: Bool = true) {
-//
-//        switch property {
-//        case .startDate:
-//            editDateType = .startDate
-//            if let startDate = value as? Date {
-//                self.startDate.value = startDate
-//            }
-//        case .deadlineDate:
-//            editDateType = .deadlineDate
-//            if let deadlineDate = value as? Date {
-//                self.deadlineDate.value = deadlineDate
-//            }
-//        case .fine:
-//            if let fine = value as? Int {
-//                self.fine.value = fine
-//            }
-//        case .addContentMember:
-//            if let value = value as? (String, String, Int) {
-//
-//                self.contentMemberState = .add
-//
-//                let member = User(context: CoreDataManager.shared.persistentContainer.viewContext)
-//
-//                member.name = value.0
-//                member.blogUrl = value.1
-//                member.fine = Int64(value.2)
-//
-//                studyMembers.value.insert(member, at: 0)
-//            }
-//        case .updateContentMember:
-//            if let value = value as? (String, String, Int, Int) {
-//
-//                self.contentMemberState = .update
-//                self.index = value.3
-//
-//                let member = studyMembers.value[self.index]
-//                member.name = value.0
-//                member.blogUrl = value.1
-//                member.fine = Int64(value.2)
-//
-//                studyMembers.value[self.index] = member
-//            }
-//        case .deleteContentMember:
-//            if let index = value as? Int {
-//                self.contentMemberState = .delete
-//                self.index = index
-//                studyMembers.value.remove(at: index)
-//            }
-//        }
-//    }
-    
-    
-    
-//    init(study: Study?) {
-//        if let study = study {
-//            self.study = study
-//            self.studyMembers.value = CoreDataManager.shared.fetchStudyMembers(studyEntity: study)
-//            self.contents = CoreDataManager.shared.fetchContentList(studyEntity: study)
-//            //self.deadlineDay.value = Int(study.finishDay)
-//            self.startDate.value = contents.last?.deadlineDate?.getStartDateAndDeadlineDate().startDate
-//
-//            if self.contents.count == 1 {
-//
-//                self.lastContentStartDate.value = contents.last?.deadlineDate?.getStartDateAndDeadlineDate().startDate
-//
-//            } else {
-//                self.lastContentStartDate.value = self.contents[self.contents.count - 2].deadlineDate?.getStartDateAndDeadlineDate().startDate
-//            }
-//
-//            self.deadlineDate.value = contents.last?.deadlineDate
-//            self.fine.value = Int(study.fine)
-//
-//            //print(startDate.value)
-//
-//        }
-//    }
-    
-//
-//
-//    func checkBlogPost() {
-//        CrawlingManager.fetchMembersBlogPost(members: studyMembers.value, startDate: startDate.value, deadlineDate: deadlineDate.value) { postsData in
-//            self.postsData.value = postsData
-//        }
-//    }
-//
-//    func createContent(completion: @escaping () -> ()) {
-//        let contentEntity = contents.last
-//        contentEntity?.deadlineDay = Int64(deadlineDay.value ?? 0)
-//        contentEntity?.startDate = startDate.value
-//        contentEntity?.deadlineDate = deadlineDate.value
-//        contentEntity?.plusFine = Int64(plusFine)
-//        contentEntity?.totalFine = Int64(totalFine)
-//
-//        // content 멤버 생성
-//        for post in postsData.value {
-//            if let index = studyMembers.value.firstIndex(where: {$0.name == post.name}) {
-//
-//                if post.data == nil {
-//                    //studyMembers.value[index].fine -= Int64(fine.value?.convertFineInt() ?? 0)
-//                } else {
-//                    studyMembers.value[index].fine += Int64(plusFine)
-//                }
-//
-//                let contentMember = ContentUser(context: CoreDataManager.shared.persistentContainer.viewContext)
-//                contentMember.name = post.name
-//                contentMember.title = post.data?.title
-//                contentMember.postUrl = post.data?.postUrl
-//                contentMember.fine = Int64(studyMembers.value[index].fine)
-//                contentEntity?.addToMembers(contentMember)
-//            }
-//        }
-//
-//        let nextContent = Content(context: CoreDataManager.shared.persistentContainer.viewContext)
-//        nextContent.contentNumber = (contentEntity?.contentNumber ?? 0) + 1
-//        //nextContent.deadlineDate = contentEntity?.deadlineDate?.calculateNewContentFinishDate(deadlineDay: Int(study?.finishDay ?? 0))
-//
-//        print(nextContent.deadlineDate)
-//
-//        study?.addToContents(nextContent)
-//
-//        CoreDataManager.shared.saveContext()
-//        completion()
-//    }
-//
-//    func updateContents() {
-//        self.startDate.value = self.contents[self.contents.count - 2].deadlineDate?.getStartDateAndDeadlineDate().startDate
-//    }
-//
-//    func calculateFine() {
-//        let notPostMemberCount = postsData.value.filter({$0.data == nil}).count
-//
-//        if notPostMemberCount == 0 || notPostMemberCount == postsData.value.count {
-//            self.totalFine = 0
-//            self.plusFine = 0
-//        } else {
-//            //self.totalFine = (fine.value?.convertFineInt() ?? 0) * notPostMemberCount
-//            self.plusFine =  totalFine / (postsData.value.count - notPostMemberCount)
-//        }
-//    }
-//
-//    func getStartDateSubTitleDate() -> String {
-//        if let studyEntity = study {
-//
-//            let contents = CoreDataManager.shared.fetchContentList(studyEntity: studyEntity)
-//
-//            if contents.count == 1 {
-//                return "처음 생성하는 공지사항 입니다.\n시작 날짜를 자유롭게 설정해주세요."
-//            } else {
-//                let subTitleDate = (contents[contents.count - 2].deadlineDate ?? Date()).makeStartDate()
-//                return "시작일은 이전 마감일인 \(subTitleDate?.toString() ?? "")및 과거로 선택할 수 없습니다."
-//            }
-//        } else {
-//            return ""
-//        }
-//    }
 }
-
-//    func addContentMember(name: String, blogUrl: String, fine: Int) {
-//        let member = User(context: CoreDataManager.shared.persistentContainer.viewContext)
-//
-//        member.name = name
-//        member.blogUrl = blogUrl
-//        member.fine = Int64(fine)
-//
-//        contentMembers.value.insert(member, at: 0)
-//    }
-//
-//    func updateContentMember(name: String, blogUrl: String, fine: Int, index: Int) {
-//
-//        self.contentMemberState = .update
-//        self.index = index
-//
-//        let member = contentMembers.value[index]
-//        member.name = name
-//        member.blogUrl = blogUrl
-//        member.fine = Int64(fine)
-//
-//        contentMembers.value[index] = member
-//    }
-    
-//    func deleteContentMember(index: Int) {
-//        self.contentMemberState = .delete
-//        self.index = index
-//
-//        contentMembers.value.remove(at: index)
-//    }

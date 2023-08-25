@@ -11,8 +11,8 @@ import UIKit
 // MARK: ===== [Extention] =====
 extension UIColor {
     
-    // MARK: ===== [Propertys] =====
-    // Asset 컬러
+    // MARK: ===== [Property] =====
+    // Asset 컬러 상수 
     static let backgroundColor = UIColor(named: "BackgroundColor")
     static let cellColor = UIColor(named: "CellColor")
     static let buttonColor = UIColor(named: "ButtonColor")
