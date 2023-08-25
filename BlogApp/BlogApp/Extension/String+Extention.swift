@@ -8,62 +8,29 @@
 import Foundation
 import UIKit
 
-enum BoldStringType: String {
-    case startDate = "진행중인 주차 : "
-    case setDay = "마감 : "
-}
-
+// MARK: ===== [Extention] =====
 extension String {
-    func convertBoldString(boldString: BoldStringType) -> NSAttributedString {
-        let fontSize = UIFont.boldSystemFont(ofSize: 17)
-        let attributedStr = NSMutableAttributedString(string: self)
-        attributedStr.addAttribute(.font, value: fontSize, range: (self as NSString).range(of: boldString.rawValue))
-        return attributedStr
-    }
     
-    func getCurrentDay() -> Int {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        
-        var calendar = Calendar.current
-        calendar.firstWeekday = 2
-        
-        let date = dateFormatter.date(from: self) ?? Date()
-        
-        let day = calendar.dateComponents([.day], from: date).day!
-        
-        return day
-    }
+    // MARK:  ===== [Function] =====
     
-    // 날짜 형식 변환
-    // return Date로 변경 
-//    func convertDateFormat(type: DateFormatType) -> String {
-//        
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-//        let date = dateFormatter.date(from: self) ?? Date()
-//        
-//        switch type {
-//        case .yyyymmdd:
-//            dateFormatter.dateFormat = "YYYY-MM-dd"
-//            return dateFormatter.string(from: date)
-//        case .mmdd:
-//            dateFormatter.dateFormat = "MM-dd"
-//            return dateFormatter.string(from: date)
-//        case .yyyyMMddHHmmssZ:
-//            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//            return dateFormatter.string(from: date)
-//        }
-//    }
-    
+    /// Date 객체를 `yyyy-MM-dd'T'HH:mm:ssZ` 포맷의 Date 객체로 변환합니다.
+    ///
+    /// - Returns: 날짜를 나타내는 `YY년 MM월 dd일` 형식의 Date 객체
     func toDate() -> Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dateFormatter.timeZone = TimeZone(identifier: "")
+
         return dateFormatter.date(from: self) ?? Date()
     }
     
-    
+    /// 중복된 이름인지 검사합니다.
+    ///
+    /// - Parameters:
+    ///   - members: 현재 등록된 멤버 목록
+    ///   - isEdit: 이름을 수정 중인지 여부. 수정 중이면 `true`, 아니면 `false` (기본값은 `false`)
+    ///   - index: 수정 중인 사용자의 인덱스. 기본값은 `9999` (이 값은 실제 사용자 인덱스로 사용되지 않음)
+    ///
+    /// - Returns: 이름이 이미 목록에 있으면 `true`, 그렇지 않으면 `false`
     func validateName(members: [User], isEdit: Bool = false, index: Int = 9999) -> Bool  {
         if isEdit {
             if members[index].name == self {

@@ -11,14 +11,14 @@ import Foundation
 extension Date {
     
     // MARK: ===== [Enum] =====
-    // 날짜 비교 유형을 나타내는 열거형 입니다.
+    /// 날짜 비교 유형을 나타내는 열거형 입니다.
     enum CompareDateType {
         // 시작 날짜 비교
         case startDate
         // 마감 날짜 비교
         case deadlineDate
         
-        // 시작 날짜나 마감 날짜와 특정 날짜를 비교했을 때의 결과를 나타내는 열거형.
+        // 시작 날짜나 마감 날짜와 특정 날짜를 비교했을 때의 결과를 나타내는 열거형 입니다.
         enum CompareResult {
             /// 비교 대상 날짜가 시작 날짜보다 이전
             case pastStartDate
@@ -42,9 +42,9 @@ extension Date {
     
     // MARK:  ===== [Function] =====
     
-    /// Date 객체를 "YY년 MM월 dd일" 포맷의 문자열로 변환합니다.
+    /// Date 객체를 `YY년 MM월 dd일` 포맷의 문자열로 변환합니다.
     ///
-    /// - Returns: 날짜를 나타내는 "YY년 MM월 dd일" 형식의 문자열
+    /// - Returns: 날짜를 나타내는 `YY년 MM월 dd일` 형식의 문자열
     func toString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "YY년 MM월 dd일"
@@ -97,7 +97,8 @@ extension Date {
 
     /// 현재 날짜의 요일 값을 반환합니다.
     /// ISO8601 캘린더를 기준으로, 월요일을 시작으로 해서 1(월요일) ~ 7(일요일)의 값으로 반환됩니다.
-    /// [1: 일] [2: 월] [3: 화] [4: 수] [5: 목] [6: 금] [7: 토]
+    ///
+    /// - Note: [1: 일] [2: 월] [3: 화] [4: 수] [5: 목] [6: 금] [7: 토]
     ///
     /// - Returns: 현재 날짜의 요일 값을 나타내는 정수. 값이 없을 경우 0을 반환합니다.
     func getDayOfCurrentDate() -> Int {
@@ -119,7 +120,7 @@ extension Date {
     /// - Returns: 날짜 비교 결과를 나타내는 `CompareDateType.CompareResult` 값.
     func dateCompare(fromDate: Date?, editType: CompareDateType) -> CompareDateType.CompareResult {
        
-        var calendar = Calendar.current
+        let calendar = Calendar.current
         
         // 비교 대상이 될 날짜(선택한 날짜)
         let targetDateComponents = calendar.dateComponents([.year, .month, .day], from: self)

@@ -49,7 +49,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
         
         LoadingIndicator.showLoading(type: .fetchPost)
         
-        if NetworkCheck.shared.isConnected {
+        if NetworkCheckManager.shared.isConnected {
             self.viewModel?.fetchBlogPosts {
                 DispatchQueue.main.async {
                     self.insertMemberViewsInStackView()
@@ -71,7 +71,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
             case .add:
                 LoadingIndicator.showLoading(type: .fetchPost)
                 
-                if NetworkCheck.shared.isConnected {
+                if NetworkCheckManager.shared.isConnected {
                     viewModel?.fetchBlogPosts {
                         DispatchQueue.main.async {
                             self.removeMemberInfoViewsInStackView()
@@ -88,7 +88,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
             case .edit:
                 LoadingIndicator.showLoading(type: .fetchPost)
                 
-                if NetworkCheck.shared.isConnected {
+                if NetworkCheckManager.shared.isConnected {
                     viewModel?.fetchBlogPosts {
                         DispatchQueue.main.async {
                             self.removeMemberInfoViewsInStackView()
@@ -120,7 +120,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
             
             LoadingIndicator.showLoading(type: .fetchPost)
             
-            if NetworkCheck.shared.isConnected {
+            if NetworkCheckManager.shared.isConnected {
                 viewModel?.fetchBlogPosts {
                     DispatchQueue.main.async {
                         self.removeMemberInfoViewsInStackView()
@@ -144,7 +144,7 @@ class AddContentViewController: UIViewController, ViewModelBindableType {
            
             LoadingIndicator.showLoading(type: .fetchPost)
             
-            if NetworkCheck.shared.isConnected {
+            if NetworkCheckManager.shared.isConnected {
                 viewModel?.fetchBlogPosts {
                     DispatchQueue.main.async {
                         self.removeMemberInfoViewsInStackView()

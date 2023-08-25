@@ -13,7 +13,7 @@ import UIKit
 class LoadingIndicator {
     
     // MARK: ===== [Enum] =====
-    // 로딩 인디케이터의 표시 타입을 정의하는 열거형
+    /// 로딩 인디케이터의 표시 타입을 정의하는 열거형
     enum IndicatorViewType {
         case fetchPost
         case saveContent

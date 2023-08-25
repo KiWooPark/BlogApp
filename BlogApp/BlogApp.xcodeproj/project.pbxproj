@@ -87,7 +87,7 @@
 		16E765CE29B8AC1900C12AA3 /* DetailStudyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E765CD29B8AC1900C12AA3 /* DetailStudyViewController.swift */; };
 		16F20C6E2A822D6000E863F5 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F20C6D2A822D6000E863F5 /* ActivityIndicatorView.swift */; };
 		16F20C722A8258CB00E863F5 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F20C712A8258CB00E863F5 /* LoadingIndicator.swift */; };
-		16F20C742A89F9AE00E863F5 /* NetworkCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F20C732A89F9AE00E863F5 /* NetworkCheck.swift */; };
+		16F20C742A89F9AE00E863F5 /* NetworkCheckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F20C732A89F9AE00E863F5 /* NetworkCheckManager.swift */; };
 		16F20C992A8B87EB00E863F5 /* StudyListEmptyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F20C972A8B87EA00E863F5 /* StudyListEmptyTableViewCell.swift */; };
 		16F20C9A2A8B87EB00E863F5 /* StudyListEmptyTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16F20C982A8B87EA00E863F5 /* StudyListEmptyTableViewCell.xib */; };
 		16F20C9C2A8BED7700E863F5 /* AddContentViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16F20C9B2A8BED7700E863F5 /* AddContentViewController.storyboard */; };
@@ -173,7 +173,7 @@
 		16E765CD29B8AC1900C12AA3 /* DetailStudyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailStudyViewController.swift; sourceTree = "<group>"; };
 		16F20C6D2A822D6000E863F5 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		16F20C712A8258CB00E863F5 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
-		16F20C732A89F9AE00E863F5 /* NetworkCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCheck.swift; sourceTree = "<group>"; };
+		16F20C732A89F9AE00E863F5 /* NetworkCheckManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCheckManager.swift; sourceTree = "<group>"; };
 		16F20C972A8B87EA00E863F5 /* StudyListEmptyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyListEmptyTableViewCell.swift; sourceTree = "<group>"; };
 		16F20C982A8B87EA00E863F5 /* StudyListEmptyTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StudyListEmptyTableViewCell.xib; sourceTree = "<group>"; };
 		16F20C9B2A8BED7700E863F5 /* AddContentViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AddContentViewController.storyboard; sourceTree = "<group>"; };
@@ -353,7 +353,7 @@
 			children = (
 				16CFAFDA2A138C2A00D49904 /* CrawlingManager.swift */,
 				16E2B1012A16320600596257 /* CoreDataManager.swift */,
-				16F20C732A89F9AE00E863F5 /* NetworkCheck.swift */,
+				16F20C732A89F9AE00E863F5 /* NetworkCheckManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -571,7 +571,7 @@
 				16F20C9E2A8BED8300E863F5 /* AddContentViewController.swift in Sources */,
 				16B535132A36FA3A0030287C /* UITableViewCell+Extention.swift in Sources */,
 				16E2B13C2A1CC21800596257 /* DetailMemberTableViewCell.swift in Sources */,
-				16F20C742A89F9AE00E863F5 /* NetworkCheck.swift in Sources */,
+				16F20C742A89F9AE00E863F5 /* NetworkCheckManager.swift in Sources */,
 				16CFAFE12A13912400D49904 /* StudyModel.swift in Sources */,
 				166DEC7B2A3C470700A59B8F /* ShareContentViewController.swift in Sources */,
 				16E2ABD52A75603600642656 /* Study+CoreDataProperties.swift in Sources */,

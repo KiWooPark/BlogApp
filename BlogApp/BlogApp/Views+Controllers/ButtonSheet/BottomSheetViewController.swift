@@ -178,7 +178,7 @@ class BottomSheetViewController: UIViewController {
                     return
                 }
                 
-                if NetworkCheck.shared.isConnected == false {
+                if NetworkCheckManager.shared.isConnected == false {
                     self.makeAlertDialog(title: nil, message: "네트워크 연결이 되지 않아 블로그 주소를 확인할 수 없습니다.\n네트워크 연결상태를 확인해 주세요", type: .ok)
                     return
                 } else {
@@ -224,7 +224,7 @@ class BottomSheetViewController: UIViewController {
                     return
                 }
                 
-                if NetworkCheck.shared.isConnected == false {
+                if NetworkCheckManager.shared.isConnected == false {
                     self.makeAlertDialog(title: nil, message: "네트워크 연결이 되지 않아 블로그 주소를 확인할 수 없습니다.\n네트워크 연결상태를 확인해 주세요", type: .ok)
                     return
                 } else {
@@ -272,7 +272,7 @@ class BottomSheetViewController: UIViewController {
                 return
             }
             
-            if NetworkCheck.shared.isConnected == false {
+            if NetworkCheckManager.shared.isConnected == false {
                 self.makeAlertDialog(title: nil, message: "네트워크 연결이 되지 않아 블로그 주소를 확인할 수 없습니다.\n네트워크 연결상태를 확인해 주세요", type: .ok)
                 return
             } else {
@@ -320,8 +320,6 @@ class BottomSheetViewController: UIViewController {
 
             let compareStartDate = targetDate.dateCompare(fromDate: startDate, editType: .deadlineDate)
             let compareTodayDate = targetDate.dateCompare(fromDate: Date(), editType: .deadlineDate)
-    
-            print(compareStartDate, compareTodayDate)
             
             switch (compareStartDate, compareTodayDate) {
             case (.pastDeadlineDate, .pastDeadlineDate):
@@ -365,7 +363,7 @@ class BottomSheetViewController: UIViewController {
                 return
             }
             
-            if NetworkCheck.shared.isConnected == false {
+            if NetworkCheckManager.shared.isConnected == false {
                 self.makeAlertDialog(title: nil, message: "네트워크 연결이 되지 않아 블로그 주소를 확인할 수 없습니다.\n네트워크 연결상태를 확인해 주세요", type: .ok)
                 return
             } else {
@@ -411,7 +409,7 @@ class BottomSheetViewController: UIViewController {
                 return
             }
             
-            if NetworkCheck.shared.isConnected == false {
+            if NetworkCheckManager.shared.isConnected == false {
                 self.makeAlertDialog(title: nil, message: "네트워크 연결이 되지 않아 블로그 주소를 확인할 수 없습니다.\n네트워크 연결상태를 확인해 주세요", type: .ok)
                 return
             } else {

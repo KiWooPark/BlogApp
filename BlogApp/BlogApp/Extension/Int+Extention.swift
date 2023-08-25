@@ -7,9 +7,15 @@
 
 import Foundation
 
+// MARK: ===== [Extention] =====
 extension Int {
     
-    // 3자리마다 콤마 찍기
+    // MARK:  ===== [Function] =====
+    
+    /// 숫자를 콤마(,)가 포함된 문자열로 변환하여 반환합니다.
+    /// 예) 1000 -> "1,000", 10000 -> "10,000"
+    ///
+    /// - Returns: 콤마(,)가 포함된 숫자 문자열
     func insertComma() -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
@@ -17,6 +23,12 @@ extension Int {
         return numberFormatter.string(from: NSNumber(value: self))!
     }
     
+    /// 주어진 숫자를 해당하는 요일의 문자열로 변환합니다.
+    /// 예) 2 -> "매주 월요일", 3 -> "매주 화요일"
+    ///
+    /// - Note: 1부터 7까지의 숫자는 각각 일요일부터 토요일까지를 나타냅니다.
+    ///
+    /// - Returns: 해당 요일에 대한 문자열. 올바르지 않은 숫자의 경우 빈 문자열을 반환합니다.
     func convertDeadlineDayToString() -> String {
         switch self {
         case 2:
@@ -37,7 +49,13 @@ extension Int {
             return ""
         }
     }
-
+    
+    /// 주어진 숫자를 해당하는 요일의 문자열로 변환합니다.
+    /// 예) 2 -> "월요일", 3 -> "화요일"
+    ///
+    /// - Note: 1부터 7까지의 숫자는 각각 일요일부터 토요일까지를 나타냅니다.
+    ///
+    /// - Returns: 해당 요일에 대한 문자열. 올바르지 않은 숫자의 경우 빈 문자열을 반환합니다.
     func convertWeekDayToString() -> String {
         switch self {
         case 2:

@@ -9,28 +9,52 @@ import Foundation
 import Alamofire
 import SwiftSoup
 
+// MARK: ===== [Enum] =====
+/// 크롤링에 실패한 경우 `Error` 유형을 정의하는 열거형 입니다.
 enum CrawlingError: Error {
-    case error
+
+    // HTML을 가지고오지 못한 경우 
     case htmlError
+    // 블로그 페이지 정보를 가지고오지 못한 경우
     case rangeError
+    // URL이 잘못된 경우
     case urlError
-    case getPostURLError
+    // 작성한 게시글 정보를 가지고오지 못한 경우
+    case getPostError
+    // catch 블록으로 빠진 경우
     case tryError
-    case latestPostURLError
+    // HTML에서 ItemListElement가 없는 경우
     case notFoundItemListElement
+    // HTML에서 Item이 없는 경우
     case notFoundItem
+    // HTML에서 Id이 없는 경우
     case notFoundId
+    // HTML에서 Title과 Date가 없는 경우
     case notFoundTitleAndDate
-    
+    // 카테고리 번호를 가지고오지 못한 경우
     case categoryNumberError
 }
 
+/// 블로그URL 검사 실패에 대한 유형을 나타내는 열거형 입니다.
+enum BlogURLError: Error {
+    // 티스토리 주소가 아닌 경우
+    case notTistoryURL
+    // URL 형식이 아닌 경우
+    case invalidURL
+    // 요청에 실패한 경우
+    case requestFailed
+}
+
+/// `CrawlingManager`는 웹 사이트 데이터 크롤링 작업을 관리합니다.
 struct CrawlingManager {
-    /// HTML 문자열에서 head 부분만 가지고오는 메소드
-    /// 이 메소드는 HTML 문자열에서 body 부분을 제외한 head 부분만 새로운 문자열로 반환합니다.
-    /// --------------------------------------------------------------
+    
+    // MARK:  ===== [Function] =====
+
+    /// HTML 문자열에서 `head` 블록의 문자열을 반환합니다.
+    ///
     /// - Parameter html: 블로그 HTML 문자열
-    /// - Returns: <head> </haed> 안에 포함된 문자열
+    ///
+    /// - Returns: <head>부터 </head>까지의 모든 문자열
     static func getHtmlHead(html: String) -> String? {
         let pattern = "<head>([\\s\\S]*?)</head>"
 
@@ -40,28 +64,29 @@ struct CrawlingManager {
         
         return String(headContent)
     }
-    
-    
-    enum BlogURLError: Error {
-        case notTistoryURL
-        case invalidURL
-        case requestFailed
-    }
-    
-    /// 새로운 멤버를 추가할 경우 입력한 URL이 정상적인 URL인지 검사하는 메소드 입니다.
+
+    /// 새로운 멤버를 추가할 경우 입력한 URL을 검사합니다.
+    /// 1. 티스토리 주소인지 검사
+    /// 2. 유효한 URL인지 검사
+    /// 3. URL 요청 성공 여부 검사
     ///
-    /// - Parameter url: <#url description#>
+    /// - Parameters:
+    ///   - url: 티스토리 블로그 URL
+    ///   - completion: 검증 작업이 완료된 후 호출할 콜백 함수입니다. 성공하면 success로, 실패하면 해당 오류로 반환됩니다.
     static func validateBlogURL(url: String, completion: @escaping (Result<Void, BlogURLError>) -> ())  {
         
+        // 티스토리 블로그 URL인지 확인
         if !url.contains("tistory") {
             completion(.failure(.notTistoryURL))
         }
         
+        // 유효한 URL인지 확인
         guard let validURL = URL(string: url) else {
             completion(.failure(.invalidURL))
             return
         }
         
+        // 해당 URL로 접속 가능한지 확인
         AF.request(validURL).responseString { result in
             switch result.result {
             case .success(_):
@@ -72,29 +97,43 @@ struct CrawlingManager {
         }
     }
 
-
-    // 멤버별 블로그 게시글 목록 가지고오기
+    /// 시작 날짜와 마감 날짜 범위사이에 작성한 블로그 게시물을 멤버별로 가져옵니다.
+    ///
+    /// 이 메소드는 멤버의 블로그 URL을 통해 게시물을 가지고 오며 각 멤버의 블로그에서 1페이지부터 확인 합니다.
+    /// 해당 페이지에서 시작 날짜와 마감 날짜 범위에 작성된 게시물이 있는지 확인합니다.
+    /// 이후 모든 멤버에 대한 조회가 완료되면 콜백 함수를 호출합니다.
+    ///
+    /// - Parameters:
+    ///   - members: 멤버 목록
+    ///   - startDate: 해당 회차 시작 날짜
+    ///   - deadlineDate: 해당 회차 마감 날짜
+    ///   - completion: 작업이 완료된 후에 호출할 콜백 함수 입니다. 완료시 멤버별 작성 게시물의 정보 목록을 반환합니다.
     static func fetchMembersBlogPost(members: [User], startDate: Date?, deadlineDate: Date?, completion: @escaping ([PostResponse]) -> ()){
         
         let group = DispatchGroup()
         
+        // 작성한 게시물에 대한 데이터를 담을 배열 입니다.
         var resultPostsData = Array(repeating: PostResponse(), count: members.count)
     
         for i in 0 ..< members.count {
     
             group.enter()
+            
+            // 멤버 블로그의 마지막 페이지 번호를 가지고옵니다.
             getCategoryLastPageNumber(blogUrl: members[i].blogUrl ?? "") { result in
             
                 switch result {
                 case .success(let lastPageNumber):
                     
+                    // 첫페이지부터 마지막 페이지까지 순회하면서 날짜 범위내에 작성한 게시물을 가지고옵니다.
                     fetchPostsByPage(lastPageNumber: lastPageNumber, baseUrl: members[i].blogUrl ?? "", startDate: startDate, deadlineDate: deadlineDate) { result in
                         
                         switch result {
                         case .success(let postData):
+                            // 작성한 게시물이 없는 경우
                             if postData?.title == nil {
                                 resultPostsData[i] = PostResponse(name: members[i].name, data: nil, errorMessage: "작성된 게시물이 없습니다.")
-                            } else {
+                            } else { // 작성한 게시물이 있는 경우
                                 resultPostsData[i] = PostResponse(name: members[i].name, data: postData, errorMessage: nil)
                             }
                             
@@ -111,27 +150,43 @@ struct CrawlingManager {
                 }
             }
         }
-        
         group.notify(queue: .main) {
+            // 멤버별 작성 게시물의 정보 목록을 반환
             completion(resultPostsData)
         }
     }
-
-    // #1
+    
+    /// 멤버의 블로그 마지막 페이지 번호를 가지고옵니다.
+    ///
+    /// 이 메소드는 첫페이지부터 마지막 페이지까지 순회하기 위해 마지막 페이지 번호를 가지고옵니다.
+    ///
+    /// - Parameters:
+    ///   - blogUrl: 블로그 URL
+    ///   - completion: 마지막 페이지 번호를 성공적으로 가져오면 해당 번호를 반환하며, 오류 발생 시 에러를 반환합니다.
     static func getCategoryLastPageNumber(blogUrl: String, completion: @escaping (Result<Int, CrawlingError>) -> ()){
         
-        // URL nil 체크
+        // 블로그 URL에 "/category"를 추가하여 URL 객체를 생성합니다.
+        // 만약 URL 변환이 실패하면 에러를 반환합니다.
         if let url = URL(string: blogUrl + "/category") {
+           
+            // URL로 요청을 보냅니다.
             AF.request(url).responseString { result in
                 switch result.result {
                 case .success( _):
+                    
+                    // HTML 문자열을 추출합니다.
                     guard let html = result.value else { return }
                     
                     do {
+                        // 페이지 번호를 찾기 위한 정규표현식 패턴을 생성합니다.
                         let pattern = #"(/category\?page=\d+)""#
                         let regex = try NSRegularExpression(pattern: pattern, options: [])
                         let range = NSRange(html.startIndex..<html.endIndex, in: html)
+                        
+                        // HTML 문자열에서 정규표현식과 일치하는 모든 문자열을 찾습니다.
                         let matches = regex.matches(in: html, options: [], range: range)
+                        
+                        // 일치하는 문자열에서 페이지 번호를 추출합니다.
                         let matchedStrings = matches.compactMap { match -> Int? in
                             guard let range = Range(match.range(at: 1), in: html) else { return nil }
                             
@@ -140,77 +195,112 @@ struct CrawlingManager {
                             return pageNumber
                         }
                         
+                        // 추출한 페이지 번호 중 가장 큰 값을 반환합니다.
                         completion(.success(matchedStrings.sorted().last ?? 0))
-                        
-                        
                     } catch {
-                        print("fetchMemberBlogPostList - Error")
+                        // 정규표현식 생성 또는 매칭 도중 오류가 발생한 경우 에러를 출력하고 에러를 반환합니다.
                         completion(.failure(.tryError))
                     }
                 case .failure( _):
-                    print("category 번호 못가져옴")
+                    // 페이지 번호를 가져오는 데 실패하면 에러를 출력하고 에러를 반환합니다.
                     completion(.failure(.categoryNumberError))
                 }
             }
         } else {
-            print("URL 변환 실패")
+            // URL 변환에 실패하면 에러를 출력하고 에러를 반환합니다.
             completion(.failure(.urlError))
         }
     }
     
-    // 페이지별로 게시글 URL 가지고오기
+    /// 페이지별로 날짜 범위내에 작성된 게시글의 URL을 가지고옵니다.
+    ///
+    /// 이 메소드는 내부에서 checkBlogPostInPage()를 재귀적으로 호출합니다.
+    /// 해당 페이지에 날짜 범위안에 속한 게시물이 있으면 콜백 함수를 호출합니다.
+    ///
+    /// - Parameters:
+    ///   - lastPageNumber: 마지막 페이지 번호
+    ///   - baseUrl: 기본 URL
+    ///   - startDate: 시작 날짜
+    ///   - deadlineDate: 마감 날짜
+    ///   - completion: 포스트를 성공적으로 가져오면 포스트 모델을 반환하며, 오류 발생 시 에러를 반환합니다.
     static func fetchPostsByPage(lastPageNumber: Int, baseUrl: String, startDate: Date?, deadlineDate: Date?, completion: @escaping (Result<PostModel?,CrawlingError>) -> ()) {
         
+        // 현재 페이지 번호를 저장하는 변수 입니다. 기본값은 첫페이지인 1 입니다.
         var currentPage = 1
         
+        /// 현재 페이지에서 날짜 범위내에 작성된 게시물이 있는지 확인합니다.
         func checkBlogPostInPage() {
             
+            // 현재 페이지가 마지막 페이지를 초과하면 함수를 종료합니다.
             guard currentPage <= lastPageNumber else { return }
             
+            // 현재 페이지의 URL을 생성합니다.
             if let url = URL(string: baseUrl + "/category" + "/?page=\(currentPage)") {
+                
                 getPostsUrl(url: url) { result in
+                    
                     switch result {
                     case .success(let urls):
-                   
+                        
                         checkBlogPostsInRange(urls: urls, startDate: startDate, deadlineDate: deadlineDate) { result  in
                             switch result {
                             case .success(let postData):
                                 if let post = postData {
+                                    // 날짜 범위 내에 작성된 게시물이 있다면 반환 합니다.
                                     completion(.success(post))
                                 } else {
+                                    // 날짜 범위 내에 작성된 게시물이 없다면 다음 페이지로 넘어간 후 검사합니다.
                                     currentPage += 1
                                     checkBlogPostInPage()
                                 }
                             case .failure( _):
+                                // 날짜 범위 내에 작성된 게시물이 없다면 다음 페이지로 넘어간 후 검사합니다.
                                 currentPage += 1
                                 checkBlogPostInPage()
                             }
                         }
                     case .failure( _):
+                        // URL 목록 가져오기에 실패하면 다음 페이지로 넘어가서 다시 검사합니다.
                         currentPage += 1
                         checkBlogPostInPage()
                     }
                 }
             }
         }
+        
+        // 재귀 함수 호출
         checkBlogPostInPage()
     }
     
-    // 해당 페이지의 게시글들의 URL 가지고오기
+    /// 현재 페이지에있는 게시물 목록을 가지고 옵니다.
+    ///
+    /// - Parameters:
+    ///   - url: 게시물 URL 목록을 가지고오기 위한 URL
+    ///   - completion: URL 목록을 성공적으로 가져오면 반환하며, 오류 발생 시 에러를 반환합니다.
     static func getPostsUrl(url: URL, completion: @escaping (Result<[String],CrawlingError>) -> ()) {
+        
+        // URL로 요청을 보냅니다.
         AF.request(url).responseString { result in
+            
             switch result.result {
             case .success(let html):
+                
+                // HTML의 head 태그 내용을 가져옵니다.
+                // 실패하면 "htmlError"를 반환합니다.
                 guard let headContent = getHtmlHead(html: html) else {
                     completion(.failure(.htmlError))
                     return
                 }
     
                 do {
+                    // SwiftSoup을 사용하여 HTML을 파싱합니다.
                     let doc = try SwiftSoup.parse(headContent)
+                    // 스크립트 태그 중 application/ld+json 타입을 선택합니다.
                     let scriptElements = try doc.select("script[type=application/ld+json]")
+                    // 첫 번째 스크립트 태그의 내용을 가져옵니다.
                     let jsonData = try scriptElements.first()?.html()
                     
+                    // JSON 데이터를 디코딩하여 URL 목록을 가져옵니다.
                     guard let data = jsonData?.data(using: .utf8),
                           let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                           let itemList = json["itemListElement"] as? [[String: Any]] else {
@@ -220,40 +310,63 @@ struct CrawlingManager {
                     
                     var urls = [String]()
                 
+                    // itemList에서 각 항목의 URL을 추출합니다.
                     itemList.forEach { item in
                         if let item = item["item"] as? [String: String],
                            let url = item["@id"] {
                             urls.append(url)
                         }
                     }
+                    
+                    // 완성된 URL 목록을 반환합니다.
                     completion(.success(urls))
                 } catch {
+                    // 파싱 중에 오류가 발생하면 해당 오류를 반환합니다.
                     completion(.failure(.tryError))
                 }
-
             case .failure(_):
-                completion(.failure(.getPostURLError))
+                // 웹 페이지 요청에 실패하면 해당 오류를 반환합니다.
+                completion(.failure(.getPostError))
             }
         }
     }
     
+    /// 시작 날짜와 마감 날짜 범위내에 작성된 게시물이 있는지 확인합니다.
+    ///
+    /// - Parameters:
+    ///   - urls: 게시물 URL 목록
+    ///   - startDate: 시작 날짜
+    ///   - deadlineDate: 마감 날짜
+    ///   - completion: 기간 내의 작성된 게시물을 확인하면 반환하며, 오류 발생 시 에러를 반환합니다.
     static func checkBlogPostsInRange(urls: [String], startDate: Date?, deadlineDate: Date?, completion: @escaping (Result<PostModel?,CrawlingError>) -> ()) {
+        
+        // 현재 게시물 URL의 인덱스 번호 입니다. 기본값은 0 입니다.
         var currentCount = 0
         
+        /// 게시물을 확인합니다.
         func checkPost() {
+            
+            // 모든 게시물 URL을 확인했을 경우 함수를 종료 합니다.
             guard currentCount < urls.count else { return completion(.success(nil)) }
             
+            // 확인할 게시물 URLString
             let currentUrl = urls[currentCount]
             
+            // 확인할 게시물의 URL을 생성합니다.
             if let url = URL(string: currentUrl) {
+                
+                // URL로 요청합니다.
                 AF.request(url).responseString { result in
                     switch result.result {
                     case .success(let html):
                         
+                        // HTML의 head 태그 내용을 가져옵니다.
                         let headContent = getHtmlHead(html: html)
                         
                         do {
+                            // SwiftSoup을 사용하여 HTML을 파싱 합니다.
                             let doc = try SwiftSoup.parse(headContent ?? "")
+                            // 메타 태그에서 게시물의 제목과 날짜를 추출 합니다.
                             let title = try doc.select("meta[property=og:title]").first()?.attr("content")
                             let dateStr = try doc.select("meta[property=article:published_time]").first()?.attr("content")
                             
@@ -261,11 +374,12 @@ struct CrawlingManager {
                             let startDate = startDate ?? Date()
                             let deadlineDate = deadlineDate ?? Date()
 
-                            // 시작일 ~ 마감일안에 포함된 경우만
+                            // 추출한 게시물 날짜가 지정된 기간 내에 있는지 확인 합니다.
                             if postDate >= startDate && postDate <= deadlineDate {
+                                // 기간 내에 있다면 해당 포스트 정보를 반환 합니다.
                                 completion(.success(PostModel(title: title, date: dateStr, postUrl: urls[currentCount])))
                             } else {
-                                // 포함되지 않은 경우에는 다음 게시물 체크
+                                // 기간 내에 없다면 다음 URL로 이동하여 확인 합니다.
                                 if postDate <= startDate {
                                     completion(.success(PostModel(title: nil, date: nil, postUrl: nil)))
                                 } else {
@@ -274,10 +388,10 @@ struct CrawlingManager {
                                 }
                             }
                         } catch {
-                            completion(.failure(.error))
+                            completion(.failure(.tryError))
                         }
                     case .failure(_):
-                        completion(.failure(.error))
+                        completion(.failure(.getPostError))
                     }
                 }
             }
