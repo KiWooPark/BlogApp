@@ -56,7 +56,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1968" y="75"/>
+            <point key="canvasLocation" x="2590" y="325"/>
         </scene>
         <!--Add Study View Controller-->
         <scene sceneID="EOd-bQ-c2h">
@@ -635,7 +635,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EY4-To-USP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="992.75362318840587" y="75"/>
+            <point key="canvasLocation" x="1616" y="325"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="kdZ-Dv-IJd">

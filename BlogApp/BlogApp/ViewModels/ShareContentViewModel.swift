@@ -77,7 +77,7 @@ class ShareContentViewModel {
     }
 
     /// 멤버 정보중 공유 포맷애 맞춰 가져옵니다.
-    /// 
+    ///
     /// - Parameter index: 정보를 가져올 인덱스
     /// - Returns: 멤버 정보중 공유할 내용을 새로운 문자열로 반환합니다.
     private func fetchMembers(index: Int) -> String {

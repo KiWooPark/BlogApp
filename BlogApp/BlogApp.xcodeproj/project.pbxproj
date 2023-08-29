@@ -213,6 +213,8 @@
 				169A021E29ACD53300C1B47B /* Intro */,
 				169A022329ACD6BD00C1B47B /* SignUp */,
 				169A022429ACD6C500C1B47B /* SignIn */,
+				16B7C74B2A9C75B900431491 /* AddStudy */,
+				16B7C74C2A9C7F3900431491 /* DetailStudy */,
 			);
 			path = Disabled;
 			sourceTree = "<group>";
@@ -303,6 +305,40 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		16B7C74B2A9C75B900431491 /* AddStudy */ = {
+			isa = PBXGroup;
+			children = (
+				162E45D12A470F6700256862 /* AddStudyTypeTableViewCell.swift */,
+				162E45D22A470F6700256862 /* AddStudyTypeTableViewCell.xib */,
+				16E2B0F62A16257800596257 /* AddTitleTableViewCell.swift */,
+				16E2B0F72A16257800596257 /* AddTitleTableViewCell.xib */,
+				16CFAFE62A1395ED00D49904 /* AddAnnouncementTableViewCell.swift */,
+				16CFAFE72A1395ED00D49904 /* AddAnnouncementTableViewCell.xib */,
+				16CFAFEA2A13C78100D49904 /* AddCommonSetInfoTableViewCell.swift */,
+				16CFAFEB2A13C78100D49904 /* AddCommonSetInfoTableViewCell.xib */,
+				16E2B1442A1F5EA100596257 /* AddMemberInfoTableViewCell.swift */,
+				16E2B1612A26701E00596257 /* AddMemberInfoTableViewCell.xib */,
+			);
+			path = AddStudy;
+			sourceTree = "<group>";
+		};
+		16B7C74C2A9C7F3900431491 /* DetailStudy */ = {
+			isa = PBXGroup;
+			children = (
+				16E2B12C2A1CC1CE00596257 /* DetailTitleTableViewCell.swift */,
+				16E2B12D2A1CC1CE00596257 /* DetailTitleTableViewCell.xib */,
+				16E2B1302A1CC1E400596257 /* DetailAnnouncementTableViewCell.swift */,
+				16E2B1312A1CC1E400596257 /* DetailAnnouncementTableViewCell.xib */,
+				16E2B1342A1CC1FC00596257 /* DetailCommonSetInfoTableViewCell.swift */,
+				16E2B1352A1CC1FC00596257 /* DetailCommonSetInfoTableViewCell.xib */,
+				16E2B13A2A1CC21800596257 /* DetailMemberTableViewCell.swift */,
+				16E2B13B2A1CC21800596257 /* DetailMemberTableViewCell.xib */,
+				16E2B13E2A1CCE1200596257 /* DetailMemberInfoTableViewCell.swift */,
+				16E2B13F2A1CCE1200596257 /* DetailMemberInfoTableViewCell.xib */,
+			);
+			path = DetailStudy;
+			sourceTree = "<group>";
+		};
 		16C2FA012A61294400A58AF3 /* AddContent */ = {
 			isa = PBXGroup;
 			children = (
@@ -319,7 +355,7 @@
 				16E2B12A2A1CBFC100596257 /* StudyList */,
 				16E2B1292A1CBFA900596257 /* AddStudy */,
 				16E2B12B2A1CBFD200596257 /* DetailStudy */,
-				16E2B1492A1F659200596257 /* ButtonSheet */,
+				16E2B1492A1F659200596257 /* BottonSheet */,
 				16C2FA012A61294400A58AF3 /* AddContent */,
 				166DEC792A3C46A900A59B8F /* ShareContent */,
 			);
@@ -374,16 +410,6 @@
 				16E2ABC52A6F0A0100642656 /* EditMemberInfoView.swift */,
 				169A023529ACE1D300C1B47B /* AddStudyViewController.swift */,
 				169A023329ACE1C300C1B47B /* AddStudyViewController.storyboard */,
-				162E45D12A470F6700256862 /* AddStudyTypeTableViewCell.swift */,
-				162E45D22A470F6700256862 /* AddStudyTypeTableViewCell.xib */,
-				16E2B0F62A16257800596257 /* AddTitleTableViewCell.swift */,
-				16E2B0F72A16257800596257 /* AddTitleTableViewCell.xib */,
-				16CFAFE62A1395ED00D49904 /* AddAnnouncementTableViewCell.swift */,
-				16CFAFE72A1395ED00D49904 /* AddAnnouncementTableViewCell.xib */,
-				16CFAFEA2A13C78100D49904 /* AddCommonSetInfoTableViewCell.swift */,
-				16CFAFEB2A13C78100D49904 /* AddCommonSetInfoTableViewCell.xib */,
-				16E2B1442A1F5EA100596257 /* AddMemberInfoTableViewCell.swift */,
-				16E2B1612A26701E00596257 /* AddMemberInfoTableViewCell.xib */,
 			);
 			path = AddStudy;
 			sourceTree = "<group>";
@@ -407,27 +433,17 @@
 				16E2ABBF2A6ED9EC00642656 /* StudyMemberInfoView.swift */,
 				16E765CD29B8AC1900C12AA3 /* DetailStudyViewController.swift */,
 				16E765CB29B8AC0D00C12AA3 /* DetailStudyViewController.storyboard */,
-				16E2B12C2A1CC1CE00596257 /* DetailTitleTableViewCell.swift */,
-				16E2B12D2A1CC1CE00596257 /* DetailTitleTableViewCell.xib */,
-				16E2B1302A1CC1E400596257 /* DetailAnnouncementTableViewCell.swift */,
-				16E2B1312A1CC1E400596257 /* DetailAnnouncementTableViewCell.xib */,
-				16E2B1342A1CC1FC00596257 /* DetailCommonSetInfoTableViewCell.swift */,
-				16E2B1352A1CC1FC00596257 /* DetailCommonSetInfoTableViewCell.xib */,
-				16E2B13A2A1CC21800596257 /* DetailMemberTableViewCell.swift */,
-				16E2B13B2A1CC21800596257 /* DetailMemberTableViewCell.xib */,
-				16E2B13E2A1CCE1200596257 /* DetailMemberInfoTableViewCell.swift */,
-				16E2B13F2A1CCE1200596257 /* DetailMemberInfoTableViewCell.xib */,
 			);
 			path = DetailStudy;
 			sourceTree = "<group>";
 		};
-		16E2B1492A1F659200596257 /* ButtonSheet */ = {
+		16E2B1492A1F659200596257 /* BottonSheet */ = {
 			isa = PBXGroup;
 			children = (
 				16E2B14A2A1F65C000596257 /* BottomSheetViewController.swift */,
 				16E2B14E2A1F65F300596257 /* BottomSheetViewController.storyboard */,
 			);
-			path = ButtonSheet;
+			path = BottonSheet;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

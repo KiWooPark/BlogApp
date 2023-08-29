@@ -7,12 +7,20 @@
 
 import UIKit
 
+/// 스터디 정보가 없을 경우 표시하는 UITableViewCell 클래스 입니다.
 class StudyListEmptyTableViewCell: UITableViewCell {
 
-    static var identifier: String { return String(describing: self)}
+    // MARK:  ===== [@IBOutlet] =====
     
+    // Empty 정보를 보여줄 뷰
     @IBOutlet weak var emptyView: UIView!
+
+    static var identifier: String { return String(describing: self)}
+
     
+    
+    // MARK: ===== [Override] =====
+
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -24,5 +32,4 @@ class StudyListEmptyTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
 }

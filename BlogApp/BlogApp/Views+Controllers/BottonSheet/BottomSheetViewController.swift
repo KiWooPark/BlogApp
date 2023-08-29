@@ -7,61 +7,139 @@
 
 import UIKit
 
-enum StudyOptionType {
-    case lastProgressDeadlineDate // o
-    case firstStartDate // o
-    case deadlineDay // o
-    case fine // o
-    case addStudyMemeber // o
-    case editStudyMember // o
-    
-    case contentStartDate
-    case contentDeadlineDate
-    case contentFine
-    case addContentMember
-    case editContentMember
-}
-
+/// 스터디에 필요한 세부 정보를 설정하는 클래스 입니다.
 class BottomSheetViewController: UIViewController {
     
+    // MARK: ===== [Enum] =====
+    
+    /// 설정할 정보의 타입 열거형
+    enum StudyOptionType {
+        // 마지막 진행 마감 날짜
+        case lastProgressDeadlineDate
+        
+        // 최초 시작 날짜
+        case firstStartDate
+        
+        // 마감 요일
+        case deadlineDay
+        
+        // 벌금
+        case fine
+        
+        // 스터디 멤버 추가
+        case addStudyMemeber
+        
+        // 스터디 멤버 수정
+        case editStudyMember
+        
+        // 마감 정보 시작 날짜
+        case contentStartDate
+        
+        // 마감 정보 마감 날짜
+        case contentDeadlineDate
+        
+        // 마감 정보 벌금
+        case contentFine
+        
+        // 마감 정보 멤버 추가
+        case addContentMember
+        
+        // 마감 정보 멤버 수정
+        case editContentMember
+    }
+    
+
+    
+    // MARK:  ===== [@IBOutlet] =====
+
+    // 바텀 시트의 바탕이 되는 뷰
     @IBOutlet weak var bottomSheetView: UIView!
     
+    // 바텀 시트 타이틀을 표시할 레이블
     @IBOutlet weak var titleLabel: UILabel!
+
+    // 바텀 시트 서브 타이틀을 표시할 레이블
     @IBOutlet weak var subTitleLabel: UILabel!
 
+    // 날짜 선택 정보를 표시할 바탕 뷰
     @IBOutlet weak var baseDatePickerView: UIView!
+    
+    // 날짜 선택 데이트 피커
     @IBOutlet weak var studyDatePicker: UIDatePicker!
 
+    // 마감요일 정보를 표시할 바탕 뷰
     @IBOutlet weak var baseDeadlineDayView: UIView!
+    
+    // 요일 선택 버튼
     @IBOutlet var dayButtons: [UIButton]!
+    
+    // 선택한 요일을 표시할 레이블
     @IBOutlet weak var selectedDayLabel: UILabel!
     
+    // 선택한 요일을 표시하기 위한 스택 뷰
     @IBOutlet weak var baseSelectedDayStackView: UIStackView!
+    
+    // 이번주 날짜를 선택할 버튼
     @IBOutlet weak var currentDayButton: UIButton!
+    
+    // 다음부 날짜를 선택할 버튼
     @IBOutlet weak var nextWeekDayButton: UIButton!
     
+    // 벌금 정보를 표시할 바탕 뷰
     @IBOutlet weak var baseFineView: UIView!
+    
+    // 벌금 선택 버튼
     @IBOutlet var fineButtons: [UIButton]!
     
+    // 멤버 정보를 입력할 뷰의 바탕 뷰
     @IBOutlet weak var baseMemberInfoView: UIView!
+    
+    // 이름을 입력할 텍스트 필드
     @IBOutlet weak var nameTextField: UITextField!
+    
+    // 블로그 주소를 입력할 텍스트 필드
     @IBOutlet weak var blogUrlTextField: UITextField!
     
+    // 벌금 정보를 표시하기위한 스택 뷰
     @IBOutlet weak var fineInfoStackView: UIStackView!
+    
+    // 벌금 정보를 입력할 텍스트 필드
     @IBOutlet weak var fineTextField: UITextField!
     
+    // 멤버 추가 완료 버튼
     @IBOutlet weak var doneButton: UIButton!
+     
+    // 멤버 삭제 버튼
     @IBOutlet weak var deleteButton: UIButton!
     
+    // 스터디 정보를 수정 및 삭제하기 위한 뷰 모델
     var composeViewModel: StudyComposeViewModel?
+    
+    // 마감 정보를 생성하기 위한 뷰 모델
     var newContentViewModel: NewContentViewModel?
     
+    // 선택된 스터디 옵션 타입
     var option: StudyOptionType?
+    
+    // 선택된 멤버 인덱스
     var index: Int = 0
+    
+    // 스터디 수정 여부
     var isEditStudy: Bool = false
     
+    // 키보드 활성화 여부
     var isKeyboardActive: Bool = false
+    
+    // 바텀 시트의 높이
     var bottomSheetViewHeight: CGFloat?
+    
+    deinit {
+        print("----- 해제")
+        // 키보드 노티 삭제
+        removeKeyboard()
+    }
+    
+    // MARK: ===== [Override] =====
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,14 +150,19 @@ class BottomSheetViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // 키보드 노티 등록
         addKeyboard()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        // 바텀 시트 높이가 nil인 경우 높이값 설정
         if bottomSheetViewHeight == nil {
             bottomSheetViewHeight = bottomSheetView.frame.height
+            
+            // 높이만큼 y값 변경(하단으로 내려 안보이도록 함)
             bottomSheetView.transform = CGAffineTransform(translationX: 0, y: bottomSheetViewHeight ?? 0.0)
         }
     }
@@ -87,107 +170,157 @@ class BottomSheetViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
+        // 원래 위치로 변경
         UIView.animate(withDuration: 0.3, animations: {
             self.bottomSheetView.transform = .identity
         })
     }
 
-    deinit {
-        print("----- 해제")
-        removeKeyboard()
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
     
-    func dismissBottomSheetView() {
-        
-        view.endEditing(true)
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.bottomSheetView.transform = CGAffineTransform(translationX: 0, y: self.bottomSheetView.frame.height)
-        }, completion: { finished in
-            // 애니메이션이 완료되면 뷰 컨트롤러를 닫음
-            if finished {
-                self.dismiss(animated: false, completion: nil)
-            }
-        })
-    }
     
+    
+    // MARK:  ===== [@IBOutlet] =====
+    
+    /// 닫기 버튼을 탭했을 때의 동작을 정의합니다.
     @IBAction func tapCloseButton(_ sender: Any) {
+        
+        // 키보드가 활성화 되어있는 경우
         if isKeyboardActive {
+            
+            // 키보드를 비활성화 합니다.
+            view.endEditing(true)
+            
+            // 바텀 시트를 화면에서 사라지도록 합니다.
             dismissBottomSheetView()
         } else {
             dismissBottomSheetView()
         }
     }
     
+    /// 완료 버튼을 탭했을 때의 동작을 정의합니다.
     @IBAction func tapDoneButton(_ sender: Any) {
+        
+        // 설정중인 정보 타입
         switch option {
+            
+        // 마지막 진행 마감 날짜
         case .lastProgressDeadlineDate:
+            // 뷰 모델의 마지막 마감 날짜를 업데이트 합니다.
             composeViewModel?.updateStudyProperty(.lastProgressDeadlineDate, value: studyDatePicker.date)
             dismissBottomSheetView()
+            
+        // 최초 시작 날짜
         case .firstStartDate:
+            
+            // 뷰 모델의 최초 시작 날짜를 업데이트 합니다.
             composeViewModel?.updateStudyProperty(.firstStudyDate, value: studyDatePicker.date)
             dismissBottomSheetView()
+            
+        // 마감 요일
         case .deadlineDay:
+            
+            // 선택한 마감 요일 버튼이 있는 경우
             if dayButtons.filter({$0.isSelected == true}).count != 0 {
+                
+                // 선택한 마감 요일 버튼을 가져옵니다.
                 let selectedButton = dayButtons.filter({$0.isSelected == true})[0]
                 
+                // 오늘을 기준으로 마감 날짜를 계산 합니다.
                 let deadlineDate = Date().calculateDeadlineDate(deadlineDay: selectedButton.tag)
                 
+                // 계산된 마감 날짜중 다음주 날짜가 nil인 경우
                 if deadlineDate.nextWeekFinishDate == nil {
+                    
+                    // 뷰 모델의 마감 요일에 선택된 버튼 태그와 이번주 마감 날짜를 업데이트 합니다.
                     composeViewModel?.updateStudyProperty(.deadlineDay, value: (selectedButton.tag, deadlineDate.currentDate))
                 } else {
+                    // 다음주 날짜가 nil이 아닌 경우 이번주 날짜와 다음주 날짜를 선택하도록 경고장의 띄웁니다.
                     if currentDayButton.isSelected == false && nextWeekDayButton.isSelected == false {
                         makeAlertDialog(title: "이번주의 마감 날짜 또는 다음주의 마감날짜중 하나를 선택해 주세요", message: nil, type: .ok)
                         return
                     } else {
+                        // 이번주 마감 날짜 버튼이 선택되어있다면 이번주 날짜를, 아니라면 다음주 날짜를 가져옵니다.
                         let selectedDeadlineDate = currentDayButton.isSelected == true ? deadlineDate.currentDate : deadlineDate.nextWeekFinishDate
+                        // 뷰 모델의 마감 요일에 선택된 버튼의 태그와 가져온 마감 날짜를 업데이트 합니다.
                         composeViewModel?.updateStudyProperty(.deadlineDay, value: (selectedButton.tag, selectedDeadlineDate))
                     }
                 }
                 dismissBottomSheetView()
             }
+        
+        // 벌금
         case .fine:
+            
+            // 선택된 벌금 버튼이 있는 경우
             if fineButtons.filter({$0.isSelected == true}).count != 0 {
+                
+                // 선택한 벌금 버튼을 가져옵니다.
                 let selectedButton = fineButtons.filter({$0.isSelected == true})[0]
+                
+                // 뷰 모델의 벌금을 업데이트 합니다.
                 composeViewModel?.updateStudyProperty(.fine, value: selectedButton.tag)
                 dismissBottomSheetView()
             }
+            
+        // 스터디 멤버 추가
         case .addStudyMemeber:
             
+            // 신규 스터디인 경우
             if composeViewModel?.isNewStudy.value == true {
+                
+                // 양쪽 끝 공백이 제거된 텍스트를 가져옵니다.
                 let name = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
                 let blogUrl = blogUrlTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                
+                // 벌금은 스터디 정보에서 선택한 벌금
                 let fine: Int? = composeViewModel?.fine.value
                 
+                // 이름이 빈 문자열인지 확인합니다.
                 if name == "" {
+                    
+                    // 빈 문자열일 경우 경고창을 띄웁니다.
                     makeAlertDialog(title: nil, message: "이름을 입력해 주세요", type: .ok)
                     return
                 }
                 
+                // 중복된 이름인지 확인합니다.
                 if name.validateName(members: composeViewModel?.studyMembers.value ?? []) {
+                    
+                    // 중복된 이름일 경우 경고창을 띄웁니다.
                     makeAlertDialog(title: nil, message: "중복된 이름 입니다", type: .ok)
                     return
                 }
                 
+                // 블로그 URL이 빈 문자열인지 확인합니다.
                 if blogUrl == "" {
+                    
+                    // 빈 문자열일 경우 경고창을 띄웁니다.
                     makeAlertDialog(title: nil, message: "블로그 주소를 입력해 주세요", type: .ok)
                     return
                 }
                 
+                // 네트워크 연결상태를 확인합니다.
                 if NetworkCheckManager.shared.isConnected == false {
+                    
+                    // 네트워크가 연결되어 있지 않으면 경고창을 띄웁니다.
                     self.makeAlertDialog(title: nil, message: "네트워크 연결이 되지 않아 블로그 주소를 확인할 수 없습니다.\n네트워크 연결상태를 확인해 주세요", type: .ok)
                     return
                 } else {
+                    
+                    // 네트워크가 정상적으로 연결되어있다면 유효한 URL인지 확인합니다.
                     CrawlingManager.validateBlogURL(url: blogUrl) { result in
                         switch result {
                         case .success:
+                            
+                            // 성공한 경우 뷰 모델에 이름, 블로그 URL, 벌금을 업데이트 합니다.
                             self.composeViewModel?.updateStudyProperty(.addMember, value: (name, blogUrl, fine))
                             self.dismissBottomSheetView()
                         case .failure(let error):
+                            
+                            // 실패한 경우 에러에 따라 경고창을 띄웁니다.
                             switch error {
                             case .invalidURL, .requestFailed:
                                 self.makeAlertDialog(title: nil, message: "블로그 URL을 확인해 주세요", type: .ok)
@@ -200,8 +333,12 @@ class BottomSheetViewController: UIViewController {
                     }
                 }
             } else {
+                
+                // 멤버 정보를 수정중이라면
                 let name = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
                 let blogUrl = blogUrlTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                
+                // 벌금은 텍스트필드에 입력된 벌금
                 let fine = fineTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "0"
                 
                 if name == "" {
@@ -247,6 +384,7 @@ class BottomSheetViewController: UIViewController {
                 }
             }
             
+        // 스터디 멤버 수정
         case .editStudyMember:
             let name = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             let blogUrl = blogUrlTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -293,51 +431,88 @@ class BottomSheetViewController: UIViewController {
                     }
                 }
             }
+            
+        // 마감 정보의 시작 날짜
         case .contentStartDate:
+            
+            // 마지막 마감 정보에 시작 날짜가 없는 경우(1회차인 경우만)
             if newContentViewModel?.lastContent.value?.startDate == nil {
+                
+                // 데이트 피커에서 선택한 날짜를 가져옵니다.
                 let targetDate = studyDatePicker.date
+                
+                // 마지막 마감 정보의 마감 날짜를 가져옵니다.
                 let deadlineDate = newContentViewModel?.deadlineDate.value
                 
-                // 선택한 날짜를 마감날짜랑 현재 날짜 두개 비교해야함
+                // 위 두 날짜를 비교합니다.
                 let result = targetDate.dateCompare(fromDate: deadlineDate, editType: .startDate)
                 
                 switch result {
                 case .pastStartDate:
+                    // 선택한 날짜가 마감일보다 과거인 경우 뷰 모델의 시작 날짜를 업데이트 합니다.
                     newContentViewModel?.updateContentProperty(.startDate, value: studyDatePicker.date)
                     dismissBottomSheetView()
                 case .futureStartDate:
+                    // 선택한 날짜가 마감일보다 미래인 경우 경고창을 띄웁니다.
                     makeAlertDialog(title: nil, message: "마감일보다 미래로 선택할 수 없습니다", type: .ok)
                 case .sameStartDate:
+                    // 선택한 날짜가 마감일과 같은 경우 경고창을 띄웁니다.
                     makeAlertDialog(title: nil, message: "마감일과 같은 날짜로 선택할 수 없습니다", type: .ok)
                 default:
                     print("none")
                 }
             }
+            
+        // 마감 정보의 마감 날짜
         case .contentDeadlineDate:
             
+            // 데이트 피커에서 선택한 날짜를 가져옵니다.
             let targetDate = studyDatePicker.date
+            
+            // 마지막 마감 정보에서 시작 날짜를 가져옵니다.
             let startDate = newContentViewModel?.startDate.value
 
+            // 선택한 날짜와 시작 날짜를 비교합니다. (마감 날짜 선택시)
             let compareStartDate = targetDate.dateCompare(fromDate: startDate, editType: .deadlineDate)
+            
+            // 선택한 날짜와 현재 날짜를 비교합니다. (마감 날짜 선택시)
             let compareTodayDate = targetDate.dateCompare(fromDate: Date(), editType: .deadlineDate)
             
             switch (compareStartDate, compareTodayDate) {
             case (.pastDeadlineDate, .pastDeadlineDate):
+                
+                // 시작 날짜보다 과거이거나, 현재 날짜보다 과거인 경우 경고창을 띄웁니다.
                 makeAlertDialog(title: nil, message: "시작일보다 과거로 선택할 수 없습니다", type: .ok)
             case (.sameDeadlineDate, .pastDeadlineDate):
+                
+                // 시작 날짜와 같거나, 현재 날짜보다 과거인 경우 경고창을 띄웁니다.
                 makeAlertDialog(title: nil, message: "시작일과 같은 날짜로 선택할 수 없습니다", type: .ok)
             case (.futureDeadlineDate, .pastDeadlineDate):
+                
+                // 시작 날짜보다 미래이거나, 현재 날짜보다 과거인 경우 뷰 모델의 마감 날짜를 업데이트 합니다.
                 newContentViewModel?.updateContentProperty(.deadlineDate, value: studyDatePicker.date)
                 dismissBottomSheetView()
             case (.futureDeadlineDate, .sameDeadlineDate):
+                
+                // 시작 날짜보다 미래이거나, 현재 날짜와 같은 경우 경고창을 띄웁니다.
                 makeAlertDialog(title: nil, message: "오늘과 같은날로 선택할 수 없습니다", type: .ok)
             default:
+                
+                // 나머지 경우 경고창을 띄웁니다.
                 makeAlertDialog(title: nil, message: "오늘보다 미래로 선택할 수 없습니다", type: .ok)
             }
+            
+        // 마감 정보의 벌금
         case .contentFine:
+            
+            // 선택한 벌금 버튼을 가져옵니다.
             let selectedButton = fineButtons.filter({$0.isSelected == true})[0]
+            
+            // 뷰 모델의 벌금을 업데이트 합니다.
             newContentViewModel?.updateContentProperty(.fine, value: selectedButton.tag)
             dismissBottomSheetView()
+            
+        // 마감 정보에 멤버 추가
         case .addContentMember:
             let name = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             let blogUrl = blogUrlTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -384,6 +559,8 @@ class BottomSheetViewController: UIViewController {
                     }
                 }
             }
+            
+        // 마감 정보에 멤버 정보 수정
         case .editContentMember:
             let name = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             let blogUrl = blogUrlTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -435,11 +612,65 @@ class BottomSheetViewController: UIViewController {
         }
     }
     
+    /// 멤버 정보 삭제 버튼을 탭했을 때의 동작을 정의합니다.
     @IBAction func tapDeleteButton(_ sender: Any) {
+        
+        // 삭제하기 전 경고창을 띄웁니다.
         makeAlertDialog(title: nil, message: "해당 멤버를 삭제 하시겠습니까?", type: .deleteMember)
     }
     
+    /// 마감 요일 선택 버튼을 탭했을 때의 동작을 정의합니다.
+    @IBAction func tapDeadlineDayButton(_ sender: Any) {
+        
+        guard let selectedButton = sender as? UIButton else { return }
+        
+        // 모든 버튼을 검사하여 현재 선택된 버튼만 선택 상태로 만들고 나머지는 비선택 상태로 만듭니다.
+        dayButtons.forEach { button in
+            button.isSelected = button.tag == selectedButton.tag ? true : false
+        }
+        
+        // 선택된 버튼의 태그값을 기준으로 마감일을 계산합니다.
+        let deadlineDate = Date().calculateDeadlineDate(deadlineDay: selectedButton.tag)
+        
+        // 다음 주 마감일이 없으면 'selectedDayLabel'을 보이게 하고, 있으면 'baseSelectedDayStackView'를 보이게 합니다.
+        if deadlineDate.nextWeekFinishDate == nil {
+            selectedDayLabel.isHidden = false
+            baseSelectedDayStackView.isHidden = true
+            selectedDayLabel.text = "\(deadlineDate.currentDate?.toString() ?? "")에 마감되요"
+        } else {
+            selectedDayLabel.isHidden = true
+            baseSelectedDayStackView.isHidden = false
+            currentDayButton.setTitle(deadlineDate.currentDate?.toString(), for: .normal)
+            nextWeekDayButton.setTitle(deadlineDate.nextWeekFinishDate?.toString(), for: .normal)
+        }
+    }
+
+    /// 이번주 마감 날짜와 다음주 마감 날짜 버튼을 탭했을 때의 동작을 정의합니다.
+    @IBAction func tapCurrentDateAndNextWeekDateButton(_ sender: Any) {
+        guard let selectedButton = sender as? UIButton else { return }
+        
+        // 현재 날짜 버튼이 선택되었는지 확인하고, 상태를 업데이트합니다.
+        currentDayButton.isSelected = selectedButton.tag == currentDayButton.tag ? true : false
+        
+        // 다음 주 날짜 버튼이 선택되었는지 확인하고, 상태를 업데이트합니다.
+        nextWeekDayButton.isSelected = selectedButton.tag == nextWeekDayButton.tag ? true : false
+    }
     
+    /// 벌금 버튼을 탭했을 때의 동작을 정의합니다.
+    @IBAction func tapFineButton(_ sender: Any) {
+        guard let selectedButton = sender as? UIButton else { return }
+        
+        // 모든 '벌금' 버튼의 선택 상태를 업데이트합니다. 선택된 버튼만 활성 상태로 설정됩니다.
+        fineButtons.forEach { button in
+            button.isSelected = button.tag == selectedButton.tag ? true : false
+        }
+    }
+    
+    
+    
+    // MARK:  ===== [Function] =====
+    
+    /// 수정 상태일 경우 멤버 정보를 설정합니다.
     func configData() {
         switch option {
         case .editStudyMember:
@@ -455,6 +686,7 @@ class BottomSheetViewController: UIViewController {
         }
     }
         
+    /// 레이아웃을 설정합니다.
     func configLayout() {
         bottomSheetView.layer.cornerRadius = .cornerRadius
         bottomSheetView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -531,7 +763,6 @@ class BottomSheetViewController: UIViewController {
             } else {
                 selectedDayLabel.text = "아직 선택하지 않았어요!"
                 baseSelectedDayStackView.isHidden = true
-               
             }
     
         case .fine:
@@ -624,54 +855,41 @@ class BottomSheetViewController: UIViewController {
             print("")
         }
     }
-    
-    @IBAction func tapDeadlineDayButton(_ sender: Any) {
-        guard let selectedButton = sender as? UIButton else { return }
+
+    /// BottomSheetView를 아래로 움직여서 화면에서 사라지게합니다.
+    func dismissBottomSheetView() {
         
-        dayButtons.forEach { button in
-            button.isSelected = button.tag == selectedButton.tag ? true : false
-        }
-        
-        let deadlineDate = Date().calculateDeadlineDate(deadlineDay: selectedButton.tag)
-        
-        if deadlineDate.nextWeekFinishDate == nil {
-            selectedDayLabel.isHidden = false
-            baseSelectedDayStackView.isHidden = true
-            selectedDayLabel.text = "\(deadlineDate.currentDate?.toString() ?? "")에 마감되요"
-        } else {
-            selectedDayLabel.isHidden = true
-            baseSelectedDayStackView.isHidden = false
-            currentDayButton.setTitle(deadlineDate.currentDate?.toString(), for: .normal)
-            nextWeekDayButton.setTitle(deadlineDate.nextWeekFinishDate?.toString(), for: .normal)
-        }
+        // 애니메이션을 사용하여 bottomSheetView를 아래로 움직입니다.
+        UIView.animate(withDuration: 0.3, animations: {
+            
+            // bottomSheetView의 위치를 변경하여 화면 아래로 이동시킵니다.
+            self.bottomSheetView.transform = CGAffineTransform(translationX: 0, y: self.bottomSheetView.frame.height)
+        }, completion: { finished in
+            
+            // 애니메이션이 완료된 경우 뷰 컨트롤러를 닫습니다.
+            if finished {
+                self.dismiss(animated: false, completion: nil)
+            }
+        })
     }
     
-    @IBAction func tapCurrentDateAndNextWeekDateButton(_ sender: Any) {
-        guard let selectedButton = sender as? UIButton else { return }
-        
-        currentDayButton.isSelected = selectedButton.tag == currentDayButton.tag ? true : false
-        nextWeekDayButton.isSelected = selectedButton.tag == nextWeekDayButton.tag ? true : false
-    }
-    
-        
-    @IBAction func tapFineButton(_ sender: Any) {
-        guard let selectedButton = sender as? UIButton else { return }
-        
-        fineButtons.forEach { button in
-            button.isSelected = button.tag == selectedButton.tag ? true : false
-        }
-    }
-    
+    /// 키보드 노티를 등록합니다.
     func addKeyboard() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardUp), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDown), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    /// 키보드 노티를 제거합니다.
     func removeKeyboard() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    
+    
+    // MARK: ===== [@objc Function] =====
+    
+    /// 키보드를 활성화합니다.
     @objc func keyboardUp(_ notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
@@ -684,434 +902,9 @@ class BottomSheetViewController: UIViewController {
         }
     }
     
+    /// 키보드를 비활성화 합니다.
     @objc func keyboardDown(notification: NSNotification) {
         isKeyboardActive = false
         self.bottomSheetView.transform = .identity
     }
 }
-
-
-
-//class BottomSheetViewController: UIViewController {
-//
-//    @IBOutlet weak var baseView: UIView!
-//
-//    @IBOutlet weak var titleLabel: UILabel!
-//    @IBOutlet weak var subTitleLabel: UILabel!
-//
-//    @IBOutlet weak var baseStackView: UIStackView!
-//
-//    @IBOutlet weak var startDateView: UIView!
-//    @IBOutlet weak var startDatePicker: UIDatePicker!
-//
-//    // tag = 101 시작
-//    @IBOutlet weak var selectDayView: UIView!
-//    @IBOutlet var dayButtons: [UIButton]!
-//
-//    // tag = 201 시작
-//    @IBOutlet weak var selectFineView: UIView!
-//    @IBOutlet var fineButtons: [UIButton]!
-//
-//    @IBOutlet weak var addMemberView: UIView!
-//    @IBOutlet weak var memberNameTextField: UITextField!
-//    @IBOutlet weak var blogUrlTextField: UITextField!
-//    @IBOutlet weak var fineTextField: UITextField!
-//
-//    @IBOutlet weak var fineStackView: UIStackView!
-//
-//    @IBOutlet weak var currentDateButton: UIButton!
-//    @IBOutlet weak var nextWeekDateButton: UIButton!
-//    @IBOutlet weak var selectDateLabel: UILabel!
-//
-//    @IBOutlet var finishDateButtons: [UIButton]!
-//
-//    @IBOutlet weak var doneButton: UIButton!
-//    @IBOutlet weak var deleteMemberButton: UIButton!
-//
-//    var option: StudyOptionType?
-//
-//    var composeViewModel: StudyComposeViewModel?
-//
-//    var newContentViewModel: NewContentViewModel?
-//
-//    var isEditStudy: Bool = false
-//    var isEditMember: Bool = false
-//    var isNewMember: Bool = true
-//
-//    var isSameFinishDate: Bool = false
-//
-//    var editIndex: Int = 999999
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        configLayout()
-//        configData()
-//        configDatePicker()
-//    }
-//
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//
-//        // 키보드 노티 등록
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardUp), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDown), name: UIResponder.keyboardWillHideNotification, object: nil)
-//    }
-//
-//
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//
-//        // 키보드 노티 삭제
-//        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-//    }
-//
-//    @objc func keyboardUp(notification: NSNotification) {
-//        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-//            let keyboardRectangle = keyboardFrame.cgRectValue
-//
-//            UIView.animate(withDuration: 0.3) {
-//                self.baseView.transform = CGAffineTransform(translationX: 0, y: -keyboardRectangle.height)
-//            }
-//        }
-//    }
-//
-//    @objc func keyboardDown(notification: NSNotification) {
-//        self.baseView.transform = .identity
-//    }
-//
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        self.baseView.endEditing(true)
-//    }
-//
-//    func configData() {
-//
-//        switch option {
-//        case .studyMemeber:
-//            if isEditMember {
-//                let target = composeViewModel?.studyMembers.value[editIndex]
-//                memberNameTextField.text = target?.name ?? ""
-//                blogUrlTextField.text = target?.blogUrl ?? ""
-//                fineTextField.text = "\(target?.fine ?? 0)"
-//            }
-//        case .contentMember:
-//            if isNewMember {
-//                let target = newContentViewModel?.study
-//                memberNameTextField.placeholder = "이름을 입력해주세요."
-//                blogUrlTextField.placeholder = "블로그 주소를 입력해주세요."
-//                fineTextField.text = "\(Int(target?.fine ?? 0).convertFineInt())"
-//            } else {
-//                let target = newContentViewModel?.studyMembers.value[editIndex]
-//                memberNameTextField.text = target?.name ?? ""
-//                blogUrlTextField.text = target?.blogUrl ?? ""
-//                fineTextField.text = "\(target?.fine ?? 0)"
-//            }
-//        default:
-//            print("")
-//        }
-//    }
-//
-//    func configLayout() {
-//        switch option {
-//        case .startDate:
-//
-//            titleLabel.text = "시작 날짜를 선택해 주세요."
-//            subTitleLabel.text = composeViewModel?.isNewStudy.value == true ? "신규 스터디의 시작 날짜는 이번주에서만 선택 가능합니다." : "기존 스터디의 시작 날짜는 이번주 일요일까지 선택 가능합니다."
-//            startDateView.isHidden = false
-//            deleteMemberButton.isHidden = true
-//        case .selectDeadlineDay:
-//            titleLabel.text = "마감 요일을 선택해 주세요."
-//            subTitleLabel.isHidden = true
-//            selectDayView.isHidden = false
-//            deleteMemberButton.isHidden = true
-//        case .selectFine:
-//            titleLabel.text = "벌금을 선택해 주세요."
-//            subTitleLabel.isHidden = true
-//            selectFineView.isHidden = false
-//            deleteMemberButton.isHidden = true
-//        case .studyMemeber:
-//            if isEditStudy {
-//                // 수정
-//                fineStackView.isHidden = isNewMember == true ? true : false
-//                titleLabel.text = "수정 할 멤버의 정보를 입력해주세요."
-//                subTitleLabel.text = ""
-//            } else {
-//                titleLabel.text = "추가 할 멤버의 정보를 입력해주세요."
-//                // 새로등록
-//                if composeViewModel?.isNewStudy.value == true {
-//                    // 신규 스터디
-//                    fineStackView.isHidden = isEditMember == true ? false : true
-//                    subTitleLabel.text = "신규 스터디에 추가되는 멤버의 보증금은 설정한 벌금으로 자동 등록 됩니다."
-//                } else {
-//                    // 기존 스터디
-//                    fineStackView.isHidden = isEditMember == true || isNewMember == true ? false : true
-//                    subTitleLabel.text = "기존 스터디에 추가되는 멤버의 보증금을 꼭 입력해 주세요. "
-//                }
-//            }
-//
-//            addMemberView.isHidden = false
-//            // 멤버 수정일 경우만
-//            deleteMemberButton.isHidden = isEditMember == true ? false : true
-//        case .contentStartDate:
-//            titleLabel.text = "시작 날짜를 선택해 주세요."
-//            subTitleLabel.text = newContentViewModel?.getStartDateSubTitleDate()
-//            startDateView.isHidden = false
-//            deleteMemberButton.isHidden = true
-//        case .contentDeadlineDate:
-//            titleLabel.text = "마감 날짜를 선택해 주세요."
-//            subTitleLabel.text = "마감 날짜는 시작 날짜 +1 일부터 오늘 날짜 -1 내에서 선택 가능합니다."
-//            startDateView.isHidden = false
-//            deleteMemberButton.isHidden = true
-//        case .contentFine:
-//            titleLabel.text = "벌금을 선택해 주세요."
-//            subTitleLabel.text = "선택한 벌금을 기준으로 보증금이 계산 됩니다."
-//            selectFineView.isHidden = false
-//            deleteMemberButton.isHidden = true
-//        case .contentMember:
-//
-//            switch newContentViewModel?.contentMemberState {
-//            case .add:
-//                titleLabel.text = "추가할 멤버의 정보를 입력해주세요."
-//                subTitleLabel.text = "보증금은 설정한 벌금으로 추가됩니다."
-//            case .update:
-//                titleLabel.text = "수정 할 멤버의 정보를 입력해주세요."
-//                subTitleLabel.text = "해당 멤버의 보증금이 다르다면 수정해주세요."
-//            default:
-//                print("")
-//            }
-//
-//            addMemberView.isHidden = false
-//            fineStackView.isHidden = false
-//
-//            deleteMemberButton.isHidden = isNewMember == true ? true : false
-//        default:
-//            print("")
-//        }
-//    }
-//
-//    func configDatePicker() {
-//
-//        // 새로 등록할때
-//        // 수정할때
-//        // 새로운 공지사항 만들때
-//
-//        if composeViewModel != nil {
-//            let startDate = Date().getMondayAndSunDay().0
-//            let endDate = Date().getMondayAndSunDay().1
-//
-//            if composeViewModel?.isNewStudy.value == true {
-//                // 신규 스터디
-//                startDatePicker.minimumDate = startDate
-//                startDatePicker.maximumDate = endDate
-//            } else {
-//                // 기존 스터디
-//                startDatePicker.maximumDate = endDate
-//            }
-//        } else {
-//            if newContentViewModel?.editDateType == .startDate {
-//
-//            } else {
-//
-//            }
-//        }
-//    }
-//
-//    @IBAction func tapCloseButton(_ sender: Any) {
-//        self.dismiss(animated: true)
-//    }
-//
-//    @IBAction func tapDoneButton(_ sender: Any) {
-//        switch option {
-//        case .startDate:
-//            let value = startDatePicker.date
-//            composeViewModel?.updateStudyProperty(.startDate, value: value)
-//            self.dismiss(animated: true)
-//        case .selectDeadlineDay:
-//            let index = dayButtons.firstIndex(where: {$0.isSelected == true}) ?? 0
-//            let dateIndex = finishDateButtons.firstIndex(where: {$0.isSelected == true}) ?? 0
-//
-//            if isSameFinishDate {
-//                composeViewModel?.updateStudyProperty(.setDay, value: (dayButtons[index].tag, finishDateButtons[dateIndex].tag))
-//            } else {
-//                composeViewModel?.updateStudyProperty(.setDay, value: (dayButtons[index].tag, 0))
-//            }
-//
-//            self.dismiss(animated: true)
-//        case .selectFine:
-//            let index = fineButtons.firstIndex(where: {$0.isSelected == true}) ?? 0
-//            composeViewModel?.updateStudyProperty(.fine, value: fineButtons[index].tag)
-//            self.dismiss(animated: true)
-//        case .studyMemeber:
-//            if fineStackView.isHidden {
-//                let name = self.memberNameTextField.text ?? ""
-//                let blogURL = self.blogUrlTextField.text ?? ""
-//                let fine = composeViewModel?.fine.value?.convertFineInt()
-//
-//                self.composeViewModel?.updateStudyProperty(.members, value: (name, blogURL, fine, editIndex))
-//
-//            } else {
-//                let name = self.memberNameTextField.text ?? ""
-//                let blogURL = self.blogUrlTextField.text ?? ""
-//                let fine = Int(self.fineTextField.text ?? "") ?? 0
-//
-//                self.composeViewModel?.updateStudyProperty(.members, value: (name, blogURL, fine, editIndex))
-//            }
-//
-//            self.dismiss(animated: true)
-//        case .contentStartDate:
-//
-//            if newContentViewModel?.contents.count == 1 {
-//                let targetDate = startDatePicker.date.makeStartDate()
-//
-//                let deadlineDate = (self.newContentViewModel?.deadlineDate.value ?? Date()).makeStartDate()
-//
-//                let dateCompare = targetDate?.dateCompare(fromDate: deadlineDate, editType: .startDate, compareType: .deadline)
-//
-//                switch dateCompare {
-//                case .deadlinePast:
-//                    self.newContentViewModel?.updateContentProperty(.startDate, value: targetDate)
-//                    self.dismiss(animated: true)
-//                case .deadlineFuture:
-//                    makeAlertDialog(title: "시작일은 마감일보다 미래로 선택할 수 없습니다.", message: "", vcType: .ok)
-//                case .deadlineSame:
-//                    makeAlertDialog(title: "시작일은 마감일과 같은 날짜로 선택할 수 없습니다.", message: "", vcType: .ok)
-//                default:
-//                    print("BottomSheetViewController tapDoneButton Default")
-//                }
-//            } else {
-//
-//                // 선택한 날짜
-//                let targetDate = startDatePicker.date.makeStartDate()
-//
-//                // 마감 날짜
-//                let deadlineDate = (self.newContentViewModel?.deadlineDate.value ?? Date()).makeStartDate()
-//
-//                // 마지막 공지 마감 날짜
-//                let contentDeadlineDate = (self.newContentViewModel?.contents[(self.newContentViewModel?.contents.count ?? 0) - 2].deadlineDate ?? Date()).makeStartDate()
-//
-//                let checkDeadlineDate = targetDate?.dateCompare(fromDate: deadlineDate, editType: .startDate, compareType: .deadline)
-//                let checkContentDeadlineDate = targetDate?.dateCompare(fromDate: contentDeadlineDate, editType: .startDate, compareType: .contentLastDeadline)
-//
-//                // Alert 분기 처리
-//                if checkDeadlineDate == .deadlinePast && checkContentDeadlineDate == .contentLastDateSame {  // 마감일 과거 / 마지막 마감 같음
-//                    makeAlertDialog(title: "마지막 공지의 마감일과 같은 날짜 선택 불가", message: "", vcType: .ok)
-//                } else if checkDeadlineDate == .deadlinePast && checkContentDeadlineDate == .contentLastDateFuture {  // 마감일 과거 / 마지막 마감 미래
-//                    self.newContentViewModel?.updateContentProperty(.startDate, value: targetDate)
-//                    self.dismiss(animated: true)
-//                } else if checkDeadlineDate == .deadlineSame && checkContentDeadlineDate == .contentLastDateFuture { // 마감일 같음 / 마지막 마감 미래
-//                    makeAlertDialog(title: "마감일과 같은 날짜 선택 불가", message: "", vcType: .ok)
-//                } else if checkDeadlineDate == .deadlinePast && checkContentDeadlineDate == .contentLastDatePast { // 마감일 과거 / 마지막 마감 과거
-//                    makeAlertDialog(title: "시작일은 마지막 공지의 마감일보다 과거로 선택 불가", message: "", vcType: .ok)
-//                } else {  // 마감일 미래 / 마지막 마감 미래
-//                    makeAlertDialog(title: "시작일은 마감일보다 미래로 선택 불가", message: "", vcType: .ok)
-//                }
-//            }
-//        case .contentDeadlineDate:
-//
-//            // 시작일보다 더 이전 날짜면 경고
-//            // 시작날짜와 같으면 안되고, 현재 날짜와 같거나 미래이면 안됨
-//            let targetDate = startDatePicker.date.makeDeadlineDate()
-//            let startDate = (self.newContentViewModel?.startDate.value ?? Date()).makeDeadlineDate()
-//            let currentDate = Date().makeDeadlineDate()
-//
-//            let checkStartDate = targetDate?.dateCompare(fromDate: startDate, editType: .deadlineDate, compareType: .start)
-//            let checkCurrentDate = targetDate?.dateCompare(fromDate: currentDate, editType: .deadlineDate, compareType: .currentDate)
-//
-//            // 시작일 과거 / 현재 날짜 과거
-//            // 시작일 같음 / 현재 날짜 과거
-//            // 시작일 미래 / 현재 날짜 과거
-//            // 시작일 미래 / 현재 날짜 같음
-//            // 시작일 미래 / 현재 날짜 미래
-//            if checkStartDate == .startPast && checkCurrentDate == .currentDatePast {
-//                makeAlertDialog(title: "마감일은 시작일보다 과거로 선택 불가", message: "", vcType: .ok)
-//            } else if checkStartDate == .startSame && checkCurrentDate == .currentDatePast {
-//                makeAlertDialog(title: "마감일은 시작일과 같은날로 선택 불가", message: "", vcType: .ok)
-//            } else if checkStartDate == .startFuture && checkCurrentDate == .currentDatePast {
-//                self.newContentViewModel?.updateContentProperty(.deadlineDate, value: targetDate)
-//                self.dismiss(animated: true)
-//            } else if checkStartDate == .startFuture && checkCurrentDate == .currentDateSame {
-//                makeAlertDialog(title: "마감일은 오늘 날짜로 선택 불가", message: "", vcType: .ok)
-//            } else {
-//                makeAlertDialog(title: "마감일은 오늘 날짜보다 미래로 선택 불가", message: "", vcType: .ok)
-//            }
-//        case .contentFine:
-//            let index = fineButtons.firstIndex(where: {$0.isSelected == true}) ?? 0
-//            self.newContentViewModel?.updateContentProperty(.fine, value: fineButtons[index].tag)
-//            self.dismiss(animated: true)
-//        case .contentMember:
-//            let name = self.memberNameTextField.text ?? ""
-//            let blogURL = self.blogUrlTextField.text ?? ""
-//            let fine = Int(self.fineTextField.text ?? "") ?? 0
-//
-//            if isNewMember {
-//                self.newContentViewModel?.updateContentProperty(.addContentMember, value: (name, blogURL, fine))
-//            } else {
-//                self.newContentViewModel?.updateContentProperty(.updateContentMember, value: (name, blogURL, fine, editIndex))
-//            }
-//
-//            self.dismiss(animated: true)
-//        default:
-//            return
-//        }
-//    }
-//
-//    @IBAction func tapDeleteMemberButton(_ sender: Any) {
-//
-//        switch option {
-//        case .studyMemeber:
-//            composeViewModel?.updateStudyProperty(.deleteMember, value: editIndex)
-//        case .contentMember:
-//            newContentViewModel?.updateContentProperty(.deleteContentMember, value: editIndex)
-//        default:
-//            print("")
-//        }
-//
-//        DispatchQueue.main.async {
-//            self.dismiss(animated: true)
-//        }
-//    }
-//
-//
-//    @IBAction func tapSetDayButton(_ sender: Any) {
-//        guard let selectButton = sender as? UIButton else { return }
-//
-//        dayButtons.forEach { button in
-//            button.isSelected = button.tag == selectButton.tag ? true : false
-//        }
-//
-//        if composeViewModel?.fetchFinishDate(day: selectButton.tag).1 == nil {
-//
-//            isSameFinishDate = false
-//
-//            currentDateButton.isHidden = true
-//            nextWeekDateButton.isHidden = true
-//            selectDateLabel.text = "\(composeViewModel?.currentDate ?? Date())"
-//        } else {
-//            isSameFinishDate = true
-//
-//            currentDateButton.isHidden = false
-//            nextWeekDateButton.isHidden = false
-//            currentDateButton.setTitle("\(composeViewModel?.currentDate ?? Date())", for: .normal)
-//            nextWeekDateButton.setTitle("\(composeViewModel?.nextWeekDate ?? Date())", for: .normal)
-//            selectDateLabel.text = "\(composeViewModel?.currentDate ?? Date())와 \(composeViewModel?.nextWeekDate ?? Date())중 하나를 선택해 주세요."
-//        }
-//    }
-//
-//    @IBAction func tapFinishDateButtons(_ sender: Any) {
-//        guard let selectButton = sender as? UIButton else { return }
-//
-//        finishDateButtons.forEach { button in
-//            button.isSelected = button.tag == selectButton.tag ? true : false
-//        }
-//    }
-//
-//
-//    @IBAction func tapFineButton(_ sender: Any) {
-//        guard let selectButton = sender as? UIButton else { return }
-//
-//        fineButtons.forEach { button in
-//            button.isSelected = button.tag == selectButton.tag ? true : false
-//        }
-//    }
-//}
