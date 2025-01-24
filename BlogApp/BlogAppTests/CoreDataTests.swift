@@ -32,7 +32,7 @@ final class CoreDataTests: XCTestCase {
                                         fine: 10000,
                                         members: users) {}
     }
-
+    
     override func tearDownWithError() throws {
         testCoreDataManager.resetPersistentStore()
         testCoreDataManager = nil
@@ -48,7 +48,7 @@ final class CoreDataTests: XCTestCase {
     // 등록된 신규 스터디 데이터 검증
     func test_CoreDataManager_StoredNewStudyData_ShouldValid() {
         let study = testCoreDataManager.fetchStudyList()[0]
-       
+        
         XCTAssertEqual(study.isNewStudy, true)
         XCTAssertEqual(study.title, "1번 스터디")
         XCTAssertEqual(study.firstStartDate, createDate(year: 2025, month: 1, day: 1))
@@ -61,7 +61,7 @@ final class CoreDataTests: XCTestCase {
     func test_CoreDataManager_StoredStudyMemberData_ShouldValid() {
         let study = testCoreDataManager.fetchStudyList()[0]
         let studyMembers = testCoreDataManager.fetchStudyMembers(studyEntity: study)
-
+        
         XCTAssertEqual(studyMembers.count, 2)
         XCTAssertEqual(studyMembers[0].name, "1번")
         XCTAssertEqual(studyMembers[1].name, "2번")
@@ -93,7 +93,7 @@ final class CoreDataTests: XCTestCase {
         createOldStudyData()
         
         let study = testCoreDataManager.fetchStudyList()[1]
-       
+        
         XCTAssertEqual(study.isNewStudy, false)
         XCTAssertEqual(study.title, "2번 스터디")
         XCTAssertEqual(study.firstStartDate, createDate(year: 2025, month: 1, day: 30))
@@ -109,7 +109,7 @@ final class CoreDataTests: XCTestCase {
         
         let study = testCoreDataManager.fetchStudyList()[1]
         let studyMembers = testCoreDataManager.fetchStudyMembers(studyEntity: study)
-
+        
         XCTAssertEqual(studyMembers.count, 3)
         XCTAssertEqual(studyMembers[0].name, "1번")
         XCTAssertEqual(studyMembers[1].name, "2번")
@@ -133,7 +133,7 @@ final class CoreDataTests: XCTestCase {
         XCTAssertEqual(studyMembers[1].study, study)
         XCTAssertEqual(studyMembers[2].study, study)
     }
-
+    
     // 스터디 생성시 공지사항도 생성되었는지 검증
     func test_CoreDataManager_CreateContent_fetchContentList() {
         let study = testCoreDataManager.fetchStudyList()[0]
@@ -146,7 +146,7 @@ final class CoreDataTests: XCTestCase {
     func test_CoreDataManager_StoredContentData_ShouldValid() {
         let study = testCoreDataManager.fetchStudyList()[0]
         let content = testCoreDataManager.fetchContentList(studyEntity: study)[0]
-    
+        
         XCTAssertEqual(content.study, study)
         XCTAssertEqual(content.contentNumber, 1)
         XCTAssertEqual(content.deadlineDate, createDate(year: 2025, month: 1, day: 30))
@@ -163,7 +163,7 @@ final class CoreDataTests: XCTestCase {
         
         var users = [createUser(name: "3번", fine: 3333, blogUrl: "url3"),
                      createUser(name: "4번", fine: 4444, blogUrl: "url4")]
-    
+        
         
         testCoreDataManager.updateStudy(id: study.objectID,
                                         title: "1번 스터디 변경!",
@@ -173,7 +173,7 @@ final class CoreDataTests: XCTestCase {
                                         members: users + studyMembers) {}
         
         let updateStudy = testCoreDataManager.fetchStudyList()[0]
-    
+        
         XCTAssertEqual(updateStudy.title, "1번 스터디 변경!")
         XCTAssertEqual(updateStudy.deadlineDay, 5)
         XCTAssertEqual(updateStudy.fine, 1000)
@@ -258,7 +258,7 @@ extension CoreDataTests {
                      createUser(name: "2번", fine: 2222, blogUrl: "url2"),
                      createUser(name: "3번", fine: 3333, blogUrl: "url3")
         ]
-    
+        
         testCoreDataManager.createStudy(isNewStudy: false,
                                         lastProgressNumber: nil,
                                         lastProgressDeadlineDate: nil,
@@ -269,23 +269,11 @@ extension CoreDataTests {
                                         fine: 5000,
                                         members: users) {}
     }
-    
-    // 성능 테스트용
+
     func testPerformanceExample() throws {
-        // This is an example of a performance test case.
+        
         measure {
-//            for i in 0..<100 {
-//                let user = createUser(name: "User \(i)", fine: i * 100, blogUrl: "url\(i)")
-//                testCoreDataManager.createStudy(isNewStudy: true,
-//                                                lastProgressNumber: i,
-//                                                lastProgressDeadlineDate: Date(),
-//                                                title: "Study \(i)",
-//                                                firstStudyDate: Date(),
-//                                                deadlineDay: i % 7,
-//                                                deadlineDate: Date(),
-//                                                fine: i * 500,
-//                                                members: [user]) {}
-//            }
+            
         }
     }
 }

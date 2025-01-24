@@ -38,23 +38,21 @@ class StudyListViewController: UIViewController, ViewModelBindableType {
         addStudyButton.layer.cornerRadius = addStudyButton.frame.width * 0.5
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    func createDate(year: Int, month: Int, day: Int) -> Date {
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = day
         
-//        // VC가 나타날때마다 참여중인 스터디 패치
-//        viewModel?.fetchStudys {
-//            DispatchQueue.main.async {
-//                self.studyListTableView.reloadData()
-//            }
-//        }
+        return Calendar.current.date(from: components)!
     }
     
-    func bindViewModel() { 
-        viewModel?.list.bind({ [weak self] _ in
+    func bindViewModel() {
+        viewModel?.list.bind { [weak self] _ in
             DispatchQueue.main.async {
                 self?.studyListTableView.reloadData()
             }
-        })
+        }
     }
     
     /// 새로운 스터디를 생성하기 위한 버튼 이벤트 메소드 입니다.
@@ -70,7 +68,7 @@ class StudyListViewController: UIViewController, ViewModelBindableType {
         vc.viewModel = StudyComposeViewModel(studyData: nil)
 
         nvc.modalPresentationStyle = .fullScreen
-        self.present(nvc, animated: true)
+        present(nvc, animated: true)
     }
 }
 

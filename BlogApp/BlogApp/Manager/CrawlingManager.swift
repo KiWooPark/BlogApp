@@ -250,7 +250,7 @@ struct CrawlingManager {
                 AF.request(url).responseString { result in
                     switch result.result {
                     case .success(let html):
-                        
+                    
                         let headContent = getHtmlHead(html: html)
                         
                         do {
