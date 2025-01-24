@@ -29,7 +29,7 @@ final class CoreDataTests: XCTestCase {
                                         firstStudyDate: firstDate,
                                         deadlineDay: 7,
                                         deadlineDate: deadlineDate,
-                                        fine: 10000,
+                                        fine: 5000,
                                         members: users) {}
     }
     
@@ -41,7 +41,7 @@ final class CoreDataTests: XCTestCase {
     // 스터디 등록 검증(신규)
     func test_CoreDataManager_CreateNewStudy_createStudyFunc() {
         let studyList = testCoreDataManager.fetchStudyList()
-        
+    
         XCTAssertEqual(studyList.count, 1, "스터디는 1개만 저장되야 합니다.")
     }
     
@@ -52,8 +52,8 @@ final class CoreDataTests: XCTestCase {
         XCTAssertEqual(study.isNewStudy, true)
         XCTAssertEqual(study.title, "1번 스터디")
         XCTAssertEqual(study.firstStartDate, createDate(year: 2025, month: 1, day: 1))
-        XCTAssertEqual(study.deadlineDay, 7)
-        XCTAssertEqual(study.fine, 10000)
+        XCTAssertEqual(study.deadlineDay, 07)
+        XCTAssertEqual(study.fine, 5000)
         XCTAssertEqual(study.memberCount, 2)
     }
     
@@ -102,7 +102,6 @@ final class CoreDataTests: XCTestCase {
         XCTAssertEqual(study.memberCount, 3)
     }
     
-    
     // 기존 스터디에 포함된 멤버 데이터 검증
     func test_CoreDataManager_StoredOldStudyMemberData_ShouldValid() {
         createOldStudyData()
@@ -134,8 +133,39 @@ final class CoreDataTests: XCTestCase {
         XCTAssertEqual(studyMembers[2].study, study)
     }
     
+    // 공지사항 등록 검증
+    func test_CoreDataManager_CreateContent_creteContent() {
+        let studys = testCoreDataManager.fetchStudyList()
+        let contents = testCoreDataManager.fetchContentList(studyEntity: studys[0])
+        let studyMembers = testCoreDataManager.fetchStudyMembers(studyEntity: studys[0])
+        
+        var contentMembers: [ContentUser] = []
+        
+        for member in studyMembers {
+            let contentMember = ContentUser(context: testCoreDataManager.context)
+            contentMember.name = member.name
+            contentMember.fine = member.fine
+            contentMember.title = "블로그 제목"
+            contentMember.postUrl = "게시글 url"
+            contentMembers.append(contentMember)
+        }
+    
+        testCoreDataManager.createContent(lastContent: contents[0],
+                                          deadlineDay: 7,
+                                          startDate:  createDate(year: 2025, month: 1, day: 23),
+                                          deadlineDate:  createDate(year: 2025, month: 1, day: 30),
+                                          fine: 10000,
+                                          totalFine: 30000,
+                                          plusFine: 6000,
+                                          studyMembers: studyMembers,
+                                          contentMembers: contentMembers) { }
+        
+        
+       
+    }
+    
     // 스터디 생성시 공지사항도 생성되었는지 검증
-    func test_CoreDataManager_CreateContent_fetchContentList() {
+    func test_CoreDataManager_CreateStudyWithContent_fetchContentList() {
         let study = testCoreDataManager.fetchStudyList()[0]
         let contents = testCoreDataManager.fetchContentList(studyEntity: study)
         

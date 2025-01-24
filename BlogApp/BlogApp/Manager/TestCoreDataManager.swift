@@ -5,9 +5,9 @@
 //  Created by PKW on 1/23/25.
 //
 
-import Foundation
-import CoreData
 @testable import BlogApp
+import CoreData
+import Foundation
 
 class TestCoreDataManager {
     static let shared = TestCoreDataManager()
@@ -16,7 +16,7 @@ class TestCoreDataManager {
     private let entityName = "CoreData"
     
     var context: NSManagedObjectContext {
-        return self.persistentContainer.viewContext
+        return persistentContainer.viewContext
     }
     
     lazy var persistentContainer: NSPersistentContainer = {
@@ -27,7 +27,7 @@ class TestCoreDataManager {
         description.type = NSInMemoryStoreType
         container.persistentStoreDescriptions = [description]
         
-        container.loadPersistentStores { description, error in
+        container.loadPersistentStores { _, error in
             if let error = error as NSError? {
                 debugPrint(error, error.userInfo)
             }
@@ -36,21 +36,21 @@ class TestCoreDataManager {
     }()
     
     // MARK: CREATE
-    func createStudy(isNewStudy: Bool?, lastProgressNumber: Int?, lastProgressDeadlineDate: Date?, title: String?, firstStudyDate: Date?, deadlineDay: Int?, deadlineDate: Date?, fine: Int?, members: [User], completion: @escaping () -> ()) {
-        
+
+    func createStudy(isNewStudy: Bool, lastProgressNumber: Int?, lastProgressDeadlineDate: Date?, title: String, firstStudyDate: Date, deadlineDay: Int, deadlineDate: Date, fine: Int, members: [User], completion: @escaping () -> ()) {
         let studyEntity = Study(context: persistentContainer.viewContext)
         // 생성 날짜
         studyEntity.createDate = Date()
         // 신규, 기존
-        studyEntity.isNewStudy = isNewStudy ?? true
+        studyEntity.isNewStudy = isNewStudy
         // 스터디 이름
         studyEntity.title = title
         // 최초 시작 날짜
         studyEntity.firstStartDate = firstStudyDate
         // 마감 요일
-        studyEntity.deadlineDay = Int64(deadlineDay ?? 0)
+        studyEntity.deadlineDay = Int64(deadlineDay)
         // 벌금
-        studyEntity.fine = Int64(fine ?? 0)
+        studyEntity.fine = Int64(fine)
         // 멤버 수
         studyEntity.memberCount = Int64(members.count)
         // 멤버
@@ -65,7 +65,7 @@ class TestCoreDataManager {
             // 회차
             contentEntity.contentNumber = 1
             // 마감 요일 (삭제해도 됨)
-            contentEntity.deadlineDay = Int64(deadlineDay ?? 0)
+            contentEntity.deadlineDay = Int64(deadlineDay)
             // 마감 날짜
             contentEntity.deadlineDate = deadlineDate
             
@@ -74,7 +74,7 @@ class TestCoreDataManager {
             // 마지막 스터디 진행 회차
             contentEntity.contentNumber = Int64(lastProgressNumber ?? 0)
             // 마감 요일
-            contentEntity.deadlineDay = Int64(deadlineDay ?? 0)
+            contentEntity.deadlineDay = Int64(deadlineDay)
             // 마지막 스터디 진행 회차의 마감 날짜
             contentEntity.startDate = lastProgressDeadlineDate?.makeDeadlineDate()?.convertDeadlineToStartDate()
             // 마감 날짜
@@ -88,15 +88,15 @@ class TestCoreDataManager {
         completion()
     }
     
-    func createContent(lastContent: Content?, deadlineDay: Int?, startDate: Date?, deadlineDate: Date?, fine: Int?, totalFine: Int?, plusFine: Int?, studyMembers: [User], contentMembers: [ContentUser], completion: @escaping () -> ()) {
-    
+    func createContent(lastContent: Content?, deadlineDay: Int, startDate: Date, deadlineDate: Date, fine: Int, totalFine: Int, plusFine: Int, studyMembers: [User], contentMembers: [ContentUser], completion: @escaping () -> ()) {
+        
         // 마지막 마감 데이터 정보 업데이트
-        lastContent?.deadlineDay = Int64(deadlineDay ?? 0)
+        lastContent?.deadlineDay = Int64(deadlineDay)
         lastContent?.startDate = startDate
         lastContent?.deadlineDate = deadlineDate
-        lastContent?.fine = Int64(fine ?? 0)
-        lastContent?.totalFine = Int64(totalFine ?? 0)
-        lastContent?.plusFine = Int64(plusFine ?? 0)
+        lastContent?.fine = Int64(fine)
+        lastContent?.totalFine = Int64(totalFine)
+        lastContent?.plusFine = Int64(plusFine)
         
         // 스터디에 설정된 마감요일
         let studyDeadlineDay = Int(studyMembers.first?.study?.deadlineDay ?? 0)
@@ -130,6 +130,7 @@ class TestCoreDataManager {
     }
     
     // MARK: READ
+
     func fetchStudyList() -> [Study] {
         let request: NSFetchRequest<Study> = Study.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "createDate", ascending: true)]
@@ -208,16 +209,15 @@ class TestCoreDataManager {
         return []
     }
 
-    
     // MARK: UPDATE
-    func updateStudy(id: NSManagedObjectID?, title: String?, deadlineDay: Int?, deadlineDate: Date?, fine: Int?, members: [User], completion: @escaping () -> ()) {
-        
+
+    func updateStudy(id: NSManagedObjectID?, title: String?, deadlineDay: Int, deadlineDate: Date, fine: Int, members: [User], completion: @escaping () -> ()) {
         if let studyID = id,
-           let studyEntity = fetchStudy(id: studyID) {
-            
+           let studyEntity = fetchStudy(id: studyID)
+        {
             studyEntity.title = title
-            studyEntity.deadlineDay = Int64(deadlineDay ?? 0)
-            studyEntity.fine = Int64(fine ?? 0)
+            studyEntity.deadlineDay = Int64(deadlineDay)
+            studyEntity.fine = Int64(fine)
             
             for member in members {
                 if member.study == nil {
@@ -228,9 +228,8 @@ class TestCoreDataManager {
             studyEntity.memberCount = Int64(studyEntity.members?.count ?? 0)
             
             let lastContent = fetchLastContent(studyEntity: studyEntity)
-            lastContent?.deadlineDay = Int64(deadlineDay ?? 0)
+            lastContent?.deadlineDay = Int64(deadlineDay)
             lastContent?.deadlineDate = deadlineDate
-        
         }
         
         saveContext()
@@ -239,6 +238,7 @@ class TestCoreDataManager {
     }
     
     // MARK: DELETE
+
     func deleteStudy(study: Study?) {
         let context = persistentContainer.viewContext
         
@@ -262,7 +262,6 @@ class TestCoreDataManager {
     }
     
     func deleteContentMembers(members: [ContentUser]) {
-            
         for member in members {
             let context = persistentContainer.viewContext
             context.delete(member)
@@ -270,6 +269,7 @@ class TestCoreDataManager {
     }
     
     // MARK: SAVE
+
     func saveContext() {
         guard context.hasChanges else { return }
         

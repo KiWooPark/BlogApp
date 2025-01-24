@@ -16,9 +16,9 @@
 		1638C16B2D421CE700EC08C6 /* Content+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1638C16A2D421CE700EC08C6 /* Content+Extention.swift */; };
 		1638C16E2D4225BF00EC08C6 /* StudyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1638C16D2D4225BF00EC08C6 /* StudyRepository.swift */; };
 		1638C1A52D42387D00EC08C6 /* MockStudyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1638C16F2D422D5300EC08C6 /* MockStudyRepository.swift */; };
-		1638C1E42D4243A500EC08C6 /* TestCoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1638C1E32D4243A500EC08C6 /* TestCoreDataManager.swift */; };
 		1638C1E62D425B2100EC08C6 /* CoreDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1638C1E52D425B2100EC08C6 /* CoreDataTests.swift */; };
 		1638C1EB2D438F1700EC08C6 /* CrawlingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1638C1EA2D438F1700EC08C6 /* CrawlingTests.swift */; };
+		1638C1EC2D43930900EC08C6 /* TestCoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1638C1E32D4243A500EC08C6 /* TestCoreDataManager.swift */; };
 		165488852A5BF14100A9925E /* ViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165488842A5BF14100A9925E /* ViewController+Extension.swift */; };
 		166DEC7B2A3C470700A59B8F /* ShareContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166DEC7A2A3C470700A59B8F /* ShareContentViewController.swift */; };
 		166DEC7D2A3C471D00A59B8F /* ShareContentViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 166DEC7C2A3C471D00A59B8F /* ShareContentViewController.storyboard */; };
@@ -239,7 +239,6 @@
 		1638C19A2D4235C300EC08C6 /* BlogAppTests */ = {
 			isa = PBXGroup;
 			children = (
-				1638C1E32D4243A500EC08C6 /* TestCoreDataManager.swift */,
 				1638C16F2D422D5300EC08C6 /* MockStudyRepository.swift */,
 				1638C1E52D425B2100EC08C6 /* CoreDataTests.swift */,
 				1638C1EA2D438F1700EC08C6 /* CrawlingTests.swift */,
@@ -406,6 +405,7 @@
 		16CFAFD92A138B3B00D49904 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				1638C1E32D4243A500EC08C6 /* TestCoreDataManager.swift */,
 				16CFAFDA2A138C2A00D49904 /* CrawlingManager.swift */,
 				16E2B1012A16320600596257 /* CoreDataManager.swift */,
 				16F20C732A89F9AE00E863F5 /* NetworkCheck.swift */,
@@ -622,7 +622,6 @@
 			files = (
 				1638C1EB2D438F1700EC08C6 /* CrawlingTests.swift in Sources */,
 				1638C1E62D425B2100EC08C6 /* CoreDataTests.swift in Sources */,
-				1638C1E42D4243A500EC08C6 /* TestCoreDataManager.swift in Sources */,
 				1638C1A52D42387D00EC08C6 /* MockStudyRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -662,6 +661,7 @@
 				16CFAFFA2A14BC9200D49904 /* StudyListViewModel.swift in Sources */,
 				16E2ABD62A75603600642656 /* Content+CoreDataClass.swift in Sources */,
 				16CFAFDB2A138C2A00D49904 /* CrawlingManager.swift in Sources */,
+				1638C1EC2D43930900EC08C6 /* TestCoreDataManager.swift in Sources */,
 				1638C1692D42178D00EC08C6 /* Study+Extention.swift in Sources */,
 				16F20C992A8B87EB00E863F5 /* StudyListEmptyTableViewCell.swift in Sources */,
 				16E2ABD92A75603600642656 /* ContentUser+CoreDataProperties.swift in Sources */,
