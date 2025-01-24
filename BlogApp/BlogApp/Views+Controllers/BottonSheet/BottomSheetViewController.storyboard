@@ -425,7 +425,7 @@
                                                                         <rect key="frame" x="0.0" y="10" width="334" height="0.0"/>
                                                                         <color key="backgroundColor" name="CellColor"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                                        <textInputTraits key="textInputTraits"/>
                                                                     </textField>
                                                                 </subviews>
                                                             </stackView>

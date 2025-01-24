@@ -7,9 +7,9 @@
 
 import UIKit
 
-//protocol AddCommonSetInfoTableViewCellDelegate: AnyObject {
-//    func showNextVC(option: BottomSheetViewController.StudyOptionType)
-//}
+protocol AddCommonSetInfoTableViewCellDelegate: AnyObject {
+    func showNextVC(option: StudyOptionType)
+}
 
 class AddCommonSetInfoTableViewCell: UITableViewCell {
 
@@ -18,7 +18,7 @@ class AddCommonSetInfoTableViewCell: UITableViewCell {
     @IBOutlet weak var changeButton: UIButton!
     
     var viewModel: StudyComposeViewModel?
-    //weak var delegate: AddCommonSetInfoTableViewCellDelegate?
+    weak var delegate: AddCommonSetInfoTableViewCellDelegate?
     
     
     static var identifier: String { return String(describing: self)}
